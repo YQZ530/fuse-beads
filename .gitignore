@@ -48,3 +48,6 @@ public/sw.js.map
 public/workbox-*.js.map
 public/worker-*.js.map
 public/fallback-*.js
+/.cursor/
+/tools
+node-v24.19.0-win-x64.zip

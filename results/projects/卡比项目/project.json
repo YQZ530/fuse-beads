@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "id": "a5146ea7-a599-4cc4-9379-37a49baeee98",
+  "name": "卡比项目",
+  "warehouseId": "warehouse-1",
+  "warehouseName": "豆仓1",
+  "warehouseBrand": "MARD",
+  "warehousePaletteName": "96",
+  "warehouseLockedAt": "2026-08-13T22:52:18.063Z",
+  "createdAt": "2026-08-13T22:52:18.063Z",
+  "updatedAt": "2026-08-13T22:52:18.063Z",
+  "patterns": [
+    {
+      "id": "d3a9dc73-d533-4e16-a706-e1953c99676b",
+      "name": "karbi",
+      "path": "results/patterns/2026-08-13_185017_karbi.grid.json",
+      "status": "draft",
+      "gridDimensions": {
+        "N": 50,
+        "M": 50
+      },
+      "totalBeadCount": 2500,
+      "colorCount": 15
+    }
+  ],
+  "summary": {
+    "totalNeeded": 2500,
+    "totalOwned": 8115,
+    "totalMissing": 340,
+    "missingColorCount": 2
+  },
+  "items": [
+    {
+      "hex": "#FBED56",
+      "colorKey": "A4",
+      "needed": 213,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 328
+    },
+    {
+      "hex": "#FFC365",
+      "colorKey": "A13",
+      "needed": 147,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 394
+    },
+    {
+      "hex": "#FD543D",
+      "colorKey": "A14",
+      "needed": 95,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 446
+    },
+    {
+      "hex": "#E3E1EE",
+      "colorKey": "D16",
+      "needed": 853,
+      "owned": 541,
+      "missing": 312,
+      "remainingAfterProject": -312
+    },
+    {
+      "hex": "#F13D74",
+      "colorKey": "E6",
+      "needed": 53,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 488
+    },
+    {
+      "hex": "#F78FC3",
+      "colorKey": "E12",
+      "needed": 569,
+      "owned": 541,
+      "missing": 28,
+      "remainingAfterProject": -28
+    },
+    {
+      "hex": "#E7002F",
+      "colorKey": "F5",
+      "needed": 56,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 485
+    },
+    {
+      "hex": "#971937",
+      "colorKey": "F7",
+      "needed": 153,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 388
+    },
+    {
+      "hex": "#BC0028",
+      "colorKey": "F8",
+      "needed": 105,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 436
+    },
+    {
+      "hex": "#E2677A",
+      "colorKey": "F9",
+      "needed": 71,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 470
+    },
+    {
+      "hex": "#F35744",
+      "colorKey": "F13",
+      "needed": 3,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 538
+    },
+    {
+      "hex": "#FDFBFF",
+      "colorKey": "H1",
+      "needed": 66,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 475
+    },
+    {
+      "hex": "#FEFFFF",
+      "colorKey": "H2",
+      "needed": 1,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 540
+    },
+    {
+      "hex": "#B6B1BA",
+      "colorKey": "H3",
+      "needed": 1,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 540
+    },
+    {
+      "hex": "#000000",
+      "colorKey": "H7",
+      "needed": 114,
+      "owned": 541,
+      "missing": 0,
+      "remainingAfterProject": 427
+    }
+  ],
+  "missingItems": [
+    {
+      "hex": "#E3E1EE",
+      "colorKey": "D16",
+      "needed": 853,
+      "owned": 541,
+      "missing": 312,
+      "remainingAfterProject": -312
+    },
+    {
+      "hex": "#F78FC3",
+      "colorKey": "E12",
+      "needed": 569,
+      "owned": 541,
+      "missing": 28,
+      "remainingAfterProject": -28
+    }
+  ]
+}

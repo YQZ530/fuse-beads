@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed:warehouse": "node scripts/seed-warehouse.js",
+    "create:warehouse": "node scripts/create-warehouse.js",
+    "export:pattern-stats": "node scripts/export-pattern-stats-csv.js",
+    "calc:project": "node scripts/calc-project-requirements.js"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
