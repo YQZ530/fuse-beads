@@ -2,31 +2,35 @@
   "schemaVersion": 1,
   "id": "a5146ea7-a599-4cc4-9379-37a49baeee98",
   "name": "卡比项目",
+  "createdAt": "2026-08-13T22:52:18.063Z",
+  "updatedAt": "2026-08-14T01:40:34.828Z",
   "warehouseId": "warehouse-1",
   "warehouseName": "豆仓1",
   "warehouseBrand": "MARD",
   "warehousePaletteName": "96",
   "warehouseLockedAt": "2026-08-13T22:52:18.063Z",
-  "createdAt": "2026-08-13T22:52:18.063Z",
-  "updatedAt": "2026-08-13T22:52:18.063Z",
+  "status": "draft",
   "patterns": [
     {
       "id": "d3a9dc73-d533-4e16-a706-e1953c99676b",
       "name": "karbi",
-      "path": "results/patterns/2026-08-13_185017_karbi.grid.json",
-      "status": "draft",
+      "fileName": "karbi.grid.json",
+      "path": "results/projects/卡比项目/patterns/karbi.grid.json",
       "gridDimensions": {
         "N": 50,
         "M": 50
       },
       "totalBeadCount": 2500,
-      "colorCount": 15
+      "colorCount": 15,
+      "status": "draft",
+      "addedToPlanAt": "2026-08-14T00:51:21.418Z"
     }
   ],
   "summary": {
     "totalNeeded": 2500,
-    "totalOwned": 8115,
+    "totalOwned": 2160,
     "totalMissing": 340,
+    "colorsNeeded": 15,
     "missingColorCount": 2
   },
   "items": [
