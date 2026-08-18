@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FormEvent, useMemo, useState } from 'react';
-import type { MardColor, MardPaletteOption, Warehouse, WarehouseInventory, WarehouseItem } from '@/lib/warehouseStore';
+import type { MardColor, MardPaletteOption, Warehouse, WarehouseInventory, WarehouseItem, WarehouseTransaction } from '@/lib/warehouseStore';
 
 interface ProjectDemand {
   projectId: string;
@@ -62,6 +62,7 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
   const [replenishText, setReplenishText] = useState('');
   const [replenishNote, setReplenishNote] = useState('');
   const [draftCounts, setDraftCounts] = useState<Record<string, string>>({});
+  const [expandedTransactionIds, setExpandedTransactionIds] = useState<string[]>([]);
   const [busyAction, setBusyAction] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -132,7 +133,7 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
         warehouseId: activeWarehouse.id,
         colorKey: item.colorKey,
         ownedCount,
-        note: '豆仓页面手动修改库存',
+        note: '修改库存',
       });
       if (!response.inventory) throw new Error('更新库存返回数据不完整');
       setInventory(response.inventory);
@@ -165,6 +166,50 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
       setDraftCounts({});
       setMessage(`已导入 ${preview.entries.length} 个色号的补货记录`);
     });
+  }
+
+  async function handleDeleteTransaction(transaction: WarehouseTransaction) {
+    if (!activeWarehouse) return;
+    const confirmed = window.confirm('确定删除这条库存记录吗？只会删除记录且回滚库存数量。');
+    if (!confirmed) return;
+
+    await runMutation(`delete-transaction-${transaction.id}`, async () => {
+      const response = await postJson('/api/warehouse/delete-transaction', {
+        warehouseId: activeWarehouse.id,
+        transactionId: transaction.id,
+      });
+      if (!response.inventory) throw new Error('删除库存记录返回数据不完整');
+      setInventory(response.inventory);
+      setMessage('已删除库存记录并回滚库存数量');
+    });
+  }
+
+  async function handleDeleteWarehouse() {
+    if (!activeWarehouse) return;
+    const confirmed = window.confirm(`确定删除豆仓「${activeWarehouse.name}」吗？这个操作会删除该豆仓和它的库存记录，不能撤销。`);
+    if (!confirmed) return;
+
+    await runMutation('delete-warehouse', async () => {
+      const response = await postJson('/api/warehouse/delete', {
+        warehouseId: activeWarehouse.id,
+      });
+      if (!response.inventory) throw new Error('删除豆仓返回数据不完整');
+      const nextWarehouseId = response.inventory.warehouses[0]?.id ?? '';
+      setInventory(response.inventory);
+      setActiveWarehouseId(nextWarehouseId);
+      setDraftCounts({});
+      setSelectedColorSeries('');
+      setInventoryPage(1);
+      setMessage(`已删除豆仓：${activeWarehouse.name}`);
+    });
+  }
+
+  function toggleTransactionDetails(transactionId: string) {
+    setExpandedTransactionIds((current) => (
+      current.includes(transactionId)
+        ? current.filter((id) => id !== transactionId)
+        : [...current, transactionId]
+    ));
   }
 
   async function runMutation(action: string, mutate: () => Promise<void>) {
@@ -352,7 +397,7 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
               <section className="grid gap-4 xl:grid-cols-[1fr_1fr]">
                 <section className="rounded border border-slate-200 bg-white p-4 shadow-sm">
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                    <h3 className="text-base font-semibold">手动补货导入</h3>
+                    <h3 className="text-base font-semibold">补货导入</h3>
                     <span className="text-sm text-slate-500">支持 T1-500 / T1 500 / T1,500</span>
                   </div>
                   <form className="mt-3 flex flex-col gap-3" onSubmit={handleReplenish}>
@@ -366,7 +411,7 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
                       value={replenishNote}
                       onChange={(event) => setReplenishNote(event.target.value)}
                       className="h-10 rounded border border-slate-300 px-3 text-sm outline-none focus:border-blue-500"
-                      placeholder="备注，默认：手动补货导入"
+                      placeholder="备注，默认：补货导入"
                     />
                     <button
                       type="submit"
@@ -556,9 +601,9 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
                           }}
                           className="h-9 rounded border border-slate-300 bg-white px-2 text-sm text-slate-700 outline-none focus:border-blue-500"
                         >
+                          <option value={10}>10 / 页</option>
                           <option value={20}>20 / 页</option>
                           <option value={50}>50 / 页</option>
-                          <option value={100}>100 / 页</option>
                         </select>
                       </div>
                     </div>
@@ -566,27 +611,102 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
                 )}
               </section>
 
-              {recentTransactions.length > 0 && (
-                <section className="rounded border border-slate-200 bg-white p-4 shadow-sm">
-                  <h3 className="text-base font-semibold">最近库存记录</h3>
-                  <div className="mt-3 flex flex-col gap-2 text-sm">
-                    {recentTransactions.map((transaction) => (
-                      <div key={transaction.id} className="rounded border border-slate-100 bg-slate-50 p-3">
-                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                          <span className="font-medium">{transactionLabel(transaction.type)}</span>
-                          <span className="text-slate-500">{formatDateTime(transaction.createdAt)}</span>
-                        </div>
-                        <div className="mt-1 text-slate-500">{transaction.note}</div>
-                        {transaction.items.length > 0 && (
-                          <div className="mt-2 text-slate-600">
-                            {transaction.items.length} 个色号 · 净变化 {transaction.items.reduce((sum, item) => sum + item.delta, 0)} 颗
-                          </div>
-                        )}
-                      </div>
-                    ))}
+              <section className="rounded border border-slate-200 bg-white p-4 shadow-sm">
+                <h3 className="text-base font-semibold">最近库存记录</h3>
+                {recentTransactions.length === 0 ? (
+                  <div className="mt-3 rounded border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+                    暂无库存记录
                   </div>
-                </section>
-              )}
+                ) : (
+                  <div className="mt-3 flex flex-col gap-2 text-sm">
+                    {recentTransactions.map((transaction) => {
+                      const actionKey = `delete-transaction-${transaction.id}`;
+                      const normalizedNote = normalizeTransactionNote(transaction.note);
+                      const netDelta = transaction.items.reduce((sum, item) => sum + item.delta, 0);
+                      const isExpanded = expandedTransactionIds.includes(transaction.id);
+                      const hasDetails = transaction.items.length > 0 || Boolean(normalizedNote);
+                      return (
+                        <div key={transaction.id} className="rounded border border-slate-100 bg-slate-50 p-3">
+                          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                                <span className="font-medium text-slate-800">{transactionLabel(transaction.type)}</span>
+                                <span className="text-slate-500">{formatDateTime(transaction.createdAt)}</span>
+                                <span className={netDelta >= 0 ? 'font-medium text-emerald-700' : 'font-medium text-red-700'}>
+                                  净变化 {formatSignedDelta(netDelta)} 颗
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex shrink-0 items-center gap-3">
+                              {hasDetails && (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleTransactionDetails(transaction.id)}
+                                  className="text-sm font-medium text-blue-700 hover:text-blue-800"
+                                >
+                                  {isExpanded ? '收起' : '详情'}
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                disabled={busyAction === actionKey}
+                                onClick={() => handleDeleteTransaction(transaction)}
+                                className="text-sm font-medium text-red-600 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                              >
+                                {busyAction === actionKey ? '删除中' : '删除'}
+                              </button>
+                            </div>
+                          </div>
+                          {isExpanded && (
+                            <div className="mt-3 max-h-48 overflow-y-auto rounded border border-slate-200 bg-white p-3 text-sm text-slate-600">
+                              {normalizedNote && (
+                                <div className="font-medium text-slate-700">{normalizedNote}</div>
+                              )}
+                              {transaction.items.length > 0 ? (
+                                <div className={normalizedNote ? 'mt-2 flex flex-col gap-2' : 'flex flex-col gap-2'}>
+                                  {transaction.items.map((item, index) => (
+                                    <div
+                                      key={`${transaction.id}-${item.colorKey}-${index}`}
+                                      className="flex items-center justify-between gap-4 border-b border-slate-100 pb-2 last:border-b-0 last:pb-0"
+                                    >
+                                      <span className="inline-flex items-center gap-2 font-semibold text-slate-700">
+                                        <span
+                                          className="h-4 w-4 rounded border border-slate-300"
+                                          style={{ backgroundColor: item.hex }}
+                                        />
+                                        {item.colorKey}
+                                      </span>
+                                      <span className={item.delta >= 0 ? 'text-emerald-700' : 'text-red-700'}>
+                                        {formatSignedDelta(item.delta)} 颗
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="mt-2 text-slate-400">没有颜色明细</div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+              </section>
+
+              <section className="rounded border border-red-200 bg-white p-4 shadow-sm">
+                <h3 className="text-base font-semibold text-red-700">删除豆仓</h3>
+                <p className="mt-1 text-sm text-slate-500">删除后会从 warehouse/inventory.json 移除这个豆仓和它的库存记录。</p>
+                <button
+                  type="button"
+                  disabled={busyAction === 'delete-warehouse'}
+                  onClick={handleDeleteWarehouse}
+                  className="mt-4 inline-flex h-10 items-center justify-center rounded border border-red-300 bg-white px-4 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {busyAction === 'delete-warehouse' ? '删除中' : '删除'}
+                </button>
+              </section>
             </section>
           )}
         </section>
@@ -773,9 +893,9 @@ function transactionLabel(type: string): string {
     case 'create_warehouse':
       return '创建豆仓';
     case 'manual_adjustment':
-      return '手动修改库存';
+      return '修改库存';
     case 'manual_replenishment':
-      return '手动补货';
+      return '补货';
     default:
       return '库存记录';
   }
@@ -784,7 +904,26 @@ function transactionLabel(type: string): string {
 function formatDateTime(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString('zh-CN', { hour12: false });
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+}
+
+function formatSignedDelta(value: number): string {
+  return value > 0 ? `+${value}` : String(value);
+}
+
+function normalizeTransactionNote(note: string): string {
+  return String(note || '')
+    .replace('豆仓页面手动修改库存', '修改库存')
+    .replace('手动修改库存', '修改库存')
+    .replace('手动补货导入', '补货导入');
 }
 
 function buildColorSeries(items: WarehouseItem[]): Array<{ prefix: string; count: number }> {

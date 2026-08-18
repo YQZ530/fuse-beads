@@ -10,7 +10,8 @@
     "seed:warehouse": "node scripts/seed-warehouse.js",
     "create:warehouse": "node scripts/create-warehouse.js",
     "export:pattern-stats": "node scripts/export-pattern-stats-csv.js",
-    "calc:project": "node scripts/calc-project-requirements.js"
+    "calc:project": "node scripts/calc-project-requirements.js",
+    "test:warehouse": "tsc -p tsconfig.warehouse-tests.json && node --test .next/warehouse-tests/tests/warehouseStore.delete.test.js"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",

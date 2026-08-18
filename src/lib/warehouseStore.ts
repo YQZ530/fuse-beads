@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { mkdir, readFile, rename, writeFile } from 'fs/promises';
+import { mkdir, readFile, readdir, rename, writeFile } from 'fs/promises';
 import path from 'path';
 
 type ColorMapping = Record<string, { MARD?: string }>;
@@ -76,8 +76,18 @@ export interface ReplenishWarehouseInput {
   note?: string;
 }
 
+export interface DeleteWarehouseInput {
+  warehouseId: string;
+}
+
+export interface DeleteWarehouseTransactionInput {
+  warehouseId: string;
+  transactionId: string;
+}
+
 const ROOT_DIR = process.cwd();
 const INVENTORY_PATH = path.join(ROOT_DIR, 'warehouse', 'inventory.json');
+const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'projects');
 const PALETTE_SETS_PATH = path.join(ROOT_DIR, 'src', 'data', 'mardPaletteSets.csv');
 const COLOR_MAPPING_PATH = path.join(ROOT_DIR, 'src', 'app', 'colorSystemMapping.json');
 const FIRST_VERSION_PALETTES = new Set(['96', '144', '291']);
@@ -194,7 +204,7 @@ export async function updateWarehouseItem(input: UpdateWarehouseItemInput): Prom
         warehouseId: warehouse.id,
         type: 'manual_adjustment',
         createdAt: now,
-        note: input.note?.trim() || '手动修改库存',
+        note: input.note?.trim() || '修改库存',
         items: [{
           hex: item.hex,
           colorKey: item.colorKey,
@@ -260,11 +270,56 @@ export async function replenishWarehouse(input: ReplenishWarehouseInput): Promis
       warehouseId: warehouse.id,
       type: 'manual_replenishment',
       createdAt: now,
-      note: input.note?.trim() || '手动补货导入',
+      note: input.note?.trim() || '补货导入',
       items: transactionItems,
     },
   ];
 
+  await writeInventory(inventory);
+  return inventory;
+}
+
+export async function deleteWarehouse(input: DeleteWarehouseInput): Promise<WarehouseInventory> {
+  const inventory = await readInventory();
+  const warehouse = findWarehouse(inventory, input.warehouseId);
+  const boundProjects = await readProjectsBoundToWarehouse(warehouse.id);
+  if (boundProjects.length > 0) {
+    throw new Error(`这个豆仓已被项目绑定，不能删除：${boundProjects.join('、')}`);
+  }
+
+  inventory.warehouses = inventory.warehouses.filter((candidate) => candidate.id !== warehouse.id);
+  inventory.transactions = (inventory.transactions ?? []).filter((transaction) => transaction.warehouseId !== warehouse.id);
+  await writeInventory(inventory);
+  return inventory;
+}
+
+export async function deleteWarehouseTransaction(input: DeleteWarehouseTransactionInput): Promise<WarehouseInventory> {
+  const inventory = await readInventory();
+  const warehouse = findWarehouse(inventory, input.warehouseId);
+  const transactions = inventory.transactions ?? [];
+  const nextTransactions = transactions.filter((transaction) => transaction.id !== input.transactionId);
+  if (nextTransactions.length === transactions.length) {
+    throw new Error('找不到这条库存记录');
+  }
+  const deletedTransaction = transactions.find((transaction) => transaction.id === input.transactionId);
+  if (deletedTransaction?.warehouseId !== warehouse.id) {
+    throw new Error('这条库存记录不属于当前豆仓');
+  }
+
+  const now = new Date().toISOString();
+  for (const transactionItem of deletedTransaction.items) {
+    if (transactionItem.delta === 0) continue;
+    const item = findWarehouseItem(warehouse, transactionItem.colorKey);
+    const nextOwnedCount = Number(item.ownedCount || 0) - Number(transactionItem.delta || 0);
+    if (!Number.isInteger(nextOwnedCount) || nextOwnedCount < 0) {
+      throw new Error(`删除记录会导致 ${item.colorKey} 库存小于 0，已取消`);
+    }
+    item.ownedCount = nextOwnedCount;
+    item.updatedAt = now;
+  }
+
+  warehouse.updatedAt = now;
+  inventory.transactions = nextTransactions;
   await writeInventory(inventory);
   return inventory;
 }
@@ -335,6 +390,28 @@ function findWarehouseItem(warehouse: Warehouse, colorKey: string): WarehouseIte
     throw new Error(`豆仓中找不到色号：${normalizedKey}`);
   }
   return item;
+}
+
+async function readProjectsBoundToWarehouse(warehouseId: string): Promise<string[]> {
+  try {
+    const entries = await readdir(PROJECTS_DIR, { withFileTypes: true });
+    const boundProjects = await Promise.all(
+      entries
+        .filter((entry) => entry.isDirectory())
+        .map(async (entry) => {
+          try {
+            const text = await readFile(path.join(PROJECTS_DIR, entry.name, 'project.json'), 'utf8');
+            const project = JSON.parse(text.replace(/^\uFEFF/, '')) as { name?: string; warehouseId?: string };
+            return project.warehouseId === warehouseId ? project.name || entry.name : null;
+          } catch {
+            return null;
+          }
+        })
+    );
+    return boundProjects.filter((projectName): projectName is string => projectName !== null);
+  } catch {
+    return [];
+  }
 }
 
 function mergeReplenishEntries(entries: Array<{ colorKey: string; count: number }>): Array<{ colorKey: string; count: number }> {

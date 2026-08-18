@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "rootDir": ".",
+    "outDir": ".next/warehouse-tests",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "noEmit": false,
+    "incremental": false
+  },
+  "include": [
+    "src/lib/warehouseStore.ts",
+    "tests/warehouseStore.delete.test.ts"
+  ]
+}
