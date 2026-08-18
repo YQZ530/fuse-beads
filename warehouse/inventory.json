@@ -305,7 +305,7 @@
         {
           "hex": "#FEFF8B",
           "colorKey": "A3",
-          "ownedCount": 549,
+          "ownedCount": 552,
           "isExtraColor": false,
           "updatedAt": "2026-08-14T01:30:16.279Z"
         },
@@ -649,6 +649,22 @@
           "delta": -3,
           "before": 541,
           "after": 538
+        }
+      ]
+    },
+    {
+      "id": "15b23eec-02f2-4bbc-9bc3-61b590cfaff3",
+      "warehouseId": "warehouse-1",
+      "type": "manual_adjustment",
+      "createdAt": "2026-08-14T00:41:02.950Z",
+      "note": "豆仓页面手动修改库存",
+      "items": [
+        {
+          "hex": "#FEFF8B",
+          "colorKey": "A3",
+          "delta": 3,
+          "before": 538,
+          "after": 541
         }
       ]
     },
