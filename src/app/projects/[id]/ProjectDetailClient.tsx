@@ -46,6 +46,9 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
   const requirementItems = project.items
     .slice()
     .sort((a, b) => compareColorKeys(a.colorKey, b.colorKey));
+  const requirementSourceLabel = formatRequirementSourceLabel(project.patterns.filter((pattern) => (
+    pattern.status === 'draft' || pattern.status === 'in_progress'
+  )));
 
   async function movePatternSelection({
     patternIds,
@@ -206,12 +209,14 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
               emptyText="当前没有缺豆"
               items={missingItems}
               mode="missing"
+              sourceLabel={requirementSourceLabel}
             />
             <RequirementTable
               title="当前计划需求"
               emptyText="还没有未完成图纸。添加图纸后会在这里显示需求。"
               items={requirementItems}
               mode="all"
+              sourceLabel={requirementSourceLabel}
             />
           </section>
         </section>
@@ -620,12 +625,14 @@ function RequirementTable({
   emptyText,
   items,
   mode,
+  sourceLabel,
 }: {
   id?: string;
   title: string;
   emptyText: string;
   items: ProjectRequirementItem[];
   mode: 'missing' | 'all';
+  sourceLabel: string;
 }) {
   if (mode === 'missing') {
     return (
@@ -634,6 +641,7 @@ function RequirementTable({
         title={title}
         emptyText={emptyText}
         items={items}
+        sourceLabel={sourceLabel}
       />
     );
   }
@@ -641,7 +649,10 @@ function RequirementTable({
   return (
     <section id={id} className="rounded border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold">{title}</h2>
+        <div>
+          <h2 className="text-base font-semibold">{title}</h2>
+          <p className="mt-1 text-xs text-slate-500">{`来源：${sourceLabel}`}</p>
+        </div>
         <span className="text-sm text-slate-500">{items.length} 色</span>
       </div>
       <div className="mt-3 overflow-auto rounded border border-slate-100">
@@ -667,7 +678,7 @@ function RequirementTable({
                   <td className="px-3 py-2">
                     <span className="inline-flex items-center gap-2">
                       <span className="h-6 w-6 rounded border border-slate-300" style={{ backgroundColor: item.hex }} />
-                      <span className="text-xs text-slate-500">{item.hex}</span>
+                      <span className="text-xs text-slate-500">{formatHexWithoutHash(item.hex)}</span>
                     </span>
                   </td>
                   <td className="px-3 py-2 text-right">{item.needed}</td>
@@ -690,16 +701,21 @@ function MissingRequirementList({
   title,
   emptyText,
   items,
+  sourceLabel,
 }: {
   id?: string;
   title: string;
   emptyText: string;
   items: ProjectRequirementItem[];
+  sourceLabel: string;
 }) {
   return (
     <section id={id} className="rounded border border-slate-200 bg-white p-4 shadow-sm scroll-mt-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold">{title}</h2>
+        <div>
+          <h2 className="text-base font-semibold">{title}</h2>
+          <p className="mt-1 text-xs text-slate-500">{`来源：${sourceLabel}`}</p>
+        </div>
         <span className="text-sm text-slate-500">{items.length} 色</span>
       </div>
       {items.length === 0 ? (
@@ -707,11 +723,14 @@ function MissingRequirementList({
           {emptyText}
         </div>
       ) : (
-        <div className="mt-3 max-h-[520px] overflow-y-auto pr-1">
+        <div className="mt-3 max-h-[472px] overflow-y-auto pr-1">
           <div className="grid grid-cols-2 gap-2">
           {items.map((item) => (
-            <div key={`${item.hex}-${item.colorKey}`} className="flex min-h-11 items-center justify-between gap-2 rounded border border-red-100 bg-red-50 px-3 py-2">
-              <span className="text-sm font-semibold text-slate-950">{item.colorKey || item.hex}</span>
+            <div key={`${item.hex}-${item.colorKey}`} className="flex min-h-10 items-center justify-between gap-2 rounded border border-slate-200 bg-white px-2.5 py-1.5">
+              <span className="inline-flex min-w-0 items-center gap-2">
+                <span className="h-5 w-5 shrink-0 rounded border border-slate-300" style={{ backgroundColor: item.hex }} />
+                <span className="truncate text-sm font-semibold text-slate-950">{item.colorKey || '未命名'}</span>
+              </span>
               <span className="whitespace-nowrap text-sm font-semibold text-red-700">
                 缺 <span className="text-base">{item.missing}</span> 颗
               </span>
@@ -786,6 +805,27 @@ function formatDateTime(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleString('zh-CN', { hour12: false });
+}
+
+function formatHexWithoutHash(hex: string): string {
+  return String(hex || '').replace(/^#/, '').toUpperCase();
+}
+
+function formatRequirementSourceLabel(patterns: ProjectPattern[]): string {
+  const names = Array.from(new Set(patterns.map(formatPatternSourceName).filter(Boolean)));
+  if (names.length === 0) return '当前无图纸';
+  if (names.length <= 3) return names.join('、');
+  return `${names.slice(0, 3).join('、')} 等 ${names.length} 张`;
+}
+
+function formatPatternSourceName(pattern: ProjectPattern): string {
+  const sourceName = pattern.name || pattern.fileName || pattern.path || '';
+  return sourceName
+    .split(/[\\/]/)
+    .pop()
+    ?.replace(/\.grid\.json$/i, '')
+    .replace(/\.[^.]+$/i, '')
+    || '未命名图纸';
 }
 
 function compareColorKeys(a: string, b: string): number {
