@@ -7,10 +7,15 @@ type ColorMapping = Record<string, { MARD?: string }>;
 const ROOT_DIR = process.cwd();
 const PALETTE_SETS_PATH = path.join(ROOT_DIR, 'src', 'data', 'mardPaletteSets.csv');
 const COLOR_MAPPING_PATH = path.join(ROOT_DIR, 'src', 'app', 'colorSystemMapping.json');
+const SUPPORTED_MARD_PALETTES = new Set(['96', '144', '291']);
 
 export async function GET(request: NextRequest) {
   try {
     const paletteName = request.nextUrl.searchParams.get('paletteName') || '291';
+    if (!SUPPORTED_MARD_PALETTES.has(paletteName)) {
+      throw new Error(`MARD ${paletteName} 色板暂不支持，当前支持 96、144、291`);
+    }
+
     const [paletteSetsCsv, colorMappingText] = await Promise.all([
       readFile(PALETTE_SETS_PATH, 'utf8'),
       readFile(COLOR_MAPPING_PATH, 'utf8'),
@@ -29,6 +34,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       brand: 'MARD',
       paletteName,
+      availablePalettes: listSupportedPaletteOptions(paletteSetsCsv, 'MARD'),
       colors,
     });
   } catch (error) {
@@ -54,6 +60,24 @@ function findPaletteCodes(csv: string, brand: string, paletteName: string): stri
   }
 
   throw new Error(`找不到 ${brand} ${paletteName} 色板`);
+}
+
+function listSupportedPaletteOptions(csv: string, brand: string): Array<{ paletteName: string; colorCount: number }> {
+  const lines = csv.trim().split(/\r?\n/);
+  const header = parseCsvLine(lines[0]);
+  const brandIndex = header.indexOf('brand');
+  const paletteIndex = header.indexOf('paletteName');
+  const colorCountIndex = header.indexOf('colorCount');
+
+  return lines
+    .slice(1)
+    .map((line) => parseCsvLine(line))
+    .filter((cells) => cells[brandIndex] === brand && SUPPORTED_MARD_PALETTES.has(cells[paletteIndex]))
+    .map((cells) => ({
+      paletteName: cells[paletteIndex],
+      colorCount: Number.parseInt(cells[colorCountIndex], 10),
+    }))
+    .sort((a, b) => a.colorCount - b.colorCount);
 }
 
 function buildMardKeyToHex(colorMapping: ColorMapping): Map<string, string> {
