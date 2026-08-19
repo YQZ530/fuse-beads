@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 
 const PROTOTYPE_GRID_SCRIPT =
-  process.env.GRID_GEOMETRY_SCRIPT ?? String.raw`C:\Users\z5308\Desktop\perler-beads\scripts\prototype_grid_geometry.py`;
+  process.env.GRID_GEOMETRY_SCRIPT ?? path.join(process.cwd(), 'scripts', 'prototype_grid_geometry.py');
 const PYTHON_COMMAND = process.env.PYTHON ?? 'python';
 const TEMP_ROOT_NAME = '.grid-python';
 
@@ -31,6 +31,7 @@ interface PrototypeGridRequest {
   crop?: unknown;
   referenceCols?: unknown;
   referenceRows?: unknown;
+  useCrop?: unknown;
 }
 
 interface PrototypeGridResult {
@@ -71,6 +72,7 @@ export async function POST(request: NextRequest) {
     const referenceCols = normalizeGridCount(body.referenceCols);
     const referenceRows = normalizeGridCount(body.referenceRows);
     const shouldUseReference = referenceCols !== null && referenceRows !== null;
+    const shouldUseCrop = body.useCrop === true;
 
     const requestId = randomUUID();
     tempDir = path.join(process.cwd(), TEMP_ROOT_NAME, requestId);
@@ -91,12 +93,17 @@ export async function POST(request: NextRequest) {
     if (shouldUseReference) {
       args.push('--cols', String(referenceCols), '--rows', String(referenceRows));
     }
+    if (shouldUseCrop) {
+      args.push('--use-crop');
+    }
 
     await runPython(args);
     const prototype = JSON.parse(await readFile(jsonPath, 'utf8')) as PrototypeGridResult;
     const imageSize = normalizeImageSize(prototype);
     const geometry = normalizeGeometry(prototype.geometry);
-    const crop = normalizeCrop(body.crop, imageSize) ?? normalizeCrop(prototype.crop, imageSize) ?? {
+    const requestCrop = normalizeCrop(body.crop, imageSize);
+    const prototypeCrop = normalizeCrop(prototype.crop, imageSize);
+    const crop = (shouldUseCrop ? requestCrop : prototypeCrop) ?? requestCrop ?? {
       left: 0,
       top: 0,
       right: imageSize.width,
@@ -110,6 +117,7 @@ export async function POST(request: NextRequest) {
       source: 'python-prototype',
       mode: typeof prototype.mode === 'string' ? prototype.mode : shouldUseReference ? 'manual' : 'auto',
       usedReference: shouldUseReference,
+      usedCrop: shouldUseCrop,
       ignoredPartialReference: (referenceCols !== null) !== (referenceRows !== null),
       detectedGrid: {
         bounds: crop,

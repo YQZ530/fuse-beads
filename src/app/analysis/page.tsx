@@ -136,6 +136,7 @@ interface PythonGridResponse {
   source?: string;
   mode?: string;
   usedReference?: boolean;
+  usedCrop?: boolean;
   ignoredPartialReference?: boolean;
   detectedGrid?: DetectedGrid;
   error?: string;
@@ -176,6 +177,7 @@ export default function PatternAnalysisPage() {
   const [isBoundaryAdjusting, setIsBoundaryAdjusting] = useState(false);
   const [isGridControlsCollapsed, setIsGridControlsCollapsed] = useState(false);
   const [isPythonGridDetecting, setIsPythonGridDetecting] = useState(false);
+  const [hasUserCrop, setHasUserCrop] = useState(false);
   const [activeBoundaryHandle, setActiveBoundaryHandle] = useState<BoundaryHandle>('move');
   const [adjustMode, setAdjustMode] = useState<AdjustMode>('auto');
   const [adjustTarget, setAdjustTarget] = useState<AdjustTarget>('grid');
@@ -367,6 +369,7 @@ export default function PatternAnalysisPage() {
     setParseStep('crop');
     setDetectedGrid(null);
     setCropBounds(null);
+    setHasUserCrop(false);
     setBounds(null);
     setResult(null);
     setSaveResult(null);
@@ -400,10 +403,12 @@ export default function PatternAnalysisPage() {
     const canvas = sourceCanvasRef.current;
     if (!canvas) return;
     const selectedCropBounds = cropBounds ?? getFullCanvasBounds(canvas);
+    const nextHasUserCrop = cropBounds !== null;
     const cropped = cropWorkingCanvases(selectedCropBounds);
     if (!cropped) return;
     setImageSrc(cropped.dataUrl);
     setCropBounds(cropped.bounds);
+    setHasUserCrop(nextHasUserCrop);
     setBounds(null);
     setDetectedGrid(null);
     setParseStep('grid');
@@ -411,10 +416,10 @@ export default function PatternAnalysisPage() {
     setAdjustTarget('grid');
     setIsBoundaryAdjusting(false);
     setIsGridControlsCollapsed(false);
-    void handleDetectGrid(cropped.bounds);
+    void handleDetectGrid(cropped.bounds, nextHasUserCrop);
   };
 
-  const handleDetectGrid = async (scanBoundsOverride?: GridBounds) => {
+  const handleDetectGrid = async (scanBoundsOverride?: GridBounds, useCrop = hasUserCrop) => {
     const canvas = sourceCanvasRef.current;
     if (!canvas || isPythonGridDetecting) return;
 
@@ -435,6 +440,7 @@ export default function PatternAnalysisPage() {
         body: JSON.stringify({
           imageDataUrl: canvas.toDataURL('image/png'),
           crop: scanBounds,
+          useCrop,
           ...(referenceCols ? { referenceCols } : {}),
           ...(referenceRows ? { referenceRows } : {}),
         }),

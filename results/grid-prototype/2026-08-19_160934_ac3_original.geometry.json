@@ -1,0 +1,28 @@
+{
+  "imageSize": {
+    "width": 1290,
+    "height": 1280
+  },
+  "mode": "auto",
+  "crop": {
+    "left": 0.0,
+    "top": 45.53,
+    "right": 1290.0,
+    "bottom": 1263.47
+  },
+  "geometry": {
+    "centerX": 646.0,
+    "centerY": 671.53,
+    "pitchX": 17.0,
+    "pitchY": 17.0,
+    "centerIsCellCenter": true
+  },
+  "debug": {
+    "confidence": {
+      "overall": 0.761
+    },
+    "pitchConfidence": {
+      "overall": 0.761
+    }
+  }
+}
