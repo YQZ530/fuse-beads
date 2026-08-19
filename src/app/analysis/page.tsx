@@ -5,7 +5,6 @@ import Link from 'next/link';
 import {
   analyzePatternCanvas,
   annotatePatternResultForPalette,
-  detectGridFromCanvas,
   DetectedGrid,
   getPaletteComplianceIssues,
   GridBounds,
@@ -132,6 +131,16 @@ interface SaveResponse {
   error?: string;
 }
 
+interface PythonGridResponse {
+  ok: boolean;
+  source?: string;
+  mode?: string;
+  usedReference?: boolean;
+  ignoredPartialReference?: boolean;
+  detectedGrid?: DetectedGrid;
+  error?: string;
+}
+
 const MAX_CANVAS_SIDE = 1800;
 
 export default function PatternAnalysisPage() {
@@ -166,6 +175,7 @@ export default function PatternAnalysisPage() {
   const [groupCorrectionColorKey, setGroupCorrectionColorKey] = useState('');
   const [isBoundaryAdjusting, setIsBoundaryAdjusting] = useState(false);
   const [isGridControlsCollapsed, setIsGridControlsCollapsed] = useState(false);
+  const [isPythonGridDetecting, setIsPythonGridDetecting] = useState(false);
   const [activeBoundaryHandle, setActiveBoundaryHandle] = useState<BoundaryHandle>('move');
   const [adjustMode, setAdjustMode] = useState<AdjustMode>('auto');
   const [adjustTarget, setAdjustTarget] = useState<AdjustTarget>('grid');
@@ -401,32 +411,40 @@ export default function PatternAnalysisPage() {
     setAdjustTarget('grid');
     setIsBoundaryAdjusting(false);
     setIsGridControlsCollapsed(false);
-    applyAutoGridDetection(cropped.bounds);
+    void handleDetectGrid(cropped.bounds);
   };
 
-  const handleDetectGrid = () => {
+  const handleDetectGrid = async (scanBoundsOverride?: GridBounds) => {
     const canvas = sourceCanvasRef.current;
-    if (!canvas) return;
-    const scanBounds = getFullCanvasBounds(canvas);
+    if (!canvas || isPythonGridDetecting) return;
+
+    const scanBounds = scanBoundsOverride ?? getFullCanvasBounds(canvas);
+    const referenceCols = parseOptionalGridCount(autoReferenceCols);
+    const referenceRows = parseOptionalGridCount(autoReferenceRows);
     setParseStep('grid');
     setAdjustMode('auto');
     setAdjustTarget('grid');
     setIsGridControlsCollapsed(false);
-    applyAutoGridDetection(scanBounds);
-  };
-
-  const applyAutoGridDetection = (scanBounds?: GridBounds) => {
-    const canvas = sourceCanvasRef.current;
-    if (!canvas) return;
+    setIsPythonGridDetecting(true);
+    setStatusMessage('Python 正在检测当前裁剪画面...');
 
     try {
-      const referenceCols = parseOptionalGridCount(autoReferenceCols);
-      const referenceRows = parseOptionalGridCount(autoReferenceRows);
-      const detected = detectGridFromCanvas(canvas, {
-        ...(scanBounds ? { bounds: scanBounds } : {}),
-        ...(referenceCols ? { expectedCols: referenceCols } : {}),
-        ...(referenceRows ? { expectedRows: referenceRows } : {}),
+      const response = await fetch('/api/analysis/grid-geometry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageDataUrl: canvas.toDataURL('image/png'),
+          crop: scanBounds,
+          ...(referenceCols ? { referenceCols } : {}),
+          ...(referenceRows ? { referenceRows } : {}),
+        }),
       });
+      const payload = (await response.json().catch(() => null)) as PythonGridResponse | null;
+      if (!response.ok || !payload?.ok || !payload.detectedGrid) {
+        throw new Error(payload?.error ?? 'Python 网格检测失败');
+      }
+
+      const detected = payload.detectedGrid;
       const nextCols =
         detected.estimatedCols && detected.estimatedCols >= 5 && detected.estimatedCols <= 300
           ? detected.estimatedCols
@@ -440,12 +458,11 @@ export default function PatternAnalysisPage() {
       setCols(nextCols);
       setRows(nextRows);
       setIsBoundaryAdjusting(false);
-      setIsGridControlsCollapsed(false);
       setActiveBoundaryHandle('move');
       redrawDisplayCanvas({
         overlayMode: 'grid',
         nextGridBounds: detected.bounds,
-        nextCropBounds: scanBounds ?? cropBounds,
+        nextCropBounds: scanBounds,
         nextDetectedGrid: detected,
         nextCols,
         nextRows,
@@ -455,14 +472,22 @@ export default function PatternAnalysisPage() {
           activeTarget: 'grid',
         },
       });
-      const referenceLabel = referenceCols || referenceRows ? `，参考 ${referenceCols || '?'} x ${referenceRows || '?'}` : '';
+
+      const referenceLabel = payload.usedReference
+        ? `，参考 ${referenceCols || '?'} x ${referenceRows || '?'}`
+        : payload.ignoredPartialReference
+          ? '，参考行列需要同时填写，本次使用自动模式'
+          : '';
+      const modeLabel = payload.mode ? `，mode ${payload.mode}` : '';
       const pitchLabel =
         detected.geometry.pitchX && detected.geometry.pitchY
           ? `，pitch ${formatMeasurementForInput(detected.geometry.pitchX)} x ${formatMeasurementForInput(detected.geometry.pitchY)}`
           : '';
-      setStatusMessage(`检测完成：当前计算画布 ${canvas.width}x${canvas.height}，建议 ${detected.estimatedCols || '?'} x ${detected.estimatedRows || '?'}${pitchLabel}${referenceLabel}，置信度 ${Math.round(detected.confidence * 100)}%`);
+      setStatusMessage(`Python 检测完成：当前计算画布 ${canvas.width}x${canvas.height}，建议 ${detected.estimatedCols || '?'} x ${detected.estimatedRows || '?'}${pitchLabel}${referenceLabel}${modeLabel}，置信度 ${Math.round(detected.confidence * 100)}%`);
     } catch (error) {
-      setStatusMessage(error instanceof Error ? error.message : '网格检测失败');
+      setStatusMessage(error instanceof Error ? error.message : 'Python 网格检测失败');
+    } finally {
+      setIsPythonGridDetecting(false);
     }
   };
 
@@ -527,6 +552,7 @@ export default function PatternAnalysisPage() {
         rows,
         palette,
         bounds: analysisBounds,
+        grid: detectedGrid ?? undefined,
         treatNearWhiteAsTransparent: treatWhiteAsTransparent,
       });
       setResult(analysis);
@@ -1382,10 +1408,11 @@ export default function PatternAnalysisPage() {
                       </div>
                       <button
                         type="button"
-                        onClick={handleDetectGrid}
-                        className="mt-3 h-9 w-full rounded border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                        disabled={isPythonGridDetecting}
+                        onClick={() => handleDetectGrid()}
+                        className="mt-3 h-9 w-full rounded border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
                       >
-                        按参考重检
+                        {isPythonGridDetecting ? 'Python 检测中' : 'Python 检测'}
                       </button>
                     </div>
 
