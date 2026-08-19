@@ -33,6 +33,7 @@ type AdjustMode = 'auto' | 'manual';
 type AdjustTarget = 'grid' | 'canvas';
 type DisplayOverlayMode = 'crop' | 'grid';
 type NudgeDirection = 'up' | 'down' | 'left' | 'right';
+type BoardSize = 52 | 104;
 
 const BOUNDARY_HANDLE_LABELS: Record<BoundaryHandle, string> = {
   topLeft: '左上',
@@ -137,6 +138,7 @@ interface PythonGridResponse {
   mode?: string;
   usedReference?: boolean;
   usedCrop?: boolean;
+  boardSize?: number;
   ignoredPartialReference?: boolean;
   detectedGrid?: DetectedGrid;
   error?: string;
@@ -162,8 +164,7 @@ export default function PatternAnalysisPage() {
   const [paletteError, setPaletteError] = useState<string | null>(null);
   const [cols, setCols] = useState(50);
   const [rows, setRows] = useState(50);
-  const [autoReferenceCols, setAutoReferenceCols] = useState('');
-  const [autoReferenceRows, setAutoReferenceRows] = useState('');
+  const [boardSize, setBoardSize] = useState<BoardSize>(52);
   const [detectedGrid, setDetectedGrid] = useState<DetectedGrid | null>(null);
   const [cropBounds, setCropBounds] = useState<GridBounds | null>(null);
   const [bounds, setBounds] = useState<GridBounds | null>(null);
@@ -373,8 +374,7 @@ export default function PatternAnalysisPage() {
     setBounds(null);
     setResult(null);
     setSaveResult(null);
-    setAutoReferenceCols('');
-    setAutoReferenceRows('');
+    setBoardSize(52);
     setSelectedCell(null);
     setSelectedColorGroupKey(null);
     setSelectedCorrectionKeys([]);
@@ -419,13 +419,11 @@ export default function PatternAnalysisPage() {
     void handleDetectGrid(cropped.bounds, nextHasUserCrop);
   };
 
-  const handleDetectGrid = async (scanBoundsOverride?: GridBounds, useCrop = hasUserCrop) => {
+  const handleDetectGrid = async (scanBoundsOverride?: GridBounds, useCrop = hasUserCrop, requestedBoardSize = boardSize) => {
     const canvas = sourceCanvasRef.current;
     if (!canvas || isPythonGridDetecting) return;
 
     const scanBounds = scanBoundsOverride ?? getFullCanvasBounds(canvas);
-    const referenceCols = parseOptionalGridCount(autoReferenceCols);
-    const referenceRows = parseOptionalGridCount(autoReferenceRows);
     setParseStep('grid');
     setAdjustMode('auto');
     setAdjustTarget('grid');
@@ -441,8 +439,7 @@ export default function PatternAnalysisPage() {
           imageDataUrl: canvas.toDataURL('image/png'),
           crop: scanBounds,
           useCrop,
-          ...(referenceCols ? { referenceCols } : {}),
-          ...(referenceRows ? { referenceRows } : {}),
+          gridSize: requestedBoardSize,
         }),
       });
       const payload = (await response.json().catch(() => null)) as PythonGridResponse | null;
@@ -479,17 +476,13 @@ export default function PatternAnalysisPage() {
         },
       });
 
-      const referenceLabel = payload.usedReference
-        ? `，参考 ${referenceCols || '?'} x ${referenceRows || '?'}`
-        : payload.ignoredPartialReference
-          ? '，参考行列需要同时填写，本次使用自动模式'
-          : '';
+      const boardLabel = `, board ${payload.boardSize ?? requestedBoardSize} x ${payload.boardSize ?? requestedBoardSize}`;
       const modeLabel = payload.mode ? `，mode ${payload.mode}` : '';
       const pitchLabel =
         detected.geometry.pitchX && detected.geometry.pitchY
           ? `，pitch ${formatMeasurementForInput(detected.geometry.pitchX)} x ${formatMeasurementForInput(detected.geometry.pitchY)}`
           : '';
-      setStatusMessage(`Python 检测完成：当前计算画布 ${canvas.width}x${canvas.height}，建议 ${detected.estimatedCols || '?'} x ${detected.estimatedRows || '?'}${pitchLabel}${referenceLabel}${modeLabel}，置信度 ${Math.round(detected.confidence * 100)}%`);
+      setStatusMessage(`Python 检测完成：当前计算画布 ${canvas.width}x${canvas.height}，建议 ${detected.estimatedCols || '?'} x ${detected.estimatedRows || '?'}${boardLabel}${pitchLabel}${modeLabel}，置信度 ${Math.round(detected.confidence * 100)}%`);
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : 'Python 网格检测失败');
     } finally {
@@ -1388,37 +1381,32 @@ export default function PatternAnalysisPage() {
                     </div>
 
                     <div className="mt-3 rounded border border-slate-200 bg-slate-50 p-3">
-                      <div className="grid grid-cols-2 gap-3">
-                        <label className="block text-sm font-medium text-slate-700">
-                          参考列数
-                          <input
-                            type="number"
-                            min={5}
-                            max={300}
-                            value={autoReferenceCols}
-                            onChange={(event) => setAutoReferenceCols(event.target.value)}
-                            className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm"
-                          />
-                        </label>
-                        <label className="block text-sm font-medium text-slate-700">
-                          参考行数
-                          <input
-                            type="number"
-                            min={5}
-                            max={300}
-                            value={autoReferenceRows}
-                            onChange={(event) => setAutoReferenceRows(event.target.value)}
-                            className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm"
-                          />
-                        </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {([52, 104] as BoardSize[]).map((size) => (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => {
+                              setBoardSize(size);
+                              handleDetectGrid(undefined, hasUserCrop, size);
+                            }}
+                            className={`h-9 rounded border px-3 text-sm font-medium ${
+                              boardSize === size
+                                ? 'border-slate-900 bg-slate-900 text-white'
+                                : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            {size} x {size}
+                          </button>
+                        ))}
                       </div>
                       <button
                         type="button"
                         disabled={isPythonGridDetecting}
-                        onClick={() => handleDetectGrid()}
+                        onClick={() => handleDetectGrid(undefined, hasUserCrop, boardSize)}
                         className="mt-3 h-9 w-full rounded border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
                       >
-                        {isPythonGridDetecting ? 'Python 检测中' : 'Python 检测'}
+                        {isPythonGridDetecting ? 'Python detecting' : `Python detect (${boardSize} x ${boardSize})`}
                       </button>
                     </div>
 
@@ -2769,9 +2757,3 @@ function clampInteger(value: string, min: number, max: number): number {
   return Math.min(max, Math.max(min, parsed));
 }
 
-function parseOptionalGridCount(value: string): number | null {
-  if (!value.trim()) return null;
-  const parsed = Number.parseInt(value, 10);
-  if (!Number.isFinite(parsed) || parsed < 5 || parsed > 300) return null;
-  return parsed;
-}

@@ -26,3 +26,19 @@
     at JSON.parse (<anonymous>) {
   page: '/analysis'
 }
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\server-development\4.pack.gz_' -> 'C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\server-development\4.pack.gz'
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development\0.pack.gz'
+ ⨯ SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>) {
+  page: '/analysis'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ⨯ SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>) {
+  page: '/analysis'
+}

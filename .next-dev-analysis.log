@@ -324,3 +324,69 @@
  ✓ Compiled in 380ms (582 modules)
  GET /analysis 200 in 392ms
  GET /analysis 200 in 45ms
+ ✓ Compiled in 477ms (582 modules)
+ GET /analysis 200 in 94ms
+ ✓ Compiled in 1050ms (1063 modules)
+ GET /analysis 200 in 388ms
+ ✓ Compiled /api/palettes/mard in 175ms (500 modules)
+ GET /api/palettes/mard?paletteName=96 200 in 389ms
+ ✓ Compiled in 1040ms (1082 modules)
+ GET /analysis 200 in 145ms
+ ✓ Compiled in 866ms (1063 modules)
+ GET /analysis 200 in 161ms
+ ✓ Compiled in 714ms (1063 modules)
+ GET /analysis 200 in 125ms
+ ✓ Compiled in 897ms (1063 modules)
+ GET /analysis 200 in 72ms
+ ✓ Compiled in 382ms (582 modules)
+ GET /analysis 200 in 51ms
+ ✓ Compiled in 519ms (582 modules)
+ GET /analysis 200 in 50ms
+ ✓ Compiled in 442ms (582 modules)
+ GET /analysis 200 in 74ms
+ ✓ Compiled in 709ms (582 modules)
+ GET /analysis 200 in 73ms
+ ✓ Compiled in 1313ms (1063 modules)
+ GET /analysis 200 in 410ms
+ ✓ Compiled in 543ms (1063 modules)
+ GET /analysis 200 in 173ms
+ ✓ Compiled in 1399ms (1063 modules)
+ GET /analysis 200 in 199ms
+ ○ Compiling /api/analysis/grid-geometry ...
+ ✓ Compiled /api/analysis/grid-geometry in 1708ms (502 modules)
+ GET /analysis 200 in 736ms
+ ✓ Compiled in 758ms (582 modules)
+ GET /analysis 200 in 42ms
+ POST /api/analysis/grid-geometry 200 in 30335ms
+ ✓ Compiled in 732ms (582 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 2.1s (1113 modules)
+ GET /analysis 500 in 2625ms
+ GET /analysis 200 in 308ms
+ GET /analysis 200 in 354ms
+ ✓ Compiled /api/palettes/mard in 325ms (546 modules)
+ GET /api/palettes/mard?paletteName=96 200 in 555ms
+ ✓ Compiled in 834ms (583 modules)
+ ✓ Compiled in 680ms (583 modules)
+ GET /analysis 200 in 830ms
+ GET /analysis 200 in 51ms
+ POST /api/analysis/grid-geometry 200 in 136806ms
+ ✓ Compiled in 554ms (582 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1507ms (1092 modules)
+ GET /analysis 500 in 1856ms
+ GET /analysis 200 in 175ms
+ GET /analysis 200 in 204ms
+ ✓ Compiled /api/palettes/mard in 215ms (542 modules)
+ GET /api/palettes/mard?paletteName=96 200 in 506ms
+ ✓ Compiled in 410ms (583 modules)
+ GET /analysis 200 in 82ms
+ ✓ Compiled /api/analysis/grid-geometry in 268ms (502 modules)
+ GET /analysis 200 in 799ms
+ ✓ Compiled in 582ms (582 modules)
+ GET /analysis 200 in 36ms
+ POST /api/analysis/grid-geometry 200 in 13647ms
+ ✓ Compiled in 297ms (582 modules)
+ ✓ Compiled in 399ms (582 modules)
+ GET /analysis 200 in 427ms
+ GET /analysis 200 in 34ms

@@ -7,9 +7,10 @@ import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 
 const PROTOTYPE_GRID_SCRIPT =
-  process.env.GRID_GEOMETRY_SCRIPT ?? path.join(process.cwd(), 'scripts', 'prototype_grid_geometry.py');
+  process.env.GRID_GEOMETRY_SCRIPT ?? path.join(process.cwd(), 'scripts', 'prototype_grid_geometry_v2.py');
 const PYTHON_COMMAND = process.env.PYTHON ?? 'python';
 const TEMP_ROOT_NAME = '.grid-python';
+const DEFAULT_BOARD_SIZE = 52;
 
 interface GridBounds {
   left: number;
@@ -29,8 +30,8 @@ interface GridGeometry {
 interface PrototypeGridRequest {
   imageDataUrl?: unknown;
   crop?: unknown;
-  referenceCols?: unknown;
-  referenceRows?: unknown;
+  gridSize?: unknown;
+  boardSize?: unknown;
   useCrop?: unknown;
 }
 
@@ -42,6 +43,11 @@ interface PrototypeGridResult {
   mode?: unknown;
   geometry?: Partial<GridGeometry>;
   crop?: Partial<GridBounds>;
+  grid?: {
+    rows?: unknown;
+    cols?: unknown;
+    gridSize?: unknown;
+  };
   debug?: {
     confidence?: {
       overall?: unknown;
@@ -52,26 +58,13 @@ interface PrototypeGridResult {
   };
 }
 
-interface GeneratedCell {
-  row: number;
-  col: number;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  visibleRatio: number;
-  visibility: 'full' | 'partial';
-}
-
 export async function POST(request: NextRequest) {
   let tempDir: string | null = null;
 
   try {
     const body = (await request.json()) as PrototypeGridRequest;
     const imageBuffer = parseImageDataUrl(body.imageDataUrl);
-    const referenceCols = normalizeGridCount(body.referenceCols);
-    const referenceRows = normalizeGridCount(body.referenceRows);
-    const shouldUseReference = referenceCols !== null && referenceRows !== null;
+    const boardSize = normalizeBoardSize(body.gridSize ?? body.boardSize);
     const shouldUseCrop = body.useCrop === true;
 
     const requestId = randomUUID();
@@ -80,7 +73,7 @@ export async function POST(request: NextRequest) {
 
     const imagePath = path.join(tempDir, 'input.png');
     const outputDir = tempDir;
-    const jsonPath = path.join(outputDir, 'input.geometry.json');
+    const jsonPath = path.join(outputDir, 'input.geometry.v2.json');
     await writeFile(imagePath, imageBuffer);
 
     const args = [
@@ -89,13 +82,9 @@ export async function POST(request: NextRequest) {
       imagePath,
       '--out-dir',
       outputDir,
+      '--grid-size',
+      String(boardSize),
     ];
-    if (shouldUseReference) {
-      args.push('--cols', String(referenceCols), '--rows', String(referenceRows));
-    }
-    if (shouldUseCrop) {
-      args.push('--use-crop');
-    }
 
     await runPython(args);
     const prototype = JSON.parse(await readFile(jsonPath, 'utf8')) as PrototypeGridResult;
@@ -103,22 +92,18 @@ export async function POST(request: NextRequest) {
     const geometry = normalizeGeometry(prototype.geometry);
     const requestCrop = normalizeCrop(body.crop, imageSize);
     const prototypeCrop = normalizeCrop(prototype.crop, imageSize);
-    const crop = (shouldUseCrop ? requestCrop : prototypeCrop) ?? requestCrop ?? {
-      left: 0,
-      top: 0,
-      right: imageSize.width,
-      bottom: imageSize.height,
-    };
-    const generated = generateCells(geometry, crop);
+    const crop = getFixedGridBounds(geometry, boardSize);
+    const generated = generateFixedGrid(geometry, boardSize);
     const confidence = getConfidence(prototype);
 
     return NextResponse.json({
       ok: true,
       source: 'python-prototype',
-      mode: typeof prototype.mode === 'string' ? prototype.mode : shouldUseReference ? 'manual' : 'auto',
-      usedReference: shouldUseReference,
+      mode: typeof prototype.mode === 'string' ? prototype.mode : 'text-lattice-v2',
+      boardSize,
+      usedReference: false,
       usedCrop: shouldUseCrop,
-      ignoredPartialReference: (referenceCols !== null) !== (referenceRows !== null),
+      ignoredPartialReference: false,
       detectedGrid: {
         bounds: crop,
         verticalLines: generated.xBoundaries,
@@ -128,9 +113,8 @@ export async function POST(request: NextRequest) {
         geometry,
         confidence,
       },
-      cells: generated.cells,
       imageSize,
-      pythonCrop: normalizeCrop(prototype.crop, imageSize),
+      pythonCrop: prototypeCrop ?? requestCrop,
     });
   } catch (error) {
     return NextResponse.json(
@@ -158,16 +142,13 @@ function parseImageDataUrl(value: unknown): Buffer {
   return Buffer.from(match[1], 'base64');
 }
 
-function normalizeGridCount(value: unknown): number | null {
-  if (value === undefined || value === null || value === '') {
-    return null;
-  }
+function normalizeBoardSize(value: unknown): 52 | 104 {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) {
-    return null;
+    return DEFAULT_BOARD_SIZE;
   }
   const rounded = Math.round(numeric);
-  return rounded >= 5 && rounded <= 300 ? rounded : null;
+  return rounded === 104 ? 104 : DEFAULT_BOARD_SIZE;
 }
 
 function normalizeImageSize(result: PrototypeGridResult): { width: number; height: number } {
@@ -233,64 +214,47 @@ function getConfidence(result: PrototypeGridResult): number {
   return Number.isFinite(confidence) ? clamp(confidence, 0, 1) : 0.5;
 }
 
-function generateCells(geometry: GridGeometry, crop: GridBounds): {
-  cells: GeneratedCell[];
+function getFixedGridBounds(geometry: GridGeometry, boardSize: number): GridBounds {
+  const left = geometry.centerX - geometry.pitchX / 2;
+  const top = geometry.centerY - geometry.pitchY / 2;
+  return {
+    left,
+    top,
+    right: left + geometry.pitchX * boardSize,
+    bottom: top + geometry.pitchY * boardSize,
+  };
+}
+
+function generateFixedGrid(
+  geometry: GridGeometry,
+  boardSize: number
+): {
   cols: number;
   rows: number;
   xBoundaries: number[];
   yBoundaries: number[];
 } {
-  const xBoundaries = generateAxisBoundaries(crop.left, crop.right, geometry.centerX, geometry.pitchX, geometry.centerIsCellCenter);
-  const yBoundaries = generateAxisBoundaries(crop.top, crop.bottom, geometry.centerY, geometry.pitchY, geometry.centerIsCellCenter);
-  const cols = Math.max(0, xBoundaries.length - 1);
-  const rows = Math.max(0, yBoundaries.length - 1);
-  const cells: GeneratedCell[] = [];
-
-  for (let row = 0; row < rows; row += 1) {
-    for (let col = 0; col < cols; col += 1) {
-      const x = xBoundaries[col];
-      const y = yBoundaries[row];
-      const width = xBoundaries[col + 1] - x;
-      const height = yBoundaries[row + 1] - y;
-      const visibleRatio = clamp(Math.min(width / geometry.pitchX, height / geometry.pitchY), 0, 1);
-      cells.push({
-        row,
-        col,
-        x,
-        y,
-        width,
-        height,
-        visibleRatio,
-        visibility: visibleRatio < 0.5 ? 'partial' : 'full',
-      });
-    }
-  }
-
-  return { cells, cols, rows, xBoundaries, yBoundaries };
+  const xBoundaries = generateFixedAxisBoundaries(geometry.centerX, geometry.pitchX, boardSize, geometry.centerIsCellCenter);
+  const yBoundaries = generateFixedAxisBoundaries(geometry.centerY, geometry.pitchY, boardSize, geometry.centerIsCellCenter);
+  return { cols: boardSize, rows: boardSize, xBoundaries, yBoundaries };
 }
 
-function generateAxisBoundaries(
-  cropStart: number,
-  cropEnd: number,
+function generateFixedAxisBoundaries(
   center: number,
   pitch: number,
+  boardSize: number,
   centerIsCellCenter: boolean
 ): number[] {
   const lineAnchor = centerIsCellCenter ? center - pitch / 2 : center;
-  const first = Math.floor((cropStart - lineAnchor) / pitch) - 1;
-  const last = Math.ceil((cropEnd - lineAnchor) / pitch) + 1;
-  const boundaries = [cropStart];
+  const boundaries: number[] = [];
 
-  for (let index = first; index <= last; index += 1) {
-    const line = lineAnchor + index * pitch;
-    if (line > cropStart && line < cropEnd) {
-      boundaries.push(line);
-    }
+  for (let index = 0; index <= boardSize; index += 1) {
+    boundaries.push(lineAnchor + index * pitch);
   }
 
-  boundaries.push(cropEnd);
   return dedupeSortedNumbers(boundaries.sort((a, b) => a - b), 0.01);
 }
+
 
 function dedupeSortedNumbers(values: number[], tolerance: number): number[] {
   const result: number[] = [];

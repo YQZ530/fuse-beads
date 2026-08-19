@@ -152,7 +152,10 @@ export function analyzePatternCanvas(
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const cropInsetRatio = options.cropInsetRatio ?? 0.16;
   const minimumVisibleRatio = options.minimumVisibleRatio ?? 0.5;
-  const generated = generateCellsFromGeometry(detectedGrid.geometry, cropBounds, cropInsetRatio, minimumVisibleRatio);
+  const generated =
+    options.grid && options.grid.verticalLines.length > 1 && options.grid.horizontalLines.length > 1
+      ? generateCellsFromBoundaryLines(options.grid.verticalLines, options.grid.horizontalLines, cropBounds, cropInsetRatio, minimumVisibleRatio)
+      : generateCellsFromGeometry(detectedGrid.geometry, cropBounds, cropInsetRatio, minimumVisibleRatio);
   const mappedPixelData: MappedPixel[][] = [];
   const cells: AnalyzedPatternCell[] = [];
 
@@ -597,6 +600,40 @@ function generateCellsFromGeometry(
   return { cells, cols, rows, xBoundaries, yBoundaries };
 }
 
+function generateCellsFromBoundaryLines(
+  xBoundaries: number[],
+  yBoundaries: number[],
+  visibleBounds: GridBounds,
+  cropInsetRatio: number,
+  minimumVisibleRatio: number
+): GeneratedCellsResult {
+  const cols = Math.max(0, xBoundaries.length - 1);
+  const rows = Math.max(0, yBoundaries.length - 1);
+  const cells: GeneratedCell[] = [];
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      const rect = {
+        x: xBoundaries[col],
+        y: yBoundaries[row],
+        width: xBoundaries[col + 1] - xBoundaries[col],
+        height: yBoundaries[row + 1] - yBoundaries[row],
+      };
+      const visibleRatio = getRectVisibleRatio(rect, visibleBounds);
+      cells.push({
+        row,
+        col,
+        rect,
+        crop: insetCellRect(rect, cropInsetRatio),
+        visibleRatio,
+        visibility: visibleRatio < minimumVisibleRatio ? 'partial' : 'full',
+      });
+    }
+  }
+
+  return { cells, cols, rows, xBoundaries, yBoundaries };
+}
+
 function generateGridBoundaries(geometry: GridGeometry, crop: GridBounds): { xBoundaries: number[]; yBoundaries: number[] } {
   return {
     xBoundaries: generateAxisBoundaries(crop.left, crop.right, geometry.centerX, geometry.pitchX, geometry.centerIsCellCenter),
@@ -655,6 +692,19 @@ function getGeometryCellVisibleRatio(
   const widthRatio = rect.width / Math.max(1, geometry.pitchX);
   const heightRatio = rect.height / Math.max(1, geometry.pitchY);
   return clamp(Math.min(widthRatio, heightRatio), 0, 1);
+}
+
+function getRectVisibleRatio(
+  rect: { x: number; y: number; width: number; height: number },
+  visibleBounds: GridBounds
+): number {
+  const left = Math.max(rect.x, visibleBounds.left);
+  const top = Math.max(rect.y, visibleBounds.top);
+  const right = Math.min(rect.x + rect.width, visibleBounds.right);
+  const bottom = Math.min(rect.y + rect.height, visibleBounds.bottom);
+  const visibleArea = Math.max(0, right - left) * Math.max(0, bottom - top);
+  const totalArea = Math.max(1, rect.width * rect.height);
+  return clamp(visibleArea / totalArea, 0, 1);
 }
 
 function dedupeSortedNumbers(values: number[], tolerance: number): number[] {
