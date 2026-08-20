@@ -1,0 +1,206 @@
+{
+  "imageSize": {
+    "width": 1992,
+    "height": 1513
+  },
+  "mode": "text-lattice-v3",
+  "crop": {
+    "left": 0.0,
+    "top": 0.0,
+    "right": 1758.6569297838325,
+    "bottom": 1414.697321675426,
+    "width": 1758.6569297838325,
+    "height": 1414.697321675426
+  },
+  "geometry": {
+    "centerX": 11.553014338906006,
+    "centerY": -332.4065937695005,
+    "pitchX": 33.92434787271702,
+    "pitchY": 33.92434787271702,
+    "centerIsCellCenter": true
+  },
+  "grid": {
+    "rows": 52,
+    "cols": 52,
+    "gridSize": 52,
+    "rowMin": 0,
+    "rowMax": 51,
+    "colMin": 0,
+    "colMax": 51
+  },
+  "debug": {
+    "confidence": {
+      "overall": 0.437
+    },
+    "candidateCount": 117,
+    "matchedCellCount": 14,
+    "inlierCount": 14,
+    "avgResidual": 3.3702632554090903,
+    "medianResidual": 3.463451201582597,
+    "maxResidual": 5.450261343498232,
+    "gridSize": 52,
+    "pitch": 33.92434787271702,
+    "bounds": {
+      "left": -5.409159597452504,
+      "top": -349.368767705859,
+      "right": 1758.6569297838325,
+      "bottom": 1414.697321675426
+    }
+  },
+  "textCenters": [
+    {
+      "x": 1162.4833333333333,
+      "y": 72.7,
+      "row": 12,
+      "col": 34,
+      "residual": 3.190623814394366,
+      "width": 16,
+      "height": 9,
+      "area": 60,
+      "inlier": true
+    },
+    {
+      "x": 1228.8275862068965,
+      "y": 73.27586206896552,
+      "row": 12,
+      "col": 36,
+      "residual": 4.242985132493551,
+      "width": 5,
+      "height": 9,
+      "area": 29,
+      "inlier": true
+    },
+    {
+      "x": 857.1,
+      "y": 682.0,
+      "row": 30,
+      "col": 25,
+      "residual": 4.1964618943715974,
+      "width": 5,
+      "height": 3,
+      "area": 10,
+      "inlier": true
+    },
+    {
+      "x": 624.7777777777778,
+      "y": 721.9444444444445,
+      "row": 31,
+      "col": 18,
+      "residual": 3.736278588770827,
+      "width": 7,
+      "height": 5,
+      "area": 18,
+      "inlier": true
+    },
+    {
+      "x": 621.5454545454545,
+      "y": 757.1818181818181,
+      "row": 32,
+      "col": 18,
+      "residual": 4.0609619213618835,
+      "width": 5,
+      "height": 3,
+      "area": 11,
+      "inlier": true
+    },
+    {
+      "x": 624.2352941176471,
+      "y": 989.6470588235294,
+      "row": 39,
+      "col": 18,
+      "residual": 2.2737316128899363,
+      "width": 8,
+      "height": 4,
+      "area": 17,
+      "inlier": true
+    },
+    {
+      "x": 660.5454545454545,
+      "y": 993.8181818181819,
+      "row": 39,
+      "col": 19,
+      "residual": 5.450261343498232,
+      "width": 5,
+      "height": 3,
+      "area": 11,
+      "inlier": true
+    },
+    {
+      "x": 47.08510638297872,
+      "y": 1226.7978723404256,
+      "row": 46,
+      "col": 1,
+      "residual": 2.0773724702281178,
+      "width": 19,
+      "height": 11,
+      "area": 94,
+      "inlier": true
+    },
+    {
+      "x": 110.92307692307692,
+      "y": 1297.3076923076924,
+      "row": 48,
+      "col": 3,
+      "residual": 2.7540743305253903,
+      "width": 7,
+      "height": 3,
+      "area": 13,
+      "inlier": true
+    },
+    {
+      "x": 1298.0,
+      "y": 1397.0,
+      "row": 51,
+      "col": 38,
+      "residual": 2.777296687484038,
+      "width": 3,
+      "height": 5,
+      "area": 15,
+      "inlier": true
+    },
+    {
+      "x": 1440.28,
+      "y": 1398.48,
+      "row": 51,
+      "col": 42,
+      "residual": 3.9747891875845585,
+      "width": 6,
+      "height": 8,
+      "area": 25,
+      "inlier": true
+    },
+    {
+      "x": 279.0,
+      "y": 1397.0,
+      "row": 51,
+      "col": 8,
+      "residual": 4.015662570874897,
+      "width": 3,
+      "height": 3,
+      "area": 9,
+      "inlier": true
+    },
+    {
+      "x": 488.0,
+      "y": 1397.0,
+      "row": 51,
+      "col": 14,
+      "residual": 1.6759552279422631,
+      "width": 3,
+      "height": 3,
+      "area": 9,
+      "inlier": true
+    },
+    {
+      "x": 557.0,
+      "y": 1397.0,
+      "row": 51,
+      "col": 16,
+      "residual": 2.757230793307613,
+      "width": 3,
+      "height": 3,
+      "area": 9,
+      "inlier": true
+    }
+  ]
+}
