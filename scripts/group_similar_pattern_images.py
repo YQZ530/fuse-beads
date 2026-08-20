@@ -24,6 +24,7 @@ except ImportError:  # pragma: no cover
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}
 DEFAULT_TESSERACT = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+CACHE_VERSION = 2
 PATTERN_VIEW = "pattern_view"
 PREVIEW_VIEW = "preview_view"
 COLOR_MODAL = "color_modal"
@@ -98,6 +99,7 @@ def main() -> int:
             continue
         features.append(feature)
 
+    apply_adjacent_modal_pair_fallback(features)
     groups = cluster_features(features, args.phash_threshold, args.thumb_threshold)
     folder_ids = assign_output_folder_ids(groups, out_dir, args.include_singletons)
     moved_paths: dict[str, Path] = {}
@@ -159,6 +161,8 @@ def load_feature_cache(manifest_path: Path) -> dict[str, dict[str, Any]]:
     try:
         payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     except Exception:
+        return {}
+    if payload.get("cache", {}).get("version") != CACHE_VERSION:
         return {}
 
     cache: dict[str, dict[str, Any]] = {}
@@ -245,6 +249,40 @@ def print_skipped_summary(skipped: list[dict[str, str]]) -> None:
         reason = row.get("reason", "")
         page_type = row.get("pageType", "")
         print(f"  skipped: {filename} reason={reason} pageType={page_type}")
+
+
+def apply_adjacent_modal_pair_fallback(features: list[ImageFeature]) -> None:
+    by_number: dict[int, ImageFeature] = {}
+    for feature in features:
+        number = trailing_number(feature.path.stem)
+        if number is not None:
+            by_number[number] = feature
+
+    for number, feature in sorted(by_number.items()):
+        neighbor = by_number.get(number + 1)
+        if neighbor is None:
+            continue
+        modal, other = adjacent_modal_pair(feature, neighbor)
+        if modal is None or other is None or not modal.pair_key:
+            continue
+        other.pair_key = modal.pair_key
+        if other.page_type == PATTERN_VIEW:
+            other.page_type = PREVIEW_VIEW
+
+
+def adjacent_modal_pair(a: ImageFeature, b: ImageFeature) -> tuple[ImageFeature | None, ImageFeature | None]:
+    if a.page_type == COLOR_MODAL and b.page_type != COLOR_MODAL:
+        return a, b
+    if b.page_type == COLOR_MODAL and a.page_type != COLOR_MODAL:
+        return b, a
+    return None, None
+
+
+def trailing_number(value: str) -> int | None:
+    match = re.search(r"(\d+)$", value)
+    if not match:
+        return None
+    return int(match.group(1))
 
 
 def looks_like_color_modal(image: np.ndarray) -> bool:
@@ -354,33 +392,65 @@ def extract_pair_key_from_region(image: np.ndarray, page_type: str) -> str | Non
     if page_type == COLOR_MODAL:
         box = find_modal_box(image)
         if box is None:
-            crop = image[int(height * 0.08):int(height * 0.20), int(width * 0.10):int(width * 0.80)]
+            crops = [image[int(height * 0.08):int(height * 0.20), int(width * 0.10):int(width * 0.80)]]
         else:
             x, y, w, h = box
-            crop = image[y + int(h * 0.02):y + int(h * 0.11), x + int(w * 0.02):x + int(w * 0.72)]
+            crops = [image[y + int(h * 0.02):y + int(h * 0.11), x + int(w * 0.02):x + int(w * 0.72)]]
     else:
-        crop = image[int(height * 0.86):int(height * 0.98), :]
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    gray = cv2.resize(gray, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
-    config = "--psm 7"
-    try:
-        text = pytesseract.image_to_string(Image.fromarray(gray), config=config)
-    except Exception:
-        return None
-    repaired = repair_pair_numbers_from_text(text)
-    if repaired:
-        return f"{repaired[0]}_{repaired[1]}"
+        crops = [
+            image[int(height * 0.86):int(height * 0.98), :],
+            image[int(height * 0.90):int(height * 0.97), :int(width * 0.65)],
+            image[int(height * 0.91):int(height * 0.965), int(width * 0.02):int(width * 0.55)],
+            image[int(height * 0.92):int(height * 0.965), int(width * 0.02):int(width * 0.50)],
+        ]
+    candidates: list[tuple[int, int, int]] = []
+    for crop in crops:
+        if crop.size == 0:
+            continue
+        gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+        variants = [
+            gray,
+            cv2.threshold(gray, 180, 255, cv2.THRESH_BINARY)[1],
+            cv2.threshold(gray, 180, 255, cv2.THRESH_BINARY_INV)[1],
+            cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1],
+        ]
+        for variant in variants:
+            enlarged = cv2.resize(variant, None, fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+            for psm in (6, 7, 11):
+                config = f"--psm {psm}"
+                try:
+                    text = pytesseract.image_to_string(Image.fromarray(enlarged), config=config)
+                except Exception:
+                    continue
+                candidate = repair_pair_candidate_from_text(text)
+                if candidate:
+                    candidates.append(candidate)
+    if candidates:
+        color_count, bead_count, _ = min(candidates, key=pair_candidate_score)
+        return f"{color_count}_{bead_count}"
     return None
 
 
 def repair_pair_numbers_from_text(text: str) -> list[int]:
+    candidate = repair_pair_candidate_from_text(text)
+    if candidate:
+        return list(candidate[:2])
+
+    return []
+
+
+def repair_pair_candidate_from_text(text: str) -> tuple[int, int, int] | None:
+    run_candidates = pair_candidates_from_digit_runs(text)
+    if run_candidates:
+        return min(run_candidates, key=pair_candidate_score)
+
     digits = re.sub(r"\D", "", text)
     if len(digits) < 5:
-        return []
+        return None
     # The UI text often OCRs as "52829558" for "52 色号 · 2955 豆":
     # two-ish leading digits for color count, then a 4-digit bead count,
     # sometimes with one stray trailing digit from icons/punctuation.
-    candidates: list[tuple[int, int]] = []
+    candidates: list[tuple[int, int, int]] = []
     for color_len in (2, 3, 1):
         if len(digits) <= color_len + 2:
             continue
@@ -394,16 +464,58 @@ def repair_pair_numbers_from_text(text: str) -> list[int]:
                 continue
             bead_count = int(bead_text)
             if 100 <= bead_count <= 9999:
-                candidates.append((color_count, bead_count))
+                candidates.append((color_count, bead_count, 5))
     if not candidates:
-        return []
-    def score(pair: tuple[int, int]) -> tuple[int, int, int]:
-        color_count, bead_count = pair
-        preferred_first_digit = 1 <= int(str(bead_count)[0]) <= 4
-        return (0 if preferred_first_digit else 1, 0 if 1000 <= bead_count <= 5000 else 1, abs(color_count - 60))
+        return None
 
-    color_count, bead_count = min(candidates, key=score)
-    return [color_count, bead_count]
+    return min(candidates, key=pair_candidate_score)
+
+
+def pair_candidates_from_digit_runs(text: str) -> list[tuple[int, int, int]]:
+    runs = re.findall(r"\d+", text)
+    if len(runs) < 2:
+        return []
+
+    color_candidates: list[tuple[int, int, bool]] = []
+    first = runs[0]
+    if 1 <= len(first) <= 3:
+        color_candidates.append((int(first), 1, False))
+    if len(first) == 2 and first[0] == first[1]:
+        color_candidates.append((int(first[0]), 0, True))
+
+    bead_candidates: list[tuple[int, int]] = []
+    for run in runs[1:]:
+        if len(run) in {3, 4}:
+            bead_candidates.append((int(run), 1))
+        if len(run) >= 4:
+            bead_candidates.append((int(run[:4]), 0))
+
+    candidates: list[tuple[int, int, int]] = []
+    for color_count, color_priority, duplicated_color in color_candidates:
+        if not (1 <= color_count <= 400):
+            continue
+        for bead_count, bead_priority in bead_candidates:
+            if 100 <= bead_count <= 9999:
+                candidates.append((color_count, bead_count, color_priority + bead_priority))
+        if duplicated_color:
+            for run in runs[1:]:
+                if len(run) == 4 and 100 <= int(run[:3]) <= 999:
+                    candidates.append((color_count, int(run[:3]), color_priority))
+        for index, run in enumerate(runs[1:-1], start=1):
+            next_run = runs[index + 1]
+            if len(run) == 1 and len(next_run) == 4 and 100 <= int(next_run[:3]) <= 999:
+                candidates.append((color_count, int(next_run[:3]), color_priority))
+    return candidates
+
+
+def pair_candidate_score(pair: tuple[int, int, int]) -> tuple[int, int, int, int]:
+    color_count, bead_count, priority = pair
+    return (
+        priority,
+        0 if 100 <= bead_count <= 5000 else 1,
+        0 if color_count <= 120 else 1,
+        abs(color_count - 40),
+    )
 
 
 def choose_pair_numbers(numbers: list[int]) -> tuple[int | None, int | None]:
@@ -631,6 +743,7 @@ def build_manifest(
         "recursive": bool(args.recursive),
         "includeSingletons": bool(args.include_singletons),
         "cache": {
+            "version": CACHE_VERSION,
             "hits": cache_stats.get("hit", 0),
             "misses": cache_stats.get("miss", 0),
             "key": "source + size + mtimeNs",
