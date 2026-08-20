@@ -1,0 +1,203 @@
+{
+  "input": "C:\\Users\\z5308\\Desktop\\batch_pic",
+  "output": "C:\\Users\\z5308\\Desktop\\batch_pic\\grouped_patterns",
+  "action": "move",
+  "dryRun": true,
+  "recursive": false,
+  "includeSingletons": false,
+  "parameters": {
+    "topRatio": 0.08,
+    "bottomRatio": 0.38,
+    "sideRatio": 0.02,
+    "phashThreshold": 10,
+    "thumbThreshold": 18.0
+  },
+  "imageCount": 10,
+  "groupCount": 7,
+  "groups": [
+    {
+      "id": "group_001",
+      "count": 4,
+      "folderCreated": true,
+      "folderName": "group_002",
+      "placement": "group_folder",
+      "items": [
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\cc1 (1).png",
+          "filename": "cc1 (1).png",
+          "pageType": "pattern_view",
+          "pairKey": "54_19414",
+          "cropBox": {
+            "x": 48,
+            "y": 133,
+            "width": 2292,
+            "height": 901
+          }
+        },
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\cc1 (2).png",
+          "filename": "cc1 (2).png",
+          "pageType": "pattern_view",
+          "pairKey": "13_19220",
+          "cropBox": {
+            "x": 48,
+            "y": 133,
+            "width": 2292,
+            "height": 901
+          }
+        },
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\cc1 (3).png",
+          "filename": "cc1 (3).png",
+          "pageType": "pattern_view",
+          "pairKey": "3_19220",
+          "cropBox": {
+            "x": 48,
+            "y": 133,
+            "width": 2292,
+            "height": 901
+          }
+        },
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\cc1 (4).png",
+          "filename": "cc1 (4).png",
+          "pageType": "pattern_view",
+          "pairKey": "1_19220",
+          "cropBox": {
+            "x": 48,
+            "y": 133,
+            "width": 2292,
+            "height": 901
+          }
+        }
+      ]
+    },
+    {
+      "id": "group_002",
+      "count": 1,
+      "folderCreated": false,
+      "folderName": null,
+      "placement": "left_in_place",
+      "items": [
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\IMG_0121.PNG",
+          "filename": "IMG_0121.PNG",
+          "pageType": "pattern_view",
+          "pairKey": "1_16818",
+          "cropBox": {
+            "x": 48,
+            "y": 133,
+            "width": 2292,
+            "height": 901
+          }
+        }
+      ]
+    },
+    {
+      "id": "group_003",
+      "count": 1,
+      "folderCreated": false,
+      "folderName": null,
+      "placement": "left_in_place",
+      "items": [
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\IMG_0122.PNG",
+          "filename": "IMG_0122.PNG",
+          "pageType": "pattern_view",
+          "pairKey": "230_2474",
+          "cropBox": {
+            "x": 48,
+            "y": 133,
+            "width": 2292,
+            "height": 901
+          }
+        }
+      ]
+    },
+    {
+      "id": "group_004",
+      "count": 1,
+      "folderCreated": false,
+      "folderName": null,
+      "placement": "left_in_place",
+      "items": [
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\IMG_0123.PNG",
+          "filename": "IMG_0123.PNG",
+          "pageType": "pattern_view",
+          "pairKey": null,
+          "cropBox": {
+            "x": 33,
+            "y": 191,
+            "width": 1602,
+            "height": 1290
+          }
+        }
+      ]
+    },
+    {
+      "id": "group_005",
+      "count": 1,
+      "folderCreated": false,
+      "folderName": null,
+      "placement": "left_in_place",
+      "items": [
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\IMG_0124.PNG",
+          "filename": "IMG_0124.PNG",
+          "pageType": "pattern_view",
+          "pairKey": "34_209",
+          "cropBox": {
+            "x": 48,
+            "y": 133,
+            "width": 2292,
+            "height": 901
+          }
+        }
+      ]
+    },
+    {
+      "id": "group_006",
+      "count": 1,
+      "folderCreated": false,
+      "folderName": null,
+      "placement": "left_in_place",
+      "items": [
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\IMG_0125.PNG",
+          "filename": "IMG_0125.PNG",
+          "pageType": "pattern_view",
+          "pairKey": "1_6525",
+          "cropBox": {
+            "x": 33,
+            "y": 191,
+            "width": 1602,
+            "height": 1290
+          }
+        }
+      ]
+    },
+    {
+      "id": "group_007",
+      "count": 1,
+      "folderCreated": false,
+      "folderName": null,
+      "placement": "left_in_place",
+      "items": [
+        {
+          "source": "C:\\Users\\z5308\\Desktop\\batch_pic\\IMG_0126.PNG",
+          "filename": "IMG_0126.PNG",
+          "pageType": "pattern_view",
+          "pairKey": null,
+          "cropBox": {
+            "x": 33,
+            "y": 191,
+            "width": 1602,
+            "height": 1290
+          }
+        }
+      ]
+    }
+  ],
+  "skipped": []
+}
