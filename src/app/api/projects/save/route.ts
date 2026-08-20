@@ -21,6 +21,8 @@ interface SavePatternRequest {
 const ROOT_DIR = process.cwd();
 const RESULTS_DIR = path.join(ROOT_DIR, 'results', 'patterns');
 const PIC_DIR = path.join(ROOT_DIR, 'pic');
+const HEX_COLOR_PATTERN = /^#[0-9A-F]{6}$/i;
+const TRANSPARENT_KEY = 'ERASE';
 
 export async function POST(request: NextRequest) {
   try {
@@ -103,11 +105,105 @@ function validateRequest(body: SavePatternRequest) {
       throw new Error('mappedPixelData 列数和 gridDimensions.N 不匹配');
     }
   }
+  const countedBeads = countAndValidateMappedPixels(body.mappedPixelData);
   if (!body.colorCounts || typeof body.colorCounts !== 'object') {
     throw new Error('colorCounts 不能为空');
   }
   if (!Number.isInteger(body.totalBeadCount) || (body.totalBeadCount ?? -1) < 0) {
     throw new Error('totalBeadCount 必须是非负整数');
+  }
+  if (countedBeads !== body.totalBeadCount) {
+    throw new Error('totalBeadCount 和 mappedPixelData 统计不一致');
+  }
+  validateColorCounts(body.colorCounts, body.totalBeadCount);
+}
+
+function countAndValidateMappedPixels(mappedPixelData: unknown): number {
+  if (!Array.isArray(mappedPixelData)) return 0;
+
+  let total = 0;
+  mappedPixelData.forEach((row, rowIndex) => {
+    if (!Array.isArray(row)) {
+      throw new Error(`mappedPixelData 第 ${rowIndex + 1} 行无效`);
+    }
+
+    row.forEach((cell, colIndex) => {
+      if (!cell || typeof cell !== 'object') {
+        throw new Error(`mappedPixelData 第 ${rowIndex + 1} 行第 ${colIndex + 1} 列格子无效`);
+      }
+
+      const mappedCell = cell as { key?: unknown; color?: unknown; isExternal?: unknown };
+      if (typeof mappedCell.key !== 'string' || !mappedCell.key.trim()) {
+        throw new Error(`mappedPixelData 第 ${rowIndex + 1} 行第 ${colIndex + 1} 列缺少 key`);
+      }
+      if (typeof mappedCell.color !== 'string' || !HEX_COLOR_PATTERN.test(mappedCell.color)) {
+        throw new Error(`mappedPixelData 第 ${rowIndex + 1} 行第 ${colIndex + 1} 列 color 格式无效`);
+      }
+      if (mappedCell.isExternal !== undefined && typeof mappedCell.isExternal !== 'boolean') {
+        throw new Error(`mappedPixelData 第 ${rowIndex + 1} 行第 ${colIndex + 1} 列 isExternal 必须是 boolean`);
+      }
+
+      if (!mappedCell.isExternal && mappedCell.key !== TRANSPARENT_KEY) {
+        total += 1;
+      }
+    });
+  });
+
+  return total;
+}
+
+function validateColorCounts(colorCounts: unknown, totalBeadCount: number) {
+  if (!colorCounts || typeof colorCounts !== 'object' || Array.isArray(colorCounts)) {
+    throw new Error('colorCounts 格式无效');
+  }
+
+  let countedTotal = 0;
+  for (const [hex, entry] of Object.entries(colorCounts as Record<string, unknown>)) {
+    if (!HEX_COLOR_PATTERN.test(hex)) {
+      throw new Error(`colorCounts key ${hex} 不是有效 hex`);
+    }
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+      throw new Error(`colorCounts ${hex} 格式无效`);
+    }
+
+    const colorEntry = entry as {
+      count?: unknown;
+      color?: unknown;
+      colorKey?: unknown;
+      isExtraColor?: unknown;
+      recommendedColor?: unknown;
+      recommendedColorKey?: unknown;
+    };
+    if (!Number.isInteger(colorEntry.count) || (colorEntry.count as number) <= 0) {
+      throw new Error(`colorCounts ${hex} count 必须是正整数`);
+    }
+    if (typeof colorEntry.color !== 'string' || colorEntry.color.toUpperCase() !== hex.toUpperCase()) {
+      throw new Error(`colorCounts ${hex} color 不匹配`);
+    }
+    if (typeof colorEntry.colorKey !== 'string' || !colorEntry.colorKey.trim()) {
+      throw new Error(`colorCounts ${hex} 缺少 colorKey`);
+    }
+    if (colorEntry.isExtraColor !== undefined && typeof colorEntry.isExtraColor !== 'boolean') {
+      throw new Error(`colorCounts ${hex} isExtraColor 必须是 boolean`);
+    }
+    if (
+      colorEntry.recommendedColor !== undefined &&
+      (typeof colorEntry.recommendedColor !== 'string' || !HEX_COLOR_PATTERN.test(colorEntry.recommendedColor))
+    ) {
+      throw new Error(`colorCounts ${hex} recommendedColor 格式无效`);
+    }
+    if (
+      colorEntry.recommendedColorKey !== undefined &&
+      (typeof colorEntry.recommendedColorKey !== 'string' || !colorEntry.recommendedColorKey.trim())
+    ) {
+      throw new Error(`colorCounts ${hex} recommendedColorKey 格式无效`);
+    }
+
+    countedTotal += colorEntry.count as number;
+  }
+
+  if (countedTotal !== totalBeadCount) {
+    throw new Error('colorCounts 统计和 totalBeadCount 不一致');
   }
 }
 

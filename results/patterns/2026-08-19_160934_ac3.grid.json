@@ -1,0 +1,7780 @@
+{
+  "schemaVersion": 1,
+  "id": "b0770d54-094d-4aa2-b0fe-f7b7bb021390",
+  "name": "ac3",
+  "createdAt": "2026-08-19T20:09:34.693Z",
+  "updatedAt": "2026-08-19T20:09:34.693Z",
+  "originalFileName": "ac3.jpg",
+  "originalImagePath": "pic/2026-08-19_160934_ac3_original.png",
+  "selectedColorSystem": "MARD",
+  "brand": "MARD",
+  "paletteName": "96",
+  "gridDimensions": {
+    "N": 39,
+    "M": 39
+  },
+  "mappedPixelData": [
+    [
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "E14",
+        "color": "#FFD1BA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "E14",
+        "color": "#FFD1BA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H3",
+        "color": "#B6B1BA",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H3",
+        "color": "#B6B1BA",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H3",
+        "color": "#B6B1BA",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H3",
+        "color": "#B6B1BA",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H3",
+        "color": "#B6B1BA",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H3",
+        "color": "#B6B1BA",
+        "isExternal": false
+      },
+      {
+        "key": "H3",
+        "color": "#B6B1BA",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "D2",
+        "color": "#858EDD",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "D16",
+        "color": "#E3E1EE",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "E15",
+        "color": "#F8C7C9",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H6",
+        "color": "#2F2B2F",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "G1",
+        "color": "#FFE2CE",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "H2",
+        "color": "#FEFFFF",
+        "isExternal": false
+      },
+      {
+        "key": "M5",
+        "color": "#D0CCAA",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "M6",
+        "color": "#B0A782",
+        "isExternal": false
+      },
+      {
+        "key": "H3",
+        "color": "#B6B1BA",
+        "isExternal": false
+      },
+      {
+        "key": "H3",
+        "color": "#B6B1BA",
+        "isExternal": false
+      },
+      {
+        "key": "M12",
+        "color": "#644749",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "H1",
+        "color": "#FDFBFF",
+        "isExternal": false
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ],
+    [
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      },
+      {
+        "key": "ERASE",
+        "color": "#FFFFFF",
+        "isExternal": true
+      }
+    ]
+  ],
+  "colorCounts": {
+    "#FDFBFF": {
+      "count": 697,
+      "color": "#FDFBFF",
+      "colorKey": "H1"
+    },
+    "#858EDD": {
+      "count": 134,
+      "color": "#858EDD",
+      "colorKey": "D2"
+    },
+    "#2F2B2F": {
+      "count": 106,
+      "color": "#2F2B2F",
+      "colorKey": "H6"
+    },
+    "#644749": {
+      "count": 29,
+      "color": "#644749",
+      "colorKey": "M12"
+    },
+    "#FEFFFF": {
+      "count": 308,
+      "color": "#FEFFFF",
+      "colorKey": "H2"
+    },
+    "#E3E1EE": {
+      "count": 20,
+      "color": "#E3E1EE",
+      "colorKey": "D16"
+    },
+    "#D0CCAA": {
+      "count": 26,
+      "color": "#D0CCAA",
+      "colorKey": "M5"
+    },
+    "#FFE2CE": {
+      "count": 24,
+      "color": "#FFE2CE",
+      "colorKey": "G1"
+    },
+    "#B0A782": {
+      "count": 19,
+      "color": "#B0A782",
+      "colorKey": "M6"
+    },
+    "#FFD1BA": {
+      "count": 2,
+      "color": "#FFD1BA",
+      "colorKey": "E14"
+    },
+    "#B6B1BA": {
+      "count": 9,
+      "color": "#B6B1BA",
+      "colorKey": "H3"
+    },
+    "#F8C7C9": {
+      "count": 32,
+      "color": "#F8C7C9",
+      "colorKey": "E15"
+    }
+  },
+  "totalBeadCount": 1406,
+  "sourceType": "analyzed_pattern_sheet",
+  "analysisMetadata": {
+    "originalPatternImagePath": "",
+    "analyzedAt": "2026-08-19T20:09:34.324Z",
+    "recognitionMethod": "background_color",
+    "unconfirmedCellCount": 50,
+    "extraColorCount": 0,
+    "extraBeadCount": 0,
+    "gridBounds": {
+      "left": 0,
+      "top": 0,
+      "right": 1290,
+      "bottom": 1280
+    },
+    "savedAt": "2026-08-19T20:09:34.693Z"
+  }
+}

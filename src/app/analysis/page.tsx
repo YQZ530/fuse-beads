@@ -14,6 +14,7 @@ import {
   updateAnalyzedColorGroups,
   updateAnalyzedCellColor,
 } from '../../utils/patternAnalysis';
+import { TRANSPARENT_KEY } from '../../utils/pixelEditingUtils';
 import { PaletteColor } from '../../utils/pixelation';
 
 type AnalysisTab = 'parse' | 'optimize' | 'edit';
@@ -33,6 +34,7 @@ type AdjustMode = 'auto' | 'manual';
 type AdjustTarget = 'grid' | 'canvas';
 type DisplayOverlayMode = 'crop' | 'grid';
 type NudgeDirection = 'up' | 'down' | 'left' | 'right';
+type BoardSize = 52 | 104;
 
 const BOUNDARY_HANDLE_LABELS: Record<BoundaryHandle, string> = {
   topLeft: '左上',
@@ -89,6 +91,7 @@ interface RedrawDisplayOptions {
   nextDetectedGrid?: DetectedGrid | null;
   nextCols?: number;
   nextRows?: number;
+  showOriginal?: boolean;
   adjustOptions?: DisplayAdjustOptions;
 }
 
@@ -105,6 +108,7 @@ interface ColorCountItem {
   isExtraColor?: boolean;
   recommendedColor?: string;
   recommendedColorKey?: string;
+  isUseless?: boolean;
   groupLabel: string;
   pendingCount: number;
   changedCount: number;
@@ -136,6 +140,8 @@ interface PythonGridResponse {
   source?: string;
   mode?: string;
   usedReference?: boolean;
+  usedCrop?: boolean;
+  boardSize?: number;
   ignoredPartialReference?: boolean;
   detectedGrid?: DetectedGrid;
   error?: string;
@@ -161,8 +167,7 @@ export default function PatternAnalysisPage() {
   const [paletteError, setPaletteError] = useState<string | null>(null);
   const [cols, setCols] = useState(50);
   const [rows, setRows] = useState(50);
-  const [autoReferenceCols, setAutoReferenceCols] = useState('');
-  const [autoReferenceRows, setAutoReferenceRows] = useState('');
+  const [boardSize, setBoardSize] = useState<BoardSize>(52);
   const [detectedGrid, setDetectedGrid] = useState<DetectedGrid | null>(null);
   const [cropBounds, setCropBounds] = useState<GridBounds | null>(null);
   const [bounds, setBounds] = useState<GridBounds | null>(null);
@@ -173,9 +178,12 @@ export default function PatternAnalysisPage() {
   const [selectedCorrectionKeys, setSelectedCorrectionKeys] = useState<string[]>([]);
   const [isGroupCorrectionOpen, setIsGroupCorrectionOpen] = useState(false);
   const [groupCorrectionColorKey, setGroupCorrectionColorKey] = useState('');
+  const [showOriginalPatternPreview, setShowOriginalPatternPreview] = useState(false);
   const [isBoundaryAdjusting, setIsBoundaryAdjusting] = useState(false);
   const [isGridControlsCollapsed, setIsGridControlsCollapsed] = useState(false);
   const [isPythonGridDetecting, setIsPythonGridDetecting] = useState(false);
+  const [hasUserCrop, setHasUserCrop] = useState(false);
+  const [showOriginalPreview, setShowOriginalPreview] = useState(false);
   const [activeBoundaryHandle, setActiveBoundaryHandle] = useState<BoundaryHandle>('move');
   const [adjustMode, setAdjustMode] = useState<AdjustMode>('auto');
   const [adjustTarget, setAdjustTarget] = useState<AdjustTarget>('grid');
@@ -227,22 +235,26 @@ export default function PatternAnalysisPage() {
 
   useEffect(() => {
     if (!result || !previewCanvasRef.current) return;
-    drawResultPreview(previewCanvasRef.current, result, {
-      selectedCell,
-      highlightedColorKey: selectedColorGroupKey,
-      previewOverride: isGroupCorrectionOpen && selectedCorrectionKeys.length > 0
-        ? {
-            sourceColorKeys: selectedCorrectionKeys,
-            targetColor: groupCorrectionColor,
-          }
-        : null,
-    });
+    if (showOriginalPatternPreview) {
+      drawOriginalGridPreview(previewCanvasRef.current, sourceCanvasRef.current, result, { selectedCell });
+    } else {
+      drawResultPreview(previewCanvasRef.current, result, {
+        selectedCell,
+        highlightedColorKey: selectedColorGroupKey,
+        previewOverride: isGroupCorrectionOpen && selectedCorrectionKeys.length > 0
+          ? {
+              sourceColorKeys: selectedCorrectionKeys,
+              targetColor: groupCorrectionColor,
+            }
+          : null,
+      });
+    }
     requestAnimationFrame(updateVisiblePreviewRange);
-  }, [activeTab, result, selectedCell, selectedColorGroupKey, isGroupCorrectionOpen, selectedCorrectionKeys, groupCorrectionColor, previewZoom]);
+  }, [activeTab, result, selectedCell, selectedColorGroupKey, isGroupCorrectionOpen, selectedCorrectionKeys, groupCorrectionColor, previewZoom, showOriginalPatternPreview, sourceCanvasVersion]);
 
   const sortedColorCounts = useMemo<ColorCountItem[]>(() => {
     if (!displayResult) return [];
-    return Object.entries(displayResult.colorCounts)
+    const normalColorCounts = Object.entries(displayResult.colorCounts)
       .map(([hex, entry]) => {
         const relatedCells = displayResult.cells.filter((cell) => {
           const mappedCell = displayResult.mappedPixelData[cell.row]?.[cell.col];
@@ -258,6 +270,25 @@ export default function PatternAnalysisPage() {
         };
       })
       .sort((a, b) => compareColorKeys(a.colorKey, b.colorKey));
+
+    const uselessCells = displayResult.cells.filter((cell) => isUselessCell(cell));
+    if (!uselessCells.length) {
+      return normalColorCounts;
+    }
+
+    return [
+      ...normalColorCounts,
+      {
+        hex: '#FFFFFF',
+        count: uselessCells.length,
+        color: '#FFFFFF',
+        colorKey: TRANSPARENT_KEY,
+        isUseless: true,
+        groupLabel: '无用',
+        pendingCount: 0,
+        changedCount: uselessCells.filter((cell) => cell.status === 'changed').length,
+      },
+    ];
   }, [displayResult]);
 
   const colorCountGroups = useMemo<ColorCountGroup[]>(() => {
@@ -274,7 +305,7 @@ export default function PatternAnalysisPage() {
         colors,
         totalCount: colors.reduce((sum, color) => sum + color.count, 0),
       }))
-      .sort((a, b) => a.label.localeCompare(b.label, 'en', { numeric: true }));
+      .sort((a, b) => compareColorGroupLabels(a.label, b.label));
   }, [sortedColorCounts]);
 
   const availableColorKeySignature = useMemo(
@@ -289,6 +320,11 @@ export default function PatternAnalysisPage() {
 
   const selectedColorGroupCells = useMemo(() => {
     if (!displayResult || !selectedColorGroupKey) return [];
+    if (selectedColorGroupKey === TRANSPARENT_KEY) {
+      return displayResult.cells
+        .filter((cell) => isUselessCell(cell))
+        .sort((a, b) => b.uncertainty - a.uncertainty || a.row - b.row || a.col - b.col);
+    }
     return displayResult.cells
       .filter((cell) => {
         const mappedCell = displayResult.mappedPixelData[cell.row]?.[cell.col];
@@ -342,7 +378,7 @@ export default function PatternAnalysisPage() {
         activeTarget: parseStep === 'crop' ? 'canvas' : adjustTarget,
       },
     });
-  }, [activeBoundaryHandle, activeTab, adjustTarget, bounds, cols, cropBounds, isBoundaryAdjusting, parseStep, rows]);
+  }, [activeBoundaryHandle, activeTab, adjustTarget, bounds, cols, cropBounds, isBoundaryAdjusting, parseStep, rows, showOriginalPreview]);
 
   useEffect(() => {
     requestAnimationFrame(updateVisiblePreviewRange);
@@ -367,11 +403,12 @@ export default function PatternAnalysisPage() {
     setParseStep('crop');
     setDetectedGrid(null);
     setCropBounds(null);
+    setHasUserCrop(false);
+    setShowOriginalPreview(false);
     setBounds(null);
     setResult(null);
     setSaveResult(null);
-    setAutoReferenceCols('');
-    setAutoReferenceRows('');
+    setBoardSize(52);
     setSelectedCell(null);
     setSelectedColorGroupKey(null);
     setSelectedCorrectionKeys([]);
@@ -400,10 +437,13 @@ export default function PatternAnalysisPage() {
     const canvas = sourceCanvasRef.current;
     if (!canvas) return;
     const selectedCropBounds = cropBounds ?? getFullCanvasBounds(canvas);
+    const nextHasUserCrop = cropBounds !== null;
     const cropped = cropWorkingCanvases(selectedCropBounds);
     if (!cropped) return;
     setImageSrc(cropped.dataUrl);
     setCropBounds(cropped.bounds);
+    setHasUserCrop(nextHasUserCrop);
+    setShowOriginalPreview(false);
     setBounds(null);
     setDetectedGrid(null);
     setParseStep('grid');
@@ -411,16 +451,14 @@ export default function PatternAnalysisPage() {
     setAdjustTarget('grid');
     setIsBoundaryAdjusting(false);
     setIsGridControlsCollapsed(false);
-    void handleDetectGrid(cropped.bounds);
+    void handleDetectGrid(cropped.bounds, nextHasUserCrop);
   };
 
-  const handleDetectGrid = async (scanBoundsOverride?: GridBounds) => {
+  const handleDetectGrid = async (scanBoundsOverride?: GridBounds, useCrop = hasUserCrop, requestedBoardSize = boardSize) => {
     const canvas = sourceCanvasRef.current;
     if (!canvas || isPythonGridDetecting) return;
 
     const scanBounds = scanBoundsOverride ?? getFullCanvasBounds(canvas);
-    const referenceCols = parseOptionalGridCount(autoReferenceCols);
-    const referenceRows = parseOptionalGridCount(autoReferenceRows);
     setParseStep('grid');
     setAdjustMode('auto');
     setAdjustTarget('grid');
@@ -435,8 +473,8 @@ export default function PatternAnalysisPage() {
         body: JSON.stringify({
           imageDataUrl: canvas.toDataURL('image/png'),
           crop: scanBounds,
-          ...(referenceCols ? { referenceCols } : {}),
-          ...(referenceRows ? { referenceRows } : {}),
+          useCrop,
+          gridSize: requestedBoardSize,
         }),
       });
       const payload = (await response.json().catch(() => null)) as PythonGridResponse | null;
@@ -457,6 +495,7 @@ export default function PatternAnalysisPage() {
       setBounds(detected.bounds);
       setCols(nextCols);
       setRows(nextRows);
+      setShowOriginalPreview(false);
       setIsBoundaryAdjusting(false);
       setActiveBoundaryHandle('move');
       redrawDisplayCanvas({
@@ -466,6 +505,7 @@ export default function PatternAnalysisPage() {
         nextDetectedGrid: detected,
         nextCols,
         nextRows,
+        showOriginal: false,
         adjustOptions: {
           isAdjusting: false,
           activeHandle: 'move',
@@ -473,17 +513,13 @@ export default function PatternAnalysisPage() {
         },
       });
 
-      const referenceLabel = payload.usedReference
-        ? `，参考 ${referenceCols || '?'} x ${referenceRows || '?'}`
-        : payload.ignoredPartialReference
-          ? '，参考行列需要同时填写，本次使用自动模式'
-          : '';
+      const boardLabel = `, board ${payload.boardSize ?? requestedBoardSize} x ${payload.boardSize ?? requestedBoardSize}`;
       const modeLabel = payload.mode ? `，mode ${payload.mode}` : '';
       const pitchLabel =
         detected.geometry.pitchX && detected.geometry.pitchY
           ? `，pitch ${formatMeasurementForInput(detected.geometry.pitchX)} x ${formatMeasurementForInput(detected.geometry.pitchY)}`
           : '';
-      setStatusMessage(`Python 检测完成：当前计算画布 ${canvas.width}x${canvas.height}，建议 ${detected.estimatedCols || '?'} x ${detected.estimatedRows || '?'}${pitchLabel}${referenceLabel}${modeLabel}，置信度 ${Math.round(detected.confidence * 100)}%`);
+      setStatusMessage(`Python 检测完成：当前计算画布 ${canvas.width}x${canvas.height}，建议 ${detected.estimatedCols || '?'} x ${detected.estimatedRows || '?'}${boardLabel}${pitchLabel}${modeLabel}，置信度 ${Math.round(detected.confidence * 100)}%`);
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : 'Python 网格检测失败');
     } finally {
@@ -565,6 +601,7 @@ export default function PatternAnalysisPage() {
       setSelectedColorGroupKey(firstColorKey);
       setSelectedCorrectionKeys(firstColorKey ? [firstColorKey] : []);
       setIsGroupCorrectionOpen(false);
+      setShowOriginalPatternPreview(false);
       setActiveTab('optimize');
       redrawDisplayCanvas({
         overlayMode: 'grid',
@@ -715,7 +752,7 @@ export default function PatternAnalysisPage() {
   };
 
   const setPreviewZoomKeepingCenter = (nextZoom: number) => {
-    const next = clampNumber(nextZoom, 0.5, 4);
+    const next = clampNumber(nextZoom, 0.1, 1.5);
     const viewport = previewViewportRef.current;
     const canvas = previewCanvasRef.current;
     const center = viewport && canvas && canvas.clientWidth > 0 && canvas.clientHeight > 0
@@ -1122,6 +1159,7 @@ export default function PatternAnalysisPage() {
     nextDetectedGrid = detectedGrid,
     nextCols = cols,
     nextRows = rows,
+    showOriginal = showOriginalPreview,
     adjustOptions = {
       isAdjusting: isBoundaryAdjusting,
       activeHandle: activeBoundaryHandle,
@@ -1137,6 +1175,7 @@ export default function PatternAnalysisPage() {
     if (!ctx) return;
     ctx.clearRect(0, 0, display.width, display.height);
     ctx.drawImage(source, 0, 0);
+    if (showOriginal) return;
 
     if (overlayMode === 'crop') {
       if (nextCropBounds) {
@@ -1382,37 +1421,32 @@ export default function PatternAnalysisPage() {
                     </div>
 
                     <div className="mt-3 rounded border border-slate-200 bg-slate-50 p-3">
-                      <div className="grid grid-cols-2 gap-3">
-                        <label className="block text-sm font-medium text-slate-700">
-                          参考列数
-                          <input
-                            type="number"
-                            min={5}
-                            max={300}
-                            value={autoReferenceCols}
-                            onChange={(event) => setAutoReferenceCols(event.target.value)}
-                            className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm"
-                          />
-                        </label>
-                        <label className="block text-sm font-medium text-slate-700">
-                          参考行数
-                          <input
-                            type="number"
-                            min={5}
-                            max={300}
-                            value={autoReferenceRows}
-                            onChange={(event) => setAutoReferenceRows(event.target.value)}
-                            className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm"
-                          />
-                        </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {([52, 104] as BoardSize[]).map((size) => (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => {
+                              setBoardSize(size);
+                              handleDetectGrid(undefined, hasUserCrop, size);
+                            }}
+                            className={`h-9 rounded border px-3 text-sm font-medium ${
+                              boardSize === size
+                                ? 'border-slate-900 bg-slate-900 text-white'
+                                : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            {size} x {size}
+                          </button>
+                        ))}
                       </div>
                       <button
                         type="button"
                         disabled={isPythonGridDetecting}
-                        onClick={() => handleDetectGrid()}
+                        onClick={() => handleDetectGrid(undefined, hasUserCrop, boardSize)}
                         className="mt-3 h-9 w-full rounded border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
                       >
-                        {isPythonGridDetecting ? 'Python 检测中' : 'Python 检测'}
+                        {isPythonGridDetecting ? 'Python detecting' : `Python detect (${boardSize} x ${boardSize})`}
                       </button>
                     </div>
 
@@ -1638,6 +1672,15 @@ export default function PatternAnalysisPage() {
               />
               {imageSrc && (
                 <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowOriginalPreview((current) => !current);
+                    }}
+                    className="mt-3 h-9 rounded border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    {showOriginalPreview ? '显示当前图' : '显示原图'}
+                  </button>
                   <div className="mt-3 grid grid-cols-2 gap-2 text-center text-sm sm:grid-cols-4">
                     <Stat label="自动建议" value={autoGridSizeLabel} />
                     <Stat label="当前网格" value={currentGridSizeLabel} />
@@ -1691,7 +1734,7 @@ export default function PatternAnalysisPage() {
                     {selectedColorGroup && (
                       <span className="inline-flex items-center gap-2">
                         <span className="h-5 w-5 rounded border border-slate-300" style={{ backgroundColor: selectedColorGroup.hex }} />
-                        {selectedColorGroup.colorKey} · {selectedColorGroup.count}
+                        {selectedColorGroup.isUseless ? '无用' : selectedColorGroup.colorKey} · {selectedColorGroup.count}
                       </span>
                     )}
                     <span>{visiblePreviewRange}</span>
@@ -1704,6 +1747,13 @@ export default function PatternAnalysisPage() {
                     <div className="mt-3 flex flex-wrap items-center gap-2">
                       <button
                         type="button"
+                        onClick={() => setShowOriginalPatternPreview((current) => !current)}
+                        className="h-8 rounded border border-slate-300 px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                      >
+                        {showOriginalPatternPreview ? '显示生成图' : '显示原图'}
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => setPreviewZoomKeepingCenter(previewZoom - 0.25)}
                         className="h-8 rounded border border-slate-300 px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
                       >
@@ -1711,9 +1761,9 @@ export default function PatternAnalysisPage() {
                       </button>
                       <input
                         type="range"
-                        min={50}
-                        max={400}
-                        step={25}
+                        min={0}
+                        max={150}
+                        step={10}
                         value={Math.round(previewZoom * 100)}
                         onChange={(event) => setPreviewZoomKeepingCenter(Number(event.target.value) / 100)}
                         className="w-40"
@@ -1756,6 +1806,7 @@ export default function PatternAnalysisPage() {
               <ColorGroupInspector
                 sourceCanvasRef={sourceCanvasRef}
                 palette={palette}
+                grid={displayResult?.grid ?? null}
                 selectedGroup={selectedColorGroup}
                 selectedCells={selectedColorGroupCells}
                 selectedCorrectionKeys={selectedCorrectionKeys}
@@ -1938,7 +1989,7 @@ function SummaryPanel({
   saveResult: SaveResponse | null;
   onApplyPaletteRecommendations?: () => void;
 }) {
-  const extraColors = sortedColorCounts.filter((entry) => entry.isExtraColor);
+  const extraColors = sortedColorCounts.filter((entry) => entry.isExtraColor && !entry.isUseless);
   const extraBeadCount = extraColors.reduce((sum, entry) => sum + entry.count, 0);
   const groupedStats =
     colorCountGroups.length > 0
@@ -1946,7 +1997,7 @@ function SummaryPanel({
       : [
           {
             label: '颜色',
-            totalCount: sortedColorCounts.reduce((sum, entry) => sum + entry.count, 0),
+            totalCount: sortedColorCounts.filter((entry) => !entry.isUseless).reduce((sum, entry) => sum + entry.count, 0),
             colors: sortedColorCounts,
           },
         ];
@@ -2029,16 +2080,17 @@ function SummaryPanel({
               {group.colors.map((entry) => {
                 const isSelected = selectedColorGroupKey === entry.colorKey;
                 const isChecked = selectedCorrectionKeys.includes(entry.colorKey);
-                const rowTone = isSelected ? 'bg-amber-50' : entry.isExtraColor ? 'bg-rose-50' : 'bg-white';
+                const rowTone = isSelected ? 'bg-amber-50' : entry.isUseless ? 'bg-slate-50' : entry.isExtraColor ? 'bg-rose-50' : 'bg-white';
                 return (
                   <div
-                    key={entry.hex}
+                    key={`${entry.colorKey}-${entry.hex}`}
                     className={`grid ${onToggleCorrectionKey ? 'grid-cols-[auto_1fr]' : 'grid-cols-1'} items-center gap-2 border-t border-slate-100 px-2 py-2 ${rowTone}`}
                   >
                     {onToggleCorrectionKey && (
                       <input
                         type="checkbox"
                         checked={isChecked}
+                        disabled={entry.isUseless}
                         onChange={() => onToggleCorrectionKey(entry.colorKey)}
                         className="h-4 w-4"
                         aria-label={`选择 ${entry.colorKey}`}
@@ -2052,11 +2104,11 @@ function SummaryPanel({
                       <span className="h-6 w-6 shrink-0 rounded border border-slate-300" style={{ backgroundColor: entry.hex }} />
                       <span className="min-w-0">
                         <span className="flex items-center gap-2">
-                          <span className="font-semibold">{entry.colorKey}</span>
+                          <span className="font-semibold">{entry.isUseless ? '无用' : entry.colorKey}</span>
                           <span className="text-slate-500">{entry.count}</span>
                         </span>
                         <span className="block truncate text-xs text-slate-500">
-                          {entry.hex}
+                          {entry.isUseless ? 'partial / transparent' : entry.hex}
                           {entry.pendingCount > 0 ? ` · 待确认 ${entry.pendingCount}` : ''}
                           {entry.changedCount > 0 ? ` · 已改 ${entry.changedCount}` : ''}
                           {entry.isExtraColor ? ` · 方案外${entry.recommendedColorKey ? ` -> ${entry.recommendedColorKey}` : ''}` : ''}
@@ -2079,6 +2131,7 @@ function ColorGroupInspector({
   palette,
   selectedGroup,
   selectedCells,
+  grid,
   selectedCorrectionKeys,
   isGroupCorrectionOpen,
   groupCorrectionColorKey,
@@ -2091,6 +2144,7 @@ function ColorGroupInspector({
 }: {
   sourceCanvasRef: React.RefObject<HTMLCanvasElement | null>;
   palette: PaletteColor[];
+  grid: PatternAnalysisResult['grid'] | null;
   selectedGroup: ColorCountItem | null;
   selectedCells: PatternAnalysisResult['cells'];
   selectedCorrectionKeys: string[];
@@ -2103,7 +2157,8 @@ function ColorGroupInspector({
   onCancelCorrection: () => void;
   sourceCanvasVersion: number;
 }) {
-  const sampleCells = selectedCells.slice(0, 120);
+  const fullCells = selectedCells.filter((cell) => cell.visibility !== 'partial' && (cell.visibleRatio ?? 1) >= 0.98);
+  const sampleCells = (fullCells.length ? fullCells : selectedCells).slice(0, 120);
 
   return (
     <div className="rounded border border-slate-200 bg-white p-4 shadow-sm">
@@ -2117,7 +2172,7 @@ function ColorGroupInspector({
       ) : (
         <>
           <div className="mt-3 grid grid-cols-3 gap-2 text-center text-sm sm:grid-cols-4">
-            <Stat label="色号" value={selectedGroup.colorKey} />
+            <Stat label="色号" value={selectedGroup.isUseless ? '无用' : selectedGroup.colorKey} />
             <Stat label="数量" value={String(selectedGroup.count)} />
             <Stat label="待确认" value={String(selectedGroup.pendingCount)} />
             <Stat label="已改" value={String(selectedGroup.changedCount)} />
@@ -2201,10 +2256,10 @@ function ColorGroupInspector({
           <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(82px,1fr))] gap-3">
             {sampleCells.map((cell) => (
               <div key={`${cell.row}-${cell.col}`} className="rounded border border-slate-200 bg-slate-50 p-2">
-                <CellCrop
-                  sourceCanvasRef={sourceCanvasRef}
-                  crop={cell.previewCrop ?? cell.crop}
-                  size={64}
+                  <CellCrop
+                    sourceCanvasRef={sourceCanvasRef}
+                    crop={getCellCropFromGrid(cell, grid) ?? cell.previewCrop ?? cell.crop}
+                    size={64}
                   sourceCanvasVersion={sourceCanvasVersion}
                 />
                 <div className="mt-1 truncate text-center text-xs text-slate-500">
@@ -2260,10 +2315,61 @@ function CellCrop({
     if (!ctx) return;
     ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, 0, size, size);
-    ctx.drawImage(source, crop.x, crop.y, crop.width, crop.height, 0, 0, size, size);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, size, size);
+
+    const sourceRect = clampSourceCrop(crop, source.width, source.height);
+    if (!sourceRect) return;
+
+    const dx = ((sourceRect.x - crop.x) / crop.width) * size;
+    const dy = ((sourceRect.y - crop.y) / crop.height) * size;
+    const dw = (sourceRect.width / crop.width) * size;
+    const dh = (sourceRect.height / crop.height) * size;
+    ctx.drawImage(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height, dx, dy, dw, dh);
   }, [sourceCanvasRef, crop, size, sourceCanvasVersion]);
 
   return <canvas ref={canvasRef} className="aspect-square w-full rounded border border-slate-200 bg-white" />;
+}
+
+function getCellCropFromGrid(
+  cell: PatternAnalysisResult['cells'][number],
+  grid: PatternAnalysisResult['grid'] | null
+): { x: number; y: number; width: number; height: number } | null {
+  if (!grid?.verticalLines?.length || !grid?.horizontalLines?.length) {
+    return null;
+  }
+  const left = grid.verticalLines[cell.col];
+  const right = grid.verticalLines[cell.col + 1];
+  const top = grid.horizontalLines[cell.row];
+  const bottom = grid.horizontalLines[cell.row + 1];
+  if (![left, right, top, bottom].every(Number.isFinite) || right <= left || bottom <= top) {
+    return null;
+  }
+  return { x: left, y: top, width: right - left, height: bottom - top };
+}
+
+function clampSourceCrop(
+  crop: { x: number; y: number; width: number; height: number },
+  sourceWidth: number,
+  sourceHeight: number
+): { x: number; y: number; width: number; height: number } | null {
+  if (!Number.isFinite(crop.x) || !Number.isFinite(crop.y) || !Number.isFinite(crop.width) || !Number.isFinite(crop.height)) {
+    return null;
+  }
+  if (crop.width <= 0 || crop.height <= 0 || sourceWidth <= 0 || sourceHeight <= 0) {
+    return null;
+  }
+
+  const left = clampNumber(crop.x, 0, sourceWidth);
+  const top = clampNumber(crop.y, 0, sourceHeight);
+  const right = clampNumber(crop.x + crop.width, 0, sourceWidth);
+  const bottom = clampNumber(crop.y + crop.height, 0, sourceHeight);
+  const width = right - left;
+  const height = bottom - top;
+  if (width <= 0 || height <= 0) {
+    return null;
+  }
+  return { x: left, y: top, width, height };
 }
 
 function drawResultPreview(
@@ -2289,19 +2395,22 @@ function drawResultPreview(
     for (let col = 0; col < N; col += 1) {
       const cell = result.mappedPixelData[row][col];
       const isPreviewOverride = previewOverrideKeySet.has(cell.key);
+      const isTransparentCell = cell.isExternal || cell.key === TRANSPARENT_KEY;
       const fillColor =
         isPreviewOverride
           ? options.previewOverride?.targetColor?.hex.toUpperCase() ?? '#F8FAFC'
+          : isTransparentCell
+            ? '#F8FAFC'
           : cell.isExternal
             ? '#F1F5F9'
             : cell.color;
       ctx.fillStyle = fillColor;
       ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
       if (cellSize >= 8) {
-        ctx.strokeStyle = '#CBD5E1';
+        ctx.strokeStyle = isTransparentCell ? '#EDF2F7' : '#CBD5E1';
         ctx.strokeRect(col * cellSize + 0.5, row * cellSize + 0.5, cellSize, cellSize);
       }
-      if (options.highlightedColorKey && cell.key === options.highlightedColorKey && cellSize >= 5) {
+      if (options.highlightedColorKey && options.highlightedColorKey !== TRANSPARENT_KEY && cell.key === options.highlightedColorKey && cellSize >= 5) {
         ctx.strokeStyle = '#F59E0B';
         ctx.lineWidth = Math.max(1, Math.floor(cellSize / 5));
         ctx.strokeRect(col * cellSize + 1, row * cellSize + 1, cellSize - 2, cellSize - 2);
@@ -2314,6 +2423,69 @@ function drawResultPreview(
     ctx.lineWidth = Math.max(2, Math.floor(cellSize / 3));
     ctx.strokeRect(options.selectedCell.col * cellSize + 1, options.selectedCell.row * cellSize + 1, cellSize - 2, cellSize - 2);
   }
+}
+
+function drawOriginalGridPreview(
+  canvas: HTMLCanvasElement,
+  source: HTMLCanvasElement | null,
+  result: PatternAnalysisResult,
+  options: {
+    selectedCell: { row: number; col: number } | null;
+  }
+) {
+  const { N, M } = result.gridDimensions;
+  const cellSize = Math.max(6, Math.min(18, Math.floor(960 / Math.max(N, M))));
+  canvas.width = N * cellSize;
+  canvas.height = M * cellSize;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#F8FAFC';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (source) {
+    for (let row = 0; row < M; row += 1) {
+      for (let col = 0; col < N; col += 1) {
+        const crop = getGridCellRect(result.grid, row, col);
+        const sourceRect = crop ? clampSourceCrop(crop, source.width, source.height) : null;
+        const dx = col * cellSize;
+        const dy = row * cellSize;
+        if (crop && sourceRect) {
+          const offsetX = ((sourceRect.x - crop.x) / crop.width) * cellSize;
+          const offsetY = ((sourceRect.y - crop.y) / crop.height) * cellSize;
+          const drawWidth = (sourceRect.width / crop.width) * cellSize;
+          const drawHeight = (sourceRect.height / crop.height) * cellSize;
+          ctx.drawImage(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height, dx + offsetX, dy + offsetY, drawWidth, drawHeight);
+        }
+        if (cellSize >= 8) {
+          ctx.strokeStyle = '#CBD5E1';
+          ctx.strokeRect(dx + 0.5, dy + 0.5, cellSize, cellSize);
+        }
+      }
+    }
+  }
+
+  if (options.selectedCell) {
+    ctx.strokeStyle = '#EF4444';
+    ctx.lineWidth = Math.max(2, Math.floor(cellSize / 3));
+    ctx.strokeRect(options.selectedCell.col * cellSize + 1, options.selectedCell.row * cellSize + 1, cellSize - 2, cellSize - 2);
+  }
+}
+
+function getGridCellRect(
+  grid: PatternAnalysisResult['grid'],
+  row: number,
+  col: number
+): { x: number; y: number; width: number; height: number } | null {
+  const left = grid.verticalLines[col];
+  const right = grid.verticalLines[col + 1];
+  const top = grid.horizontalLines[row];
+  const bottom = grid.horizontalLines[row + 1];
+  if (![left, right, top, bottom].every(Number.isFinite) || right <= left || bottom <= top) {
+    return null;
+  }
+  return { x: left, y: top, width: right - left, height: bottom - top };
 }
 
 function drawCropOverlay(
@@ -2490,7 +2662,18 @@ function getFirstColorKey(result: PatternAnalysisResult): string | null {
 }
 
 function getColorGroupLabel(colorKey: string): string {
+  if (colorKey === TRANSPARENT_KEY) return '无用';
   return colorKey.match(/^[A-Za-z]+/)?.[0].toUpperCase() ?? '#';
+}
+
+function isUselessCell(cell: PatternAnalysisResult['cells'][number]): boolean {
+  return cell.status === 'transparent' || cell.visibility === 'partial' || (cell.visibleRatio ?? 1) < 0.98;
+}
+
+function compareColorGroupLabels(a: string, b: string): number {
+  if (a === '无用' && b !== '无用') return 1;
+  if (b === '无用' && a !== '无用') return -1;
+  return a.localeCompare(b, 'en', { numeric: true });
 }
 
 function compareColorKeys(a: string, b: string): number {
@@ -2763,9 +2946,3 @@ function clampInteger(value: string, min: number, max: number): number {
   return Math.min(max, Math.max(min, parsed));
 }
 
-function parseOptionalGridCount(value: string): number | null {
-  if (!value.trim()) return null;
-  const parsed = Number.parseInt(value, 10);
-  if (!Number.isFinite(parsed) || parsed < 5 || parsed > 300) return null;
-  return parsed;
-}
