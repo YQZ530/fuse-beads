@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import re
 import shutil
 from dataclasses import dataclass
@@ -24,11 +25,12 @@ except ImportError:  # pragma: no cover
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}
 DEFAULT_TESSERACT = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
-CACHE_VERSION = 2
+CACHE_VERSION = 3
 PATTERN_VIEW = "pattern_view"
 PREVIEW_VIEW = "preview_view"
 COLOR_MODAL = "color_modal"
 UNKNOWN_VIEW = "unknown"
+_PADDLE_OCR: Any | None = None
 
 
 @dataclass
@@ -386,6 +388,10 @@ def ocr_numbers_for_key(image: np.ndarray, page_type: str) -> list[int]:
 
 
 def extract_pair_key_from_region(image: np.ndarray, page_type: str) -> str | None:
+    paddle_pair = extract_pair_key_with_paddle(image, page_type)
+    if paddle_pair:
+        return paddle_pair
+
     if pytesseract is None:
         return None
     height, width = image.shape[:2]
@@ -428,6 +434,94 @@ def extract_pair_key_from_region(image: np.ndarray, page_type: str) -> str | Non
     if candidates:
         color_count, bead_count, _ = min(candidates, key=pair_candidate_score)
         return f"{color_count}_{bead_count}"
+    return None
+
+
+def extract_pair_key_with_paddle(image: np.ndarray, page_type: str) -> str | None:
+    ocr = get_paddle_ocr()
+    if ocr is None:
+        return None
+
+    for crop in pair_key_crops(image, page_type):
+        if crop.size == 0:
+            continue
+        try:
+            results = ocr.predict(crop)
+        except Exception:
+            return None
+        texts = paddle_texts(results)
+        pair = parse_pair_key_from_texts(texts)
+        if pair:
+            return pair
+    return None
+
+
+def get_paddle_ocr() -> Any | None:
+    global _PADDLE_OCR
+    if _PADDLE_OCR is not None:
+        return _PADDLE_OCR
+
+    try:
+        default_cache = Path(r"C:\Users\z5308\Desktop\perler-beads-analysis")
+        os.environ["USERPROFILE"] = str(default_cache / ".ocr_home")
+        os.environ["PADDLE_PDX_CACHE_HOME"] = str(default_cache / ".paddlex_cache")
+        os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
+        from paddleocr import PaddleOCR
+
+        _PADDLE_OCR = PaddleOCR(
+            lang="ch",
+            use_doc_orientation_classify=False,
+            use_doc_unwarping=False,
+            use_textline_orientation=False,
+        )
+    except Exception:
+        _PADDLE_OCR = None
+    return _PADDLE_OCR
+
+
+def pair_key_crops(image: np.ndarray, page_type: str) -> list[np.ndarray]:
+    height, width = image.shape[:2]
+    if page_type == COLOR_MODAL:
+        box = find_modal_box(image)
+        if box is None:
+            return [image[int(height * 0.30):int(height * 0.48), int(width * 0.08):int(width * 0.92)]]
+        x, y, w, h = box
+        return [
+            image[y + int(h * 0.02):y + int(h * 0.16), x + int(w * 0.02):x + int(w * 0.78)],
+            image[y + int(h * 0.00):y + int(h * 0.20), x:x + int(w * 0.92)],
+        ]
+    return [
+        image[int(height * 0.91):int(height * 0.965), int(width * 0.02):int(width * 0.58)],
+        image[int(height * 0.90):int(height * 0.97), :int(width * 0.70)],
+        image[int(height * 0.88):int(height * 0.98), :],
+    ]
+
+
+def paddle_texts(results: Any) -> list[str]:
+    texts: list[str] = []
+    for item in results or []:
+        data = dict(item) if hasattr(item, "keys") else item
+        if isinstance(data, dict):
+            values = data.get("rec_texts") or []
+            texts.extend(str(value) for value in values if value is not None)
+        else:
+            texts.append(str(data))
+    return texts
+
+
+def parse_pair_key_from_texts(texts: list[str]) -> str | None:
+    for text in texts:
+        pair = parse_pair_key_text(text)
+        if pair:
+            return pair
+    return parse_pair_key_text(" ".join(texts))
+
+
+def parse_pair_key_text(text: str) -> str | None:
+    compact = re.sub(r"\s+", "", text)
+    match = re.search(r"(\d+)\s*色\s*号.*?(\d+)\s*豆", compact)
+    if match:
+        return f"{int(match.group(1))}_{int(match.group(2))}"
     return None
 
 

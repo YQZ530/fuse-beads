@@ -52,3 +52,4 @@ public/fallback-*.js
 /tools
 node-v24.19.0-win-x64.zip
 plan.MD
+/.paddle_deps
