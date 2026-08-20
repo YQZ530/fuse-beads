@@ -56,3 +56,5 @@ public/fallback-*.js
 /tools
 node-v24.19.0-win-x64.zip
 plan.MD
+dev-3000-current.log
+dev-3000-current.err.log
