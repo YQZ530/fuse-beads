@@ -42,3 +42,31 @@
     at JSON.parse (<anonymous>) {
   page: '/analysis'
 }
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 388 (line 20 column 2)
+    at JSON.parse (<anonymous>) {
+  page: '/analysis'
+}
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 4 (line 1 column 5)
+    at JSON.parse (<anonymous>) {
+  page: '/analysis'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ⨯ SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>) {
+  page: '/analysis'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 388 (line 20 column 2)
+    at JSON.parse (<anonymous>) {
+  page: '/analysis'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\Users\z5308\Desktop\perler-beads-analysis\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
