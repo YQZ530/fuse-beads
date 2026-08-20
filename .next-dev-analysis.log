@@ -623,3 +623,239 @@
  GET /favicon.ico 200 in 14ms
  ✓ Compiled in 3.2s (1108 modules)
  GET /analysis 200 in 230ms
+ GET /analysis 200 in 765ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 4.8s (1151 modules)
+ GET /analysis 200 in 278ms
+ GET /api/palettes/mard?paletteName=96 404 in 6035ms
+ ✓ Compiled in 1199ms (602 modules)
+ GET /analysis 200 in 109ms
+ ✓ Compiled in 729ms (602 modules)
+ GET /analysis 200 in 41ms
+ ✓ Compiled in 957ms (602 modules)
+ GET /analysis 200 in 43ms
+ ✓ Compiled in 1198ms (602 modules)
+ GET /analysis 200 in 43ms
+ ✓ Compiled in 844ms (602 modules)
+ GET /analysis 200 in 43ms
+ ✓ Compiled in 789ms (602 modules)
+ GET /analysis 200 in 42ms
+ ✓ Compiled in 1505ms (602 modules)
+ ✓ Compiled in 520ms (602 modules)
+ GET /analysis 200 in 447ms
+ GET /analysis 200 in 262ms
+ ✓ Compiled in 585ms (602 modules)
+ GET /analysis 200 in 156ms
+ ✓ Compiled in 441ms (602 modules)
+ GET /analysis 200 in 150ms
+ ✓ Compiled in 883ms (602 modules)
+ ✓ Compiled in 800ms (602 modules)
+ GET /analysis 200 in 787ms
+ GET /analysis 200 in 41ms
+ ✓ Compiled in 1224ms (602 modules)
+ GET /analysis 200 in 51ms
+ ✓ Compiled in 679ms (602 modules)
+ GET /analysis 200 in 90ms
+ ✓ Compiled in 646ms (602 modules)
+ ✓ Compiled in 689ms (602 modules)
+ GET /analysis 200 in 228ms
+ GET /analysis 200 in 44ms
+ ✓ Compiled in 1059ms (602 modules)
+ GET /analysis 200 in 48ms
+ ✓ Compiled in 445ms (602 modules)
+ GET /analysis 200 in 37ms
+ ✓ Compiled in 456ms (602 modules)
+ ✓ Compiled in 691ms (602 modules)
+ GET /analysis 200 in 665ms
+ GET /analysis 200 in 40ms
+ ✓ Compiled in 548ms (602 modules)
+ GET /analysis 200 in 126ms
+ ✓ Compiled in 850ms (602 modules)
+ ✓ Compiled in 1049ms (602 modules)
+ GET /analysis 200 in 1020ms
+ GET /analysis 200 in 76ms
+ ✓ Compiled in 1392ms (602 modules)
+ GET /analysis 200 in 90ms
+ ✓ Compiled in 939ms (602 modules)
+ ✓ Compiled in 892ms (602 modules)
+ GET /analysis 200 in 304ms
+ GET /analysis 200 in 98ms
+ ✓ Compiled in 1496ms (602 modules)
+ GET /analysis 200 in 59ms
+ ✓ Compiled in 1270ms (602 modules)
+ GET /analysis 200 in 54ms
+ ✓ Compiled in 752ms (602 modules)
+ ✓ Compiled in 2.3s (602 modules)
+ ✓ Compiled in 3.2s (602 modules)
+ ✓ Compiled in 1359ms (602 modules)
+ ✓ Compiled in 1570ms (602 modules)
+ GET /analysis 200 in 428ms
+ GET /favicon.ico 200 in 198ms
+ GET /api/palettes/mard?paletteName=96 200 in 133ms
+ GET /analysis 200 in 231ms
+ ✓ Compiled in 1581ms (602 modules)
+ ✓ Compiled in 889ms (602 modules)
+ GET /analysis 200 in 49ms
+ GET /analysis 200 in 47ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1973ms (1108 modules)
+ GET /_next/static/webpack/89f2dc09b1b37d34.webpack.hot-update.json 404 in 2730ms
+ GET /analysis 200 in 108ms
+ GET /analysis 200 in 333ms
+ GET /api/palettes/mard?paletteName=96 200 in 104ms
+ GET /favicon.ico 200 in 38ms
+ ✓ Compiled in 1135ms (605 modules)
+ GET /analysis 200 in 157ms
+ GET /favicon.ico 200 in 17ms
+ GET /favicon.ico 200 in 18ms
+ GET /favicon.ico 200 in 15ms
+ GET /favicon.ico 200 in 18ms
+ GET /api/palettes/mard?paletteName=96 200 in 83ms
+ ✓ Compiled in 3.5s (602 modules)
+ GET /analysis 200 in 109ms
+ GET /analysis 200 in 219ms
+ ✓ Compiled in 1305ms (602 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 3.3s (1108 modules)
+ GET /_next/static/webpack/4392080aa9b8b26b.webpack.hot-update.json 404 in 4997ms
+ GET /analysis 200 in 2434ms
+ ✓ Compiled in 2.2s (605 modules)
+ ✓ Compiled in 2.5s (605 modules)
+ ✓ Compiled in 950ms (605 modules)
+ GET /analysis 200 in 619ms
+ GET /analysis 200 in 47ms
+ GET /analysis 200 in 51ms
+ GET /analysis 200 in 59ms
+ GET /analysis 200 in 53ms
+ GET /favicon.ico 200 in 46ms
+ GET /favicon.ico 200 in 18ms
+ GET /favicon.ico 200 in 13ms
+ GET /favicon.ico 200 in 15ms
+ ✓ Compiled in 1834ms (605 modules)
+ GET /analysis 200 in 73ms
+ GET /favicon.ico 200 in 12ms
+ GET /api/palettes/mard?paletteName=96 200 in 34ms
+ GET /favicon.ico 200 in 22ms
+ GET /favicon.ico 200 in 75ms
+ GET /favicon.ico 200 in 15ms
+ GET /favicon.ico 200 in 16ms
+ ✓ Compiled in 875ms (605 modules)
+ GET /analysis 200 in 53ms
+ GET /analysis 200 in 196ms
+ ✓ Compiled in 1054ms (605 modules)
+ ✓ Compiled in 1982ms (605 modules)
+ ✓ Compiled in 1313ms (605 modules)
+ GET /_next/static/webpack/581e7cc5afabd7e5.webpack.hot-update.json 404 in 132ms
+ GET /analysis 200 in 189ms
+ GET /favicon.ico 200 in 21ms
+ GET /api/palettes/mard?paletteName=96 200 in 57ms
+ ✓ Compiled in 764ms (605 modules)
+ ✓ Compiled in 1031ms (605 modules)
+ GET /analysis 200 in 1016ms
+ GET /analysis 200 in 142ms
+ GET /favicon.ico 200 in 16ms
+ GET /favicon.ico 200 in 21ms
+ GET /favicon.ico 200 in 26ms
+ GET /favicon.ico 200 in 16ms
+ ✓ Compiled in 856ms (605 modules)
+ GET /analysis 200 in 47ms
+ GET /favicon.ico 200 in 16ms
+ GET /favicon.ico 200 in 11ms
+ GET /favicon.ico 200 in 11ms
+ GET /favicon.ico 200 in 13ms
+ GET /analysis 200 in 135ms
+ GET /favicon.ico 200 in 21ms
+ GET /api/palettes/mard?paletteName=96 200 in 65ms
+ ○ Compiling /api/analysis/grid-geometry ...
+ ✓ Compiled /api/analysis/grid-geometry in 669ms (506 modules)
+ ✓ Compiled in 1332ms (602 modules)
+ ○ Compiling /_not-found ...
+ GET /analysis 200 in 1230ms
+ ✓ Compiled /_not-found in 1927ms (1112 modules)
+ ✓ Compiled in 1ms (507 modules)
+ ✓ Compiled in 2.5s (1112 modules)
+ GET /favicon.ico 200 in 4499ms
+ GET /_next/static/webpack/87849dc224669e2d.webpack.hot-update.json 404 in 6303ms
+ GET /favicon.ico 200 in 145ms
+ GET /analysis 200 in 4230ms
+ POST /api/analysis/grid-geometry 200 in 9118ms
+ GET /analysis 200 in 401ms
+ GET /favicon.ico 200 in 403ms
+ GET /analysis 200 in 687ms
+ GET /favicon.ico 200 in 21ms
+ GET /api/palettes/mard?paletteName=96 200 in 70ms
+ ✓ Compiled in 1086ms (605 modules)
+ GET /analysis 200 in 850ms
+ ✓ Compiled in 943ms (605 modules)
+ GET /analysis 200 in 101ms
+ GET /favicon.ico 200 in 32ms
+ GET /favicon.ico 200 in 17ms
+ GET /favicon.ico 200 in 22ms
+ GET /favicon.ico 200 in 75ms
+ ✓ Compiled in 906ms (605 modules)
+ ✓ Compiled in 1109ms (605 modules)
+ GET /analysis 200 in 1080ms
+ GET /analysis 200 in 680ms
+ ✓ Compiled in 796ms (605 modules)
+ GET /analysis 200 in 213ms
+ GET /favicon.ico 200 in 51ms
+ GET /favicon.ico 200 in 22ms
+ GET /favicon.ico 200 in 14ms
+ GET /favicon.ico 200 in 14ms
+ POST /api/analysis/grid-geometry 200 in 39688ms
+ ✓ Compiled in 2.1s (605 modules)
+ ✓ Compiled in 845ms (605 modules)
+ GET /analysis 200 in 46ms
+ ✓ Compiled in 4.3s (602 modules)
+ ✓ Compiled in 2.6s (602 modules)
+ ✓ Compiled in 5.1s (602 modules)
+ ✓ Compiled in 2.6s (602 modules)
+ ✓ Compiled in 1377ms (602 modules)
+ ✓ Compiled in 762ms (602 modules)
+ ✓ Compiled in 975ms (602 modules)
+ ✓ Compiled in 665ms (602 modules)
+ ✓ Compiled in 1642ms (602 modules)
+ POST /api/analysis/grid-geometry 200 in 35930ms
+ ✓ Compiled in 1115ms (602 modules)
+ ✓ Compiled in 748ms (602 modules)
+ ✓ Compiled in 869ms (602 modules)
+ ✓ Compiled in 622ms (602 modules)
+ ✓ Compiled in 550ms (602 modules)
+ ✓ Compiled in 782ms (602 modules)
+ ✓ Compiled in 471ms (602 modules)
+ ✓ Compiled in 627ms (602 modules)
+ ✓ Compiled in 1025ms (602 modules)
+ ✓ Compiled in 518ms (602 modules)
+ ✓ Compiled in 980ms (602 modules)
+ ✓ Compiled in 881ms (602 modules)
+ ✓ Compiled in 766ms (602 modules)
+ ✓ Compiled in 677ms (602 modules)
+ ✓ Compiled in 1485ms (602 modules)
+ ✓ Compiled in 1599ms (602 modules)
+ ✓ Compiled in 1748ms (602 modules)
+ ✓ Compiled in 2.4s (602 modules)
+ ✓ Compiled in 1660ms (602 modules)
+ ✓ Compiled in 1416ms (602 modules)
+ ✓ Compiled in 863ms (602 modules)
+ ✓ Compiled in 1969ms (602 modules)
+ ✓ Compiled in 1017ms (602 modules)
+ ✓ Compiled in 1647ms (602 modules)
+ ✓ Compiled in 2s (602 modules)
+ ✓ Compiled in 1314ms (602 modules)
+ ✓ Compiled in 1011ms (602 modules)
+ ✓ Compiled in 1014ms (602 modules)
+ ✓ Compiled in 831ms (602 modules)
+ ✓ Compiled in 1595ms (602 modules)
+ ✓ Compiled in 1543ms (602 modules)
+ ✓ Compiled in 728ms (602 modules)
+ ✓ Compiled in 1234ms (602 modules)
+ ✓ Compiled in 706ms (602 modules)
+ ✓ Compiled in 1244ms (602 modules)
+ ✓ Compiled in 867ms (602 modules)
+ ✓ Compiled in 820ms (602 modules)
+ ✓ Compiled in 1310ms (602 modules)
+ ✓ Compiled in 1375ms (602 modules)
+ ✓ Compiled in 1084ms (602 modules)
+ ✓ Compiled in 836ms (602 modules)
+ ✓ Compiled in 1597ms (602 modules)
+ ✓ Compiled in 597ms (602 modules)
