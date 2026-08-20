@@ -15,17 +15,22 @@ export interface GridBounds {
   bottom: number;
 }
 
+export interface GridGeometry {
+  centerX: number;
+  centerY: number;
+  pitchX: number;
+  pitchY: number;
+  centerIsCellCenter: boolean;
+}
+
 export interface DetectedGrid {
   bounds: GridBounds;
   verticalLines: number[];
   horizontalLines: number[];
   estimatedCols: number | null;
   estimatedRows: number | null;
+  geometry: GridGeometry;
   confidence: number;
-}
-
-export interface DetectGridOptions {
-  bounds?: GridBounds;
 }
 
 export interface AnalyzedPatternCell {
@@ -38,6 +43,8 @@ export interface AnalyzedPatternCell {
   confidence: number;
   uncertainty: number;
   status: 'pending' | 'confirmed' | 'changed' | 'transparent';
+  visibility?: 'full' | 'partial';
+  visibleRatio?: number;
   recommendedColorKeys?: string[];
   crop: { x: number; y: number; width: number; height: number };
   previewCrop?: { x: number; y: number; width: number; height: number };
@@ -48,6 +55,9 @@ export interface ColorCountEntry {
   count: number;
   color: string;
   colorKey: string;
+  isExtraColor?: boolean;
+  recommendedColor?: string;
+  recommendedColorKey?: string;
 }
 
 export interface PatternAnalysisResult {
@@ -64,56 +74,52 @@ export interface PatternAnalysisOptions {
   rows: number;
   palette: PaletteColor[];
   bounds?: GridBounds;
+  grid?: DetectedGrid;
   cropInsetRatio?: number;
+  minimumVisibleRatio?: number;
   transparentWhiteThreshold?: number;
   treatNearWhiteAsTransparent?: boolean;
 }
 
-interface AxisScore {
-  index: number;
-  score: number;
+export interface PaletteComplianceIssue {
+  colorKey: string;
+  color: string;
+  count: number;
+  recommendedColor: string;
+  recommendedColorKey: string;
 }
 
-const DEFAULT_BOUNDS_PADDING = 2;
+export interface GeneratedCell {
+  row: number;
+  col: number;
+  rect: { x: number; y: number; width: number; height: number };
+  crop: { x: number; y: number; width: number; height: number };
+  visibleRatio: number;
+  visibility: 'full' | 'partial';
+}
 
-export function detectGridFromCanvas(canvas: HTMLCanvasElement, options: DetectGridOptions = {}): DetectedGrid {
-  const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  if (!ctx) {
-    throw new Error('无法获取图像 Canvas 上下文');
-  }
+export interface GeneratedCellsResult {
+  cells: GeneratedCell[];
+  cols: number;
+  rows: number;
+  xBoundaries: number[];
+  yBoundaries: number[];
+}
 
-  const { width, height } = canvas;
-  const scanBounds = options.bounds ? clampBounds(options.bounds, width, height) : { left: 0, top: 0, right: width, bottom: height };
-  const scanWidth = Math.max(1, scanBounds.right - scanBounds.left);
-  const scanHeight = Math.max(1, scanBounds.bottom - scanBounds.top);
-  const imageData = ctx.getImageData(scanBounds.left, scanBounds.top, scanWidth, scanHeight);
-  const edgeMap = createEdgeMap(imageData);
-  const verticalScores = smoothScores(scoreVerticalLines(imageData, edgeMap), 2);
-  const horizontalScores = smoothScores(scoreHorizontalLines(imageData, edgeMap), 2);
-  const relativeVerticalLines = findLinePeaks(verticalScores, Math.max(4, Math.floor(scanWidth / 220)));
-  const relativeHorizontalLines = findLinePeaks(horizontalScores, Math.max(4, Math.floor(scanHeight / 220)));
-  const relativeBounds = detectContentBounds(imageData, verticalScores, horizontalScores);
-  const verticalLines = relativeVerticalLines.map((line) => line + scanBounds.left);
-  const horizontalLines = relativeHorizontalLines.map((line) => line + scanBounds.top);
-  const bounds = {
-    left: relativeBounds.left + scanBounds.left,
-    top: relativeBounds.top + scanBounds.top,
-    right: relativeBounds.right + scanBounds.left,
-    bottom: relativeBounds.bottom + scanBounds.top,
-  };
+export interface GenerateCellsOptions {
+  cropInsetRatio?: number;
+  minimumVisibleRatio?: number;
+}
 
-  const estimatedCols = verticalLines.length >= 2 ? verticalLines.length - 1 : null;
-  const estimatedRows = horizontalLines.length >= 2 ? horizontalLines.length - 1 : null;
-  const confidence = estimateGridConfidence(relativeVerticalLines, relativeHorizontalLines, scanWidth, scanHeight);
-
-  return {
-    bounds,
-    verticalLines,
-    horizontalLines,
-    estimatedCols,
-    estimatedRows,
-    confidence,
-  };
+export function generateCells(
+  geometry: GridGeometry,
+  crop: GridBounds,
+  options: GenerateCellsOptions = {}
+): GeneratedCellsResult {
+  const cropBounds = normalizeAnalysisBounds(crop);
+  const cropInsetRatio = options.cropInsetRatio ?? 0.16;
+  const minimumVisibleRatio = options.minimumVisibleRatio ?? 0.5;
+  return generateCellsFromGeometry(geometry, cropBounds, cropInsetRatio, minimumVisibleRatio);
 }
 
 export function analyzePatternCanvas(
@@ -131,32 +137,49 @@ export function analyzePatternCanvas(
     throw new Error('色板为空，无法解析图纸');
   }
 
-  const detectedGrid = detectGridFromCanvas(canvas, options.bounds ? { bounds: options.bounds } : {});
-  const bounds = clampBounds(options.bounds ?? detectedGrid.bounds, canvas.width, canvas.height);
+  const fallbackBounds = { left: 0, top: 0, right: canvas.width, bottom: canvas.height };
+  const cropBounds = options.bounds
+    ? clampBounds(normalizeAnalysisBounds(options.bounds), canvas.width, canvas.height)
+    : options.grid
+      ? clampBounds(options.grid.bounds, canvas.width, canvas.height)
+      : fallbackBounds;
+  const detectedGrid = options.grid
+    ? {
+        ...options.grid,
+        bounds: cropBounds,
+      }
+    : buildManualDetectedGrid(cropBounds, options.cols, options.rows);
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const cropInsetRatio = options.cropInsetRatio ?? 0.16;
+  const minimumVisibleRatio = options.minimumVisibleRatio ?? 0.5;
+  const generated = generateCellsFromGeometry(detectedGrid.geometry, cropBounds, cropInsetRatio, minimumVisibleRatio);
   const mappedPixelData: MappedPixel[][] = [];
   const cells: AnalyzedPatternCell[] = [];
 
-  for (let row = 0; row < options.rows; row += 1) {
+  for (let row = 0; row < generated.rows; row += 1) {
     const mappedRow: MappedPixel[] = [];
-    for (let col = 0; col < options.cols; col += 1) {
-      const crop = getCellCrop(bounds, options.cols, options.rows, col, row, cropInsetRatio);
-      const previewCrop = getCellCrop(bounds, options.cols, options.rows, col, row, 0);
-      const sampledRgb = sampleDominantCellColor(imageData, crop);
+    for (let col = 0; col < generated.cols; col += 1) {
+      const generatedCell = generated.cells[row * generated.cols + col];
+      const crop = generatedCell.crop;
+      const previewCrop = generatedCell.rect;
+      const visibleRatio = generatedCell.visibleRatio;
+      const isPartial = generatedCell.visibility === 'partial';
+      const sampledRgb = isPartial ? undefined : sampleDominantCellColor(imageData, crop);
       let mappedPixel: MappedPixel;
       let cell: AnalyzedPatternCell;
 
-      if (!sampledRgb || shouldTreatAsTransparent(sampledRgb, options)) {
+      if (isPartial || !sampledRgb || shouldTreatAsTransparent(sampledRgb, options)) {
         mappedPixel = { ...transparentColorData };
         cell = {
           row,
           col,
           detectedText: TRANSPARENT_KEY,
           recognitionMethod: 'background_color',
-          confidence: sampledRgb ? 0.7 : 1,
-          uncertainty: sampledRgb ? 0.3 : 0,
+          confidence: isPartial || !sampledRgb ? 1 : 0.7,
+          uncertainty: isPartial || !sampledRgb ? 0 : 0.3,
           status: 'transparent',
+          visibility: isPartial ? 'partial' : 'full',
+          visibleRatio,
           crop,
           previewCrop,
           sampledRgb,
@@ -181,6 +204,8 @@ export function analyzePatternCanvas(
           confidence,
           uncertainty: 1 - confidence,
           status: confidence >= 0.82 ? 'confirmed' : 'pending',
+          visibility: 'full',
+          visibleRatio,
           recommendedColorKeys: recommendations,
           crop,
           previewCrop,
@@ -194,14 +219,18 @@ export function analyzePatternCanvas(
     mappedPixelData.push(mappedRow);
   }
 
-  const { colorCounts, totalBeadCount } = recalculatePatternStats(mappedPixelData);
+  const { colorCounts, totalBeadCount } = recalculatePatternStats(mappedPixelData, options.palette);
 
   return {
     grid: {
       ...detectedGrid,
-      bounds,
+      bounds: cropBounds,
+      verticalLines: generated.xBoundaries,
+      horizontalLines: generated.yBoundaries,
+      estimatedCols: generated.cols,
+      estimatedRows: generated.rows,
     },
-    gridDimensions: { N: options.cols, M: options.rows },
+    gridDimensions: { N: generated.cols, M: generated.rows },
     mappedPixelData,
     colorCounts,
     totalBeadCount,
@@ -210,7 +239,8 @@ export function analyzePatternCanvas(
 }
 
 export function recalculatePatternStats(
-  mappedPixelData: MappedPixel[][]
+  mappedPixelData: MappedPixel[][],
+  palette?: PaletteColor[]
 ): {
   colorCounts: Record<string, ColorCountEntry>;
   totalBeadCount: number;
@@ -234,7 +264,94 @@ export function recalculatePatternStats(
     }
   }
 
-  return { colorCounts, totalBeadCount };
+  return {
+    colorCounts: annotateColorCountsWithPalette(colorCounts, palette),
+    totalBeadCount,
+  };
+}
+
+export function annotatePatternResultForPalette(
+  result: PatternAnalysisResult,
+  palette: PaletteColor[]
+): PatternAnalysisResult {
+  const { colorCounts, totalBeadCount } = recalculatePatternStats(result.mappedPixelData, palette);
+  return {
+    ...result,
+    colorCounts,
+    totalBeadCount,
+  };
+}
+
+export function getPaletteComplianceIssues(
+  result: PatternAnalysisResult,
+  palette: PaletteColor[]
+): PaletteComplianceIssue[] {
+  if (!palette.length) return [];
+  const annotatedResult = annotatePatternResultForPalette(result, palette);
+  return Object.values(annotatedResult.colorCounts)
+    .filter((entry): entry is ColorCountEntry & { recommendedColor: string; recommendedColorKey: string } =>
+      Boolean(entry.isExtraColor && entry.recommendedColor && entry.recommendedColorKey)
+    )
+    .map((entry) => ({
+      colorKey: entry.colorKey,
+      color: entry.color,
+      count: entry.count,
+      recommendedColor: entry.recommendedColor,
+      recommendedColorKey: entry.recommendedColorKey,
+    }));
+}
+
+export function remapPatternResultToPalette(
+  result: PatternAnalysisResult,
+  palette: PaletteColor[]
+): PatternAnalysisResult {
+  if (!palette.length) return result;
+
+  const paletteByKey = buildPaletteKeyMap(palette);
+  const mappedPixelData = result.mappedPixelData.map((rowData) =>
+    rowData.map((cell) => {
+      const replacement = getPaletteReplacement(cell, palette, paletteByKey);
+      return replacement
+        ? {
+            key: replacement.key,
+            color: replacement.hex.toUpperCase(),
+            isExternal: false,
+          }
+        : { ...cell };
+    })
+  );
+
+  const cells = result.cells.map((cell): AnalyzedPatternCell => {
+    const currentPixel = result.mappedPixelData[cell.row]?.[cell.col];
+    const replacement = currentPixel ? getPaletteReplacement(currentPixel, palette, paletteByKey) : null;
+    if (!replacement) {
+      return cloneAnalyzedPatternCell(cell);
+    }
+
+    return {
+      ...cell,
+      crop: { ...cell.crop },
+      previewCrop: cell.previewCrop ? { ...cell.previewCrop } : undefined,
+      detectedText: replacement.key,
+      detectedColorKey: replacement.key,
+      detectedHex: replacement.hex.toUpperCase(),
+      status: 'changed',
+      recognitionMethod: 'manual',
+      confidence: Math.max(cell.confidence, 0.9),
+      uncertainty: Math.min(cell.uncertainty, 0.1),
+      recommendedColorKeys: [replacement.key],
+    };
+  });
+
+  const { colorCounts, totalBeadCount } = recalculatePatternStats(mappedPixelData, palette);
+
+  return {
+    ...result,
+    mappedPixelData,
+    cells,
+    colorCounts,
+    totalBeadCount,
+  };
 }
 
 export function updateAnalyzedCellColor(
@@ -370,206 +487,184 @@ function cloneAnalyzedPatternCell(cell: AnalyzedPatternCell): AnalyzedPatternCel
   };
 }
 
-function createEdgeMap(imageData: ImageData): Float32Array {
-  const { width, height, data } = imageData;
-  const gray = new Float32Array(width * height);
-  const magnitudes = new Float32Array(width * height);
-
-  for (let index = 0; index < width * height; index += 1) {
-    const dataIndex = index * 4;
-    const alpha = data[dataIndex + 3];
-    gray[index] = alpha < 32 ? 255 : getLuma(data[dataIndex], data[dataIndex + 1], data[dataIndex + 2]);
+function annotateColorCountsWithPalette(
+  colorCounts: Record<string, ColorCountEntry>,
+  palette?: PaletteColor[]
+): Record<string, ColorCountEntry> {
+  if (!palette?.length) {
+    return Object.fromEntries(
+      Object.entries(colorCounts).map(([hex, entry]) => [hex, { ...entry }])
+    );
   }
 
-  const sampledMagnitudes: number[] = [];
-  const sampleStep = Math.max(1, Math.floor(Math.sqrt((width * height) / 5000)));
-
-  for (let y = 1; y < height - 1; y += 1) {
-    for (let x = 1; x < width - 1; x += 1) {
-      const topLeft = gray[(y - 1) * width + x - 1];
-      const top = gray[(y - 1) * width + x];
-      const topRight = gray[(y - 1) * width + x + 1];
-      const left = gray[y * width + x - 1];
-      const right = gray[y * width + x + 1];
-      const bottomLeft = gray[(y + 1) * width + x - 1];
-      const bottom = gray[(y + 1) * width + x];
-      const bottomRight = gray[(y + 1) * width + x + 1];
-      const gx = -topLeft - left * 2 - bottomLeft + topRight + right * 2 + bottomRight;
-      const gy = -topLeft - top * 2 - topRight + bottomLeft + bottom * 2 + bottomRight;
-      const magnitude = Math.sqrt(gx * gx + gy * gy);
-      magnitudes[y * width + x] = magnitude;
-
-      if (x % sampleStep === 0 && y % sampleStep === 0) {
-        sampledMagnitudes.push(magnitude);
+  const paletteByKey = buildPaletteKeyMap(palette);
+  return Object.fromEntries(
+    Object.entries(colorCounts).map(([hex, entry]) => {
+      if (paletteByKey.has(entry.colorKey.toUpperCase())) {
+        return [hex, { ...entry }];
       }
-    }
-  }
 
-  const strongEdgeThreshold = Math.max(24, percentile(sampledMagnitudes, 0.78));
-  const edgeMap = new Float32Array(width * height);
-  for (let index = 0; index < magnitudes.length; index += 1) {
-    edgeMap[index] = magnitudes[index] >= strongEdgeThreshold ? Math.min(1, magnitudes[index] / 255) : 0;
-  }
-
-  return edgeMap;
+      const recommendedColor = getClosestPaletteColorFromHex(entry.color, palette);
+      return [
+        hex,
+        {
+          ...entry,
+          isExtraColor: true,
+          recommendedColor: recommendedColor?.hex.toUpperCase(),
+          recommendedColorKey: recommendedColor?.key,
+        },
+      ];
+    })
+  );
 }
 
-function scoreVerticalLines(imageData: ImageData, edgeMap: Float32Array): AxisScore[] {
-  const { width, height, data } = imageData;
-  const scores: AxisScore[] = [];
-  const yStep = Math.max(1, Math.floor(height / 900));
-
-  for (let x = 0; x < width; x += 1) {
-    let score = 0;
-    let samples = 0;
-    for (let y = 0; y < height; y += yStep) {
-      const index = (y * width + x) * 4;
-      const luma = getLuma(data[index], data[index + 1], data[index + 2]);
-      const alpha = data[index + 3];
-      if (alpha < 32) continue;
-      score += edgeMap[y * width + x] * 1.8;
-      if (luma < 100) score += 0.85;
-      if (x > 0) {
-        const leftIndex = (y * width + x - 1) * 4;
-        const leftLuma = getLuma(data[leftIndex], data[leftIndex + 1], data[leftIndex + 2]);
-        score += Math.min(1, Math.abs(luma - leftLuma) / 120);
-      }
-      samples += 1;
-    }
-    scores.push({ index: x, score: samples ? score / samples : 0 });
+function getPaletteReplacement(
+  cell: MappedPixel,
+  palette: PaletteColor[],
+  paletteByKey: Map<string, PaletteColor>
+): PaletteColor | null {
+  if (!cell || cell.isExternal || cell.key === TRANSPARENT_KEY || paletteByKey.has(cell.key.toUpperCase())) {
+    return null;
   }
 
-  return scores;
+  return getClosestPaletteColorFromHex(cell.color, palette);
 }
 
-function scoreHorizontalLines(imageData: ImageData, edgeMap: Float32Array): AxisScore[] {
-  const { width, height, data } = imageData;
-  const scores: AxisScore[] = [];
-  const xStep = Math.max(1, Math.floor(width / 900));
-
-  for (let y = 0; y < height; y += 1) {
-    let score = 0;
-    let samples = 0;
-    for (let x = 0; x < width; x += xStep) {
-      const index = (y * width + x) * 4;
-      const luma = getLuma(data[index], data[index + 1], data[index + 2]);
-      const alpha = data[index + 3];
-      if (alpha < 32) continue;
-      score += edgeMap[y * width + x] * 1.8;
-      if (luma < 100) score += 0.85;
-      if (y > 0) {
-        const aboveIndex = ((y - 1) * width + x) * 4;
-        const aboveLuma = getLuma(data[aboveIndex], data[aboveIndex + 1], data[aboveIndex + 2]);
-        score += Math.min(1, Math.abs(luma - aboveLuma) / 120);
-      }
-      samples += 1;
-    }
-    scores.push({ index: y, score: samples ? score / samples : 0 });
-  }
-
-  return scores;
+function getClosestPaletteColorFromHex(hex: string, palette: PaletteColor[]): PaletteColor | null {
+  const rgb = hexToRgb(hex);
+  if (!rgb || !palette.length) return null;
+  return findClosestPaletteColor(rgb, palette);
 }
 
-function smoothScores(scores: AxisScore[], radius: number): AxisScore[] {
-  return scores.map((score, index) => {
-    let sum = 0;
-    let count = 0;
-    for (let offset = -radius; offset <= radius; offset += 1) {
-      const neighbor = scores[index + offset];
-      if (!neighbor) continue;
-      sum += neighbor.score;
-      count += 1;
-    }
-    return { index: score.index, score: count ? sum / count : score.score };
-  });
+function buildPaletteKeyMap(palette: PaletteColor[]): Map<string, PaletteColor> {
+  return new Map(palette.map((color) => [color.key.toUpperCase(), color]));
 }
 
-function findLinePeaks(scores: AxisScore[], minDistance: number): number[] {
-  const values = scores.map((score) => score.score);
-  const mean = values.reduce((sum, value) => sum + value, 0) / Math.max(1, values.length);
-  const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / Math.max(1, values.length);
-  const stdDev = Math.sqrt(variance);
-  const threshold = Math.max(mean + stdDev * 0.85, percentile(values, 0.82));
-  const groups: AxisScore[][] = [];
-  let current: AxisScore[] = [];
-
-  for (const score of scores) {
-    if (score.score >= threshold) {
-      current.push(score);
-    } else if (current.length) {
-      groups.push(current);
-      current = [];
-    }
-  }
-  if (current.length) groups.push(current);
-
-  const peaks = groups
-    .map((group) => group.reduce((best, item) => (item.score > best.score ? item : best), group[0]))
-    .sort((a, b) => b.score - a.score);
-
-  const selected: number[] = [];
-  for (const peak of peaks) {
-    if (selected.every((existing) => Math.abs(existing - peak.index) >= minDistance)) {
-      selected.push(peak.index);
-    }
-  }
-
-  return selected.sort((a, b) => a - b);
-}
-
-function detectContentBounds(
-  imageData: ImageData,
-  verticalScores: AxisScore[],
-  horizontalScores: AxisScore[]
-): GridBounds {
-  const { width, height } = imageData;
-  const xThreshold = Math.max(0.04, percentile(verticalScores.map((score) => score.score), 0.62));
-  const yThreshold = Math.max(0.04, percentile(horizontalScores.map((score) => score.score), 0.62));
-  const xs = verticalScores.filter((score) => score.score >= xThreshold).map((score) => score.index);
-  const ys = horizontalScores.filter((score) => score.score >= yThreshold).map((score) => score.index);
-
-  if (!xs.length || !ys.length) {
-    return { left: 0, top: 0, right: width, bottom: height };
-  }
+function buildManualDetectedGrid(bounds: GridBounds, cols: number, rows: number): DetectedGrid {
+  const pitchX = Math.max(1, (bounds.right - bounds.left) / Math.max(1, cols));
+  const pitchY = Math.max(1, (bounds.bottom - bounds.top) / Math.max(1, rows));
+  const geometry: GridGeometry = {
+    centerX: bounds.left,
+    centerY: bounds.top,
+    pitchX,
+    pitchY,
+    centerIsCellCenter: false,
+  };
+  const { xBoundaries, yBoundaries } = generateGridBoundaries(geometry, bounds);
 
   return {
-    left: Math.max(0, Math.min(...xs) - DEFAULT_BOUNDS_PADDING),
-    top: Math.max(0, Math.min(...ys) - DEFAULT_BOUNDS_PADDING),
-    right: Math.min(width, Math.max(...xs) + DEFAULT_BOUNDS_PADDING),
-    bottom: Math.min(height, Math.max(...ys) + DEFAULT_BOUNDS_PADDING),
+    bounds,
+    verticalLines: xBoundaries,
+    horizontalLines: yBoundaries,
+    estimatedCols: cols,
+    estimatedRows: rows,
+    geometry,
+    confidence: 1,
   };
 }
 
-function estimateGridConfidence(verticalLines: number[], horizontalLines: number[], width: number, height: number): number {
-  const verticalConfidence = verticalLines.length >= 2 ? regularityConfidence(verticalLines, width) : 0.15;
-  const horizontalConfidence = horizontalLines.length >= 2 ? regularityConfidence(horizontalLines, height) : 0.15;
-  return Math.round(((verticalConfidence + horizontalConfidence) / 2) * 100) / 100;
+function generateCellsFromGeometry(
+  geometry: GridGeometry,
+  crop: GridBounds,
+  cropInsetRatio: number,
+  minimumVisibleRatio: number
+): GeneratedCellsResult {
+  const { xBoundaries, yBoundaries } = generateGridBoundaries(geometry, crop);
+  const cols = Math.max(0, xBoundaries.length - 1);
+  const rows = Math.max(0, yBoundaries.length - 1);
+  const cells: GeneratedCell[] = [];
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      const rect = {
+        x: xBoundaries[col],
+        y: yBoundaries[row],
+        width: xBoundaries[col + 1] - xBoundaries[col],
+        height: yBoundaries[row + 1] - yBoundaries[row],
+      };
+      const visibleRatio = getGeometryCellVisibleRatio(rect, geometry);
+      cells.push({
+        row,
+        col,
+        rect,
+        crop: insetCellRect(rect, cropInsetRatio),
+        visibleRatio,
+        visibility: visibleRatio < minimumVisibleRatio ? 'partial' : 'full',
+      });
+    }
+  }
+
+  return { cells, cols, rows, xBoundaries, yBoundaries };
 }
 
-function regularityConfidence(lines: number[], span: number): number {
-  if (lines.length < 3) return 0.35;
-  const gaps = lines.slice(1).map((line, index) => line - lines[index]);
-  const mean = gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length;
-  const deviation = gaps.reduce((sum, gap) => sum + Math.abs(gap - mean), 0) / gaps.length;
-  const densityBonus = Math.min(0.25, lines.length / Math.max(20, span) * 2);
-  return clamp(1 - deviation / Math.max(1, mean) + densityBonus, 0, 1);
-}
-
-function getCellCrop(bounds: GridBounds, cols: number, rows: number, col: number, row: number, insetRatio: number) {
-  const gridWidth = bounds.right - bounds.left;
-  const gridHeight = bounds.bottom - bounds.top;
-  const cellWidth = gridWidth / cols;
-  const cellHeight = gridHeight / rows;
-  const insetX = Math.max(1, cellWidth * insetRatio);
-  const insetY = Math.max(1, cellHeight * insetRatio);
-  const x = bounds.left + col * cellWidth + insetX;
-  const y = bounds.top + row * cellHeight + insetY;
+function generateGridBoundaries(geometry: GridGeometry, crop: GridBounds): { xBoundaries: number[]; yBoundaries: number[] } {
   return {
-    x: Math.floor(x),
-    y: Math.floor(y),
-    width: Math.max(1, Math.floor(cellWidth - insetX * 2)),
-    height: Math.max(1, Math.floor(cellHeight - insetY * 2)),
+    xBoundaries: generateAxisBoundaries(crop.left, crop.right, geometry.centerX, geometry.pitchX, geometry.centerIsCellCenter),
+    yBoundaries: generateAxisBoundaries(crop.top, crop.bottom, geometry.centerY, geometry.pitchY, geometry.centerIsCellCenter),
   };
+}
+
+function generateAxisBoundaries(
+  cropStart: number,
+  cropEnd: number,
+  center: number,
+  pitch: number,
+  centerIsCellCenter: boolean
+): number[] {
+  if (!Number.isFinite(cropStart) || !Number.isFinite(cropEnd) || cropEnd <= cropStart) {
+    return [0, 1];
+  }
+  if (!Number.isFinite(center) || !Number.isFinite(pitch) || pitch <= 0) {
+    return [cropStart, cropEnd];
+  }
+
+  const lineAnchor = centerIsCellCenter ? center - pitch / 2 : center;
+  const kStart = Math.floor((cropStart - lineAnchor) / pitch) - 1;
+  const kEnd = Math.ceil((cropEnd - lineAnchor) / pitch) + 1;
+  const boundaries = [cropStart];
+
+  for (let k = kStart; k <= kEnd; k += 1) {
+    const line = lineAnchor + k * pitch;
+    if (line > cropStart && line < cropEnd) {
+      boundaries.push(line);
+    }
+  }
+
+  boundaries.push(cropEnd);
+  return dedupeSortedNumbers(boundaries.sort((a, b) => a - b), 0.01);
+}
+
+function insetCellRect(
+  rect: { x: number; y: number; width: number; height: number },
+  insetRatio: number
+): { x: number; y: number; width: number; height: number } {
+  const insetX = Math.max(0, rect.width * insetRatio);
+  const insetY = Math.max(0, rect.height * insetRatio);
+  return {
+    x: Math.floor(rect.x + insetX),
+    y: Math.floor(rect.y + insetY),
+    width: Math.max(1, Math.floor(rect.width - insetX * 2)),
+    height: Math.max(1, Math.floor(rect.height - insetY * 2)),
+  };
+}
+
+function getGeometryCellVisibleRatio(
+  rect: { width: number; height: number },
+  geometry: GridGeometry
+): number {
+  const widthRatio = rect.width / Math.max(1, geometry.pitchX);
+  const heightRatio = rect.height / Math.max(1, geometry.pitchY);
+  return clamp(Math.min(widthRatio, heightRatio), 0, 1);
+}
+
+function dedupeSortedNumbers(values: number[], tolerance: number): number[] {
+  const result: number[] = [];
+  for (const value of values) {
+    if (!result.length || Math.abs(value - result[result.length - 1]) > tolerance) {
+      result.push(value);
+    }
+  }
+  return result;
 }
 
 function sampleDominantCellColor(
@@ -646,18 +741,19 @@ function getLuma(r: number, g: number, b: number): number {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-function percentile(values: number[], percentileValue: number): number {
-  if (!values.length) return 0;
-  const sorted = values.slice().sort((a, b) => a - b);
-  const index = Math.min(sorted.length - 1, Math.max(0, Math.floor(sorted.length * percentileValue)));
-  return sorted[index];
-}
-
 function clampBounds(bounds: GridBounds, width: number, height: number): GridBounds {
   const left = clamp(Math.floor(bounds.left), 0, width - 1);
   const top = clamp(Math.floor(bounds.top), 0, height - 1);
   const right = clamp(Math.ceil(bounds.right), left + 1, width);
   const bottom = clamp(Math.ceil(bounds.bottom), top + 1, height);
+  return { left, top, right, bottom };
+}
+
+function normalizeAnalysisBounds(bounds: GridBounds): GridBounds {
+  const left = Number.isFinite(bounds.left) ? bounds.left : 0;
+  const top = Number.isFinite(bounds.top) ? bounds.top : 0;
+  const right = Number.isFinite(bounds.right) && bounds.right > left ? bounds.right : left + 1;
+  const bottom = Number.isFinite(bounds.bottom) && bounds.bottom > top ? bounds.bottom : top + 1;
   return { left, top, right, bottom };
 }
 

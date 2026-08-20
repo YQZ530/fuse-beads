@@ -63,6 +63,8 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
   const [replenishNote, setReplenishNote] = useState('');
   const [draftCounts, setDraftCounts] = useState<Record<string, string>>({});
   const [expandedTransactionIds, setExpandedTransactionIds] = useState<string[]>([]);
+  const [isRenamingWarehouse, setIsRenamingWarehouse] = useState(false);
+  const [renameDraft, setRenameDraft] = useState('');
   const [busyAction, setBusyAction] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -143,6 +145,23 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
         return next;
       });
       setMessage(`已更新 ${item.colorKey} 库存`);
+    });
+  }
+
+  async function handleRenameWarehouse(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!activeWarehouse) return;
+    await runMutation('rename-warehouse', async () => {
+      const response = await postJson('/api/warehouse/rename', {
+        warehouseId: activeWarehouse.id,
+        name: renameDraft,
+      });
+      if (!response.inventory || !response.warehouse) throw new Error('修改豆仓名称返回数据不完整');
+      setInventory(response.inventory);
+      setActiveWarehouseId(response.warehouse.id);
+      setIsRenamingWarehouse(false);
+      setRenameDraft('');
+      setMessage(`已改名为：${response.warehouse.name}`);
     });
   }
 
@@ -233,15 +252,17 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
             <Link href="/" className="text-sm font-medium text-slate-500 hover:text-slate-900">返回主页</Link>
             <h1 className="mt-1 text-2xl font-semibold tracking-normal">加载豆仓</h1>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="relative z-20 flex flex-wrap gap-2">
             <Link
               href="/projects"
+              prefetch={false}
               className="inline-flex h-10 items-center justify-center rounded border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
-              查看项目
+              加载项目
             </Link>
             <Link
               href="/analysis"
+              prefetch={false}
               className="inline-flex h-10 items-center justify-center rounded bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700"
             >
               加载图纸
@@ -311,7 +332,7 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
                     <input
                       value={createForm.name}
                       onChange={(event) => setCreateForm((current) => ({ ...current, name: event.target.value }))}
-                      className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm outline-none focus:border-blue-500"
+                      className="mt-1 h-11 w-full rounded border border-slate-300 px-3 text-sm outline-none focus:border-blue-500"
                       placeholder="例如：豆仓2"
                     />
                   </label>
@@ -320,21 +341,35 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
                     <input
                       value="MARD"
                       disabled
-                      className="mt-1 h-10 w-full rounded border border-slate-200 bg-slate-50 px-3 text-sm text-slate-500"
+                      className="mt-1 h-11 w-full rounded border border-slate-200 bg-slate-50 px-3 text-sm text-slate-500"
                     />
                   </label>
-                  <label className="text-sm">
-                    <span className="font-medium text-slate-700">色板</span>
-                    <select
-                      value={createForm.paletteName}
-                      onChange={(event) => setCreateForm((current) => ({ ...current, paletteName: event.target.value }))}
-                      className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm outline-none focus:border-blue-500"
-                    >
-                      {paletteOptions.map((option) => (
-                        <option key={option.paletteName} value={option.paletteName}>MARD {option.paletteName} · {option.colorCount} 色</option>
-                      ))}
-                    </select>
-                  </label>
+                  <div className="text-sm">
+                    <div className="font-medium text-slate-700">色板</div>
+                    <div className="mt-2 grid grid-cols-1 gap-2">
+                      {paletteOptions.map((option) => {
+                        const isSelected = createForm.paletteName === option.paletteName;
+                        return (
+                          <button
+                            key={option.paletteName}
+                            type="button"
+                            aria-pressed={isSelected}
+                            onClick={() => setCreateForm((current) => ({ ...current, paletteName: option.paletteName }))}
+                            className={`min-h-16 rounded border px-3 py-3 text-left transition ${
+                              isSelected
+                                ? 'border-slate-950 bg-slate-950 text-white shadow-sm'
+                                : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50'
+                            }`}
+                          >
+                            <span className="block text-base font-semibold">MARD {option.paletteName}</span>
+                            <span className={`mt-1 block text-sm ${isSelected ? 'text-slate-200' : 'text-slate-500'}`}>
+                              {option.colorCount} 色
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                   <label className="text-sm">
                     <span className="font-medium text-slate-700">每色初始库存</span>
                     <input
@@ -343,13 +378,13 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
                       step="1"
                       value={createForm.ownedCount}
                       onChange={(event) => setCreateForm((current) => ({ ...current, ownedCount: event.target.value }))}
-                      className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm outline-none focus:border-blue-500"
+                      className="mt-1 h-11 w-full rounded border border-slate-300 px-3 text-sm outline-none focus:border-blue-500"
                     />
                   </label>
                   <button
                     type="submit"
                     disabled={busyAction === 'create'}
-                    className="inline-flex h-10 items-center justify-center rounded bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex h-11 items-center justify-center rounded bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {busyAction === 'create' ? '创建中...' : '创建豆仓'}
                   </button>
@@ -365,7 +400,49 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
               <section className="rounded border border-slate-200 bg-white p-4 shadow-sm">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold">{activeWarehouse.name}</h2>
+                    {isRenamingWarehouse ? (
+                      <form className="flex max-w-md flex-wrap items-center gap-2" onSubmit={handleRenameWarehouse}>
+                        <input
+                          value={renameDraft}
+                          onChange={(event) => setRenameDraft(event.target.value)}
+                          className="h-9 min-w-0 flex-1 rounded border border-slate-300 px-3 text-base font-semibold outline-none focus:border-blue-500"
+                          autoFocus
+                        />
+                        <button
+                          type="submit"
+                          disabled={busyAction === 'rename-warehouse' || !renameDraft.trim()}
+                          className="h-9 rounded bg-blue-600 px-3 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          保存
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsRenamingWarehouse(false);
+                            setRenameDraft('');
+                          }}
+                          className="h-9 rounded border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                        >
+                          取消
+                        </button>
+                      </form>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-lg font-semibold">{activeWarehouse.name}</h2>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setRenameDraft(activeWarehouse.name);
+                            setIsRenamingWarehouse(true);
+                          }}
+                          className="inline-flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+                          aria-label="修改豆仓名称"
+                          title="修改豆仓名称"
+                        >
+                          <span aria-hidden="true">✎</span>
+                        </button>
+                      </div>
+                    )}
                     <p className="mt-1 text-sm text-slate-500">
                       {activeWarehouse.brand} {activeWarehouse.paletteName} · {items.length} 色 · 共 {totalStock} 颗
                     </p>
@@ -380,9 +457,25 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
 
                 {activeDemand.items.length > 0 && (
                   <div className="mt-4 rounded border border-slate-200 bg-slate-50 p-3">
-                    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div className="text-sm font-semibold">项目缺豆概览</div>
-                      <div className="text-sm text-slate-500">{activeDemand.projectNames.join('、')}</div>
+                      <div className="flex flex-wrap gap-2 text-sm">
+                        {activeDemand.projects.map((project) => (
+                          <Link
+                            key={project.projectId}
+                            href={`/projects/${encodeURIComponent(project.projectId)}`}
+                            className="rounded border border-slate-200 bg-white px-2 py-1 font-medium text-slate-700 hover:border-blue-300 hover:text-blue-700"
+                          >
+                            {project.name}
+                          </Link>
+                        ))}
+                        <Link
+                          href="/projects"
+                          className="rounded border border-slate-200 bg-white px-2 py-1 font-medium text-slate-500 hover:border-slate-300 hover:text-slate-900"
+                        >
+                          全部项目
+                        </Link>
+                      </div>
                     </div>
                     <div className="mt-3 grid grid-cols-2 gap-2 text-center text-sm sm:grid-cols-4">
                       <Stat label="计划需求" value={String(activeDemand.totalNeeded)} />
@@ -821,17 +914,17 @@ function buildWarehouseDemand(warehouse: Warehouse | null, projectDemands: Proje
       missingItems: [],
       totalNeeded: 0,
       totalMissing: 0,
-      projectNames: [],
+      projects: [],
     };
   }
 
   const stock = new Map((warehouse.items ?? []).map((item) => [normalizeColorKey(item.colorKey), Number(item.ownedCount || 0)]));
   const demand = new Map<string, ProjectDemandItem>();
-  const projectNames: string[] = [];
+  const projects: Array<{ projectId: string; name: string }> = [];
 
   for (const project of projectDemands) {
     if (project.warehouseId !== warehouse.id) continue;
-    projectNames.push(project.name);
+    projects.push({ projectId: project.projectId, name: project.name });
     for (const item of project.items) {
       const colorKey = normalizeColorKey(item.colorKey);
       if (!colorKey) continue;
@@ -859,7 +952,7 @@ function buildWarehouseDemand(warehouse: Warehouse | null, projectDemands: Proje
     missingItems: items.filter((item) => item.missing > 0),
     totalNeeded: items.reduce((sum, item) => sum + item.needed, 0),
     totalMissing: items.reduce((sum, item) => sum + item.missing, 0),
-    projectNames,
+    projects,
   };
 }
 

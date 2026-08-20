@@ -2163,7 +2163,7 @@ export default function Home() {
 
       {/* Apply dark mode styles to the main section */}
       <main ref={mainRef} className="w-full md:max-w-4xl flex flex-col items-center space-y-5 sm:space-y-6 relative overflow-hidden">
-        <div className="w-full md:max-w-2xl grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="relative z-20 w-full md:max-w-2xl grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Link
             href="/warehouse"
             className="h-12 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 text-sm font-semibold text-gray-700 dark:text-gray-100 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center justify-center"

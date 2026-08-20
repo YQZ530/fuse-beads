@@ -70,6 +70,11 @@ export interface UpdateWarehouseItemInput {
   note?: string;
 }
 
+export interface RenameWarehouseInput {
+  warehouseId: string;
+  name: string;
+}
+
 export interface ReplenishWarehouseInput {
   warehouseId: string;
   entries: Array<{ colorKey: string; count: number }>;
@@ -218,6 +223,21 @@ export async function updateWarehouseItem(input: UpdateWarehouseItemInput): Prom
 
   await writeInventory(inventory);
   return inventory;
+}
+
+export async function renameWarehouse(input: RenameWarehouseInput): Promise<{ inventory: WarehouseInventory; warehouse: Warehouse }> {
+  const name = String(input.name || '').trim();
+  if (!name) {
+    throw new Error('豆仓名称不能为空');
+  }
+
+  const inventory = await readInventory();
+  const warehouse = findWarehouse(inventory, input.warehouseId);
+  warehouse.name = name;
+  warehouse.updatedAt = new Date().toISOString();
+
+  await writeInventory(inventory);
+  return { inventory, warehouse };
 }
 
 export async function replenishWarehouse(input: ReplenishWarehouseInput): Promise<WarehouseInventory> {

@@ -66,8 +66,8 @@ export default function ProjectsClient({ initialProjects, warehouses }: Projects
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <header className="flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <Link href="/" className="text-sm font-medium text-slate-500 hover:text-slate-900">返回主页</Link>
-            <h1 className="mt-1 text-2xl font-semibold tracking-normal">加载项目</h1>
+            <Link href="/" prefetch={false} className="text-sm font-medium text-slate-500 hover:text-slate-900">返回主页</Link>
+            <h1 className="mt-1 text-2xl font-semibold tracking-normal">项目</h1>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
@@ -79,12 +79,14 @@ export default function ProjectsClient({ initialProjects, warehouses }: Projects
             </button>
             <Link
               href="/analysis"
+              prefetch={false}
               className="inline-flex h-10 items-center justify-center rounded bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700"
             >
               加载图纸
             </Link>
             <Link
               href="/warehouse"
+              prefetch={false}
               className="inline-flex h-10 items-center justify-center rounded border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
               查看豆仓

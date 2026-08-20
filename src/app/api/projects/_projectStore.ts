@@ -114,6 +114,11 @@ export interface CreateProjectInput {
   warehouseId: string;
 }
 
+export interface RenameProjectInput {
+  projectId: string;
+  name: string;
+}
+
 export interface UpdateProjectPatternStatusInput {
   projectId: string;
   patternIds: string[];
@@ -225,6 +230,27 @@ export async function createProject(input: CreateProjectInput): Promise<ProjectF
   const projectPath = path.join(PROJECTS_DIR, directoryName, 'project.json');
   await writeJsonAtomic(projectPath, project);
   return project;
+}
+
+export async function renameProject(input: RenameProjectInput): Promise<ProjectDetailFile> {
+  const name = input.name.trim();
+  if (!name) {
+    throw new Error('项目名称不能为空');
+  }
+
+  const match = await readProjectRefById(input.projectId);
+  if (!match) {
+    throw new Error('找不到项目');
+  }
+
+  const project: ProjectFile = {
+    ...match.project,
+    name,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await writeJsonAtomic(match.projectPath, project);
+  return enrichProjectDetail(project, match.directoryName);
 }
 
 export async function updateProjectPatternStatuses(input: UpdateProjectPatternStatusInput): Promise<ProjectDetailFile> {

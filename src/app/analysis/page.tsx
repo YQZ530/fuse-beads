@@ -4,11 +4,13 @@ import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link';
 import {
   analyzePatternCanvas,
-  detectGridFromCanvas,
+  annotatePatternResultForPalette,
   DetectedGrid,
+  getPaletteComplianceIssues,
   GridBounds,
   paletteColorFromHex,
   PatternAnalysisResult,
+  remapPatternResultToPalette,
   updateAnalyzedColorGroups,
   updateAnalyzedCellColor,
 } from '../../utils/patternAnalysis';
@@ -84,9 +86,15 @@ interface RedrawDisplayOptions {
   overlayMode?: DisplayOverlayMode;
   nextGridBounds?: GridBounds | null;
   nextCropBounds?: GridBounds | null;
+  nextDetectedGrid?: DetectedGrid | null;
   nextCols?: number;
   nextRows?: number;
   adjustOptions?: DisplayAdjustOptions;
+}
+
+interface CropWorkingCanvasResult {
+  bounds: GridBounds;
+  dataUrl: string;
 }
 
 interface ColorCountItem {
@@ -94,6 +102,9 @@ interface ColorCountItem {
   count: number;
   color: string;
   colorKey: string;
+  isExtraColor?: boolean;
+  recommendedColor?: string;
+  recommendedColorKey?: string;
   groupLabel: string;
   pendingCount: number;
   changedCount: number;
@@ -120,6 +131,16 @@ interface SaveResponse {
   error?: string;
 }
 
+interface PythonGridResponse {
+  ok: boolean;
+  source?: string;
+  mode?: string;
+  usedReference?: boolean;
+  ignoredPartialReference?: boolean;
+  detectedGrid?: DetectedGrid;
+  error?: string;
+}
+
 const MAX_CANVAS_SIDE = 1800;
 
 export default function PatternAnalysisPage() {
@@ -128,6 +149,7 @@ export default function PatternAnalysisPage() {
   const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const previewViewportRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const hasConfirmedPaletteRemapRef = useRef(false);
 
   const [activeTab, setActiveTab] = useState<AnalysisTab>('parse');
   const [parseStep, setParseStep] = useState<ParseStep>('empty');
@@ -139,6 +161,8 @@ export default function PatternAnalysisPage() {
   const [paletteError, setPaletteError] = useState<string | null>(null);
   const [cols, setCols] = useState(50);
   const [rows, setRows] = useState(50);
+  const [autoReferenceCols, setAutoReferenceCols] = useState('');
+  const [autoReferenceRows, setAutoReferenceRows] = useState('');
   const [detectedGrid, setDetectedGrid] = useState<DetectedGrid | null>(null);
   const [cropBounds, setCropBounds] = useState<GridBounds | null>(null);
   const [bounds, setBounds] = useState<GridBounds | null>(null);
@@ -150,6 +174,8 @@ export default function PatternAnalysisPage() {
   const [isGroupCorrectionOpen, setIsGroupCorrectionOpen] = useState(false);
   const [groupCorrectionColorKey, setGroupCorrectionColorKey] = useState('');
   const [isBoundaryAdjusting, setIsBoundaryAdjusting] = useState(false);
+  const [isGridControlsCollapsed, setIsGridControlsCollapsed] = useState(false);
+  const [isPythonGridDetecting, setIsPythonGridDetecting] = useState(false);
   const [activeBoundaryHandle, setActiveBoundaryHandle] = useState<BoundaryHandle>('move');
   const [adjustMode, setAdjustMode] = useState<AdjustMode>('auto');
   const [adjustTarget, setAdjustTarget] = useState<AdjustTarget>('grid');
@@ -166,22 +192,12 @@ export default function PatternAnalysisPage() {
   useEffect(() => {
     let cancelled = false;
     setPaletteError(null);
-    fetch(`/api/palettes/mard?paletteName=${encodeURIComponent(paletteName)}`)
-      .then(async (response) => {
-        const body = await response.json();
-        if (!response.ok) {
-          throw new Error(body.error || '读取色板失败');
-        }
-        return body as PaletteApiResponse;
-      })
-      .then((body) => {
+    fetchMardPalette(paletteName)
+      .then((parsed) => {
         if (cancelled) return;
-        const parsed = body.colors
-          .map((color) => paletteColorFromHex(color.key, color.hex))
-          .filter((color): color is PaletteColor => color !== null);
         setPalette(parsed);
-        setSelectedColorKey((current) => current || parsed[0]?.key || '');
-        setGroupCorrectionColorKey((current) => current || parsed[0]?.key || '');
+        setSelectedColorKey((current) => keepPaletteSelection(current, parsed));
+        setGroupCorrectionColorKey((current) => keepPaletteSelection(current, parsed));
       })
       .catch((error) => {
         if (cancelled) return;
@@ -193,6 +209,16 @@ export default function PatternAnalysisPage() {
       cancelled = true;
     };
   }, [paletteName]);
+
+  const displayResult = useMemo(
+    () => (result ? annotatePatternResultForPalette(result, palette) : null),
+    [result, palette]
+  );
+
+  const paletteComplianceIssues = useMemo(
+    () => (displayResult ? getPaletteComplianceIssues(displayResult, palette) : []),
+    [displayResult, palette]
+  );
 
   const groupCorrectionColor = useMemo(
     () => palette.find((color) => color.key === groupCorrectionColorKey) ?? null,
@@ -215,11 +241,11 @@ export default function PatternAnalysisPage() {
   }, [activeTab, result, selectedCell, selectedColorGroupKey, isGroupCorrectionOpen, selectedCorrectionKeys, groupCorrectionColor, previewZoom]);
 
   const sortedColorCounts = useMemo<ColorCountItem[]>(() => {
-    if (!result) return [];
-    return Object.entries(result.colorCounts)
+    if (!displayResult) return [];
+    return Object.entries(displayResult.colorCounts)
       .map(([hex, entry]) => {
-        const relatedCells = result.cells.filter((cell) => {
-          const mappedCell = result.mappedPixelData[cell.row]?.[cell.col];
+        const relatedCells = displayResult.cells.filter((cell) => {
+          const mappedCell = displayResult.mappedPixelData[cell.row]?.[cell.col];
           return mappedCell && !mappedCell.isExternal && mappedCell.key === entry.colorKey;
         });
 
@@ -232,7 +258,7 @@ export default function PatternAnalysisPage() {
         };
       })
       .sort((a, b) => compareColorKeys(a.colorKey, b.colorKey));
-  }, [result]);
+  }, [displayResult]);
 
   const colorCountGroups = useMemo<ColorCountGroup[]>(() => {
     const groups = new Map<string, ColorCountItem[]>();
@@ -262,17 +288,17 @@ export default function PatternAnalysisPage() {
   );
 
   const selectedColorGroupCells = useMemo(() => {
-    if (!result || !selectedColorGroupKey) return [];
-    return result.cells
+    if (!displayResult || !selectedColorGroupKey) return [];
+    return displayResult.cells
       .filter((cell) => {
-        const mappedCell = result.mappedPixelData[cell.row]?.[cell.col];
+        const mappedCell = displayResult.mappedPixelData[cell.row]?.[cell.col];
         return mappedCell && !mappedCell.isExternal && mappedCell.key === selectedColorGroupKey;
       })
       .sort((a, b) => b.uncertainty - a.uncertainty || a.row - b.row || a.col - b.col);
-  }, [result, selectedColorGroupKey]);
+  }, [displayResult, selectedColorGroupKey]);
 
   useEffect(() => {
-    if (!result) {
+    if (!displayResult) {
       setSelectedColorGroupKey(null);
       setSelectedCorrectionKeys((current) => (current.length === 0 ? current : []));
       setIsGroupCorrectionOpen(false);
@@ -299,7 +325,7 @@ export default function PatternAnalysisPage() {
     if (selectedCorrectionKeys.length > 0 && selectedCorrectionKeys.every((colorKey) => !availableKeys.includes(colorKey))) {
       setIsGroupCorrectionOpen(false);
     }
-  }, [availableColorKeySignature, result, selectedColorGroupKey, selectedCorrectionKeys]);
+  }, [availableColorKeySignature, displayResult, selectedColorGroupKey, selectedCorrectionKeys]);
 
   const selectedPaletteColor = useMemo(
     () => palette.find((color) => color.key === selectedColorKey) ?? null,
@@ -344,6 +370,8 @@ export default function PatternAnalysisPage() {
     setBounds(null);
     setResult(null);
     setSaveResult(null);
+    setAutoReferenceCols('');
+    setAutoReferenceRows('');
     setSelectedCell(null);
     setSelectedColorGroupKey(null);
     setSelectedCorrectionKeys([]);
@@ -352,6 +380,7 @@ export default function PatternAnalysisPage() {
     setAdjustTarget('canvas');
     setActiveBoundaryHandle('move');
     setIsBoundaryAdjusting(true);
+    setIsGridControlsCollapsed(false);
     setBoundaryDrag(null);
     const initialBounds = await drawImageToCanvases(dataUrl);
     setCropBounds(null);
@@ -370,31 +399,52 @@ export default function PatternAnalysisPage() {
   const handleConfirmCrop = () => {
     const canvas = sourceCanvasRef.current;
     if (!canvas) return;
-    const nextCropBounds = cropBounds ?? getFullCanvasBounds(canvas);
-    setCropBounds(nextCropBounds);
+    const selectedCropBounds = cropBounds ?? getFullCanvasBounds(canvas);
+    const cropped = cropWorkingCanvases(selectedCropBounds);
+    if (!cropped) return;
+    setImageSrc(cropped.dataUrl);
+    setCropBounds(cropped.bounds);
+    setBounds(null);
+    setDetectedGrid(null);
     setParseStep('grid');
     setAdjustMode('auto');
     setAdjustTarget('grid');
     setIsBoundaryAdjusting(false);
-    applyAutoGridDetection(nextCropBounds);
+    setIsGridControlsCollapsed(false);
+    void handleDetectGrid(cropped.bounds);
   };
 
-  const handleDetectGrid = () => {
+  const handleDetectGrid = async (scanBoundsOverride?: GridBounds) => {
     const canvas = sourceCanvasRef.current;
-    if (!canvas) return;
-    const scanBounds = cropBounds ?? getFullCanvasBounds(canvas);
+    if (!canvas || isPythonGridDetecting) return;
+
+    const scanBounds = scanBoundsOverride ?? getFullCanvasBounds(canvas);
+    const referenceCols = parseOptionalGridCount(autoReferenceCols);
+    const referenceRows = parseOptionalGridCount(autoReferenceRows);
     setParseStep('grid');
     setAdjustMode('auto');
     setAdjustTarget('grid');
-    applyAutoGridDetection(scanBounds);
-  };
-
-  const applyAutoGridDetection = (scanBounds?: GridBounds) => {
-    const canvas = sourceCanvasRef.current;
-    if (!canvas) return;
+    setIsGridControlsCollapsed(false);
+    setIsPythonGridDetecting(true);
+    setStatusMessage('Python 正在检测当前裁剪画面...');
 
     try {
-      const detected = detectGridFromCanvas(canvas, scanBounds ? { bounds: scanBounds } : {});
+      const response = await fetch('/api/analysis/grid-geometry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageDataUrl: canvas.toDataURL('image/png'),
+          crop: scanBounds,
+          ...(referenceCols ? { referenceCols } : {}),
+          ...(referenceRows ? { referenceRows } : {}),
+        }),
+      });
+      const payload = (await response.json().catch(() => null)) as PythonGridResponse | null;
+      if (!response.ok || !payload?.ok || !payload.detectedGrid) {
+        throw new Error(payload?.error ?? 'Python 网格检测失败');
+      }
+
+      const detected = payload.detectedGrid;
       const nextCols =
         detected.estimatedCols && detected.estimatedCols >= 5 && detected.estimatedCols <= 300
           ? detected.estimatedCols
@@ -412,7 +462,8 @@ export default function PatternAnalysisPage() {
       redrawDisplayCanvas({
         overlayMode: 'grid',
         nextGridBounds: detected.bounds,
-        nextCropBounds: scanBounds ?? cropBounds,
+        nextCropBounds: scanBounds,
+        nextDetectedGrid: detected,
         nextCols,
         nextRows,
         adjustOptions: {
@@ -421,10 +472,65 @@ export default function PatternAnalysisPage() {
           activeTarget: 'grid',
         },
       });
-      setStatusMessage(`检测完成：建议 ${detected.estimatedCols || '?'} x ${detected.estimatedRows || '?'}，置信度 ${Math.round(detected.confidence * 100)}%`);
+
+      const referenceLabel = payload.usedReference
+        ? `，参考 ${referenceCols || '?'} x ${referenceRows || '?'}`
+        : payload.ignoredPartialReference
+          ? '，参考行列需要同时填写，本次使用自动模式'
+          : '';
+      const modeLabel = payload.mode ? `，mode ${payload.mode}` : '';
+      const pitchLabel =
+        detected.geometry.pitchX && detected.geometry.pitchY
+          ? `，pitch ${formatMeasurementForInput(detected.geometry.pitchX)} x ${formatMeasurementForInput(detected.geometry.pitchY)}`
+          : '';
+      setStatusMessage(`Python 检测完成：当前计算画布 ${canvas.width}x${canvas.height}，建议 ${detected.estimatedCols || '?'} x ${detected.estimatedRows || '?'}${pitchLabel}${referenceLabel}${modeLabel}，置信度 ${Math.round(detected.confidence * 100)}%`);
     } catch (error) {
-      setStatusMessage(error instanceof Error ? error.message : '网格检测失败');
+      setStatusMessage(error instanceof Error ? error.message : 'Python 网格检测失败');
+    } finally {
+      setIsPythonGridDetecting(false);
     }
+  };
+
+  const handleConfirmGrid = () => {
+    if (!bounds) {
+      setStatusMessage('请先自动检测或手动框选网格边界');
+      return;
+    }
+
+    setIsGridControlsCollapsed(true);
+    setIsBoundaryAdjusting(false);
+    setActiveBoundaryHandle('move');
+    redrawDisplayCanvas({
+      overlayMode: 'grid',
+      nextGridBounds: bounds,
+      nextCols: cols,
+      nextRows: rows,
+      adjustOptions: {
+        isAdjusting: false,
+        activeHandle: 'move',
+        activeTarget: 'grid',
+      },
+    });
+    setStatusMessage('网格已确认，可以继续微调或进入下一步');
+  };
+
+  const handleReopenGridControls = () => {
+    setIsGridControlsCollapsed(false);
+    setAdjustMode('manual');
+    setAdjustTarget('grid');
+    setIsBoundaryAdjusting(true);
+    setActiveBoundaryHandle('move');
+    redrawDisplayCanvas({
+      overlayMode: 'grid',
+      nextGridBounds: bounds,
+      nextCols: cols,
+      nextRows: rows,
+      adjustOptions: {
+        isAdjusting: true,
+        activeHandle: 'move',
+        activeTarget: 'grid',
+      },
+    });
   };
 
   const handleAnalyze = () => {
@@ -446,11 +552,14 @@ export default function PatternAnalysisPage() {
         rows,
         palette,
         bounds: analysisBounds,
+        grid: detectedGrid ?? undefined,
         treatNearWhiteAsTransparent: treatWhiteAsTransparent,
       });
       setResult(analysis);
       setBounds(analysis.grid.bounds);
       setDetectedGrid(analysis.grid);
+      setCols(analysis.gridDimensions.N);
+      setRows(analysis.gridDimensions.M);
       setSelectedCell(null);
       const firstColorKey = getFirstColorKey(analysis);
       setSelectedColorGroupKey(firstColorKey);
@@ -460,13 +569,69 @@ export default function PatternAnalysisPage() {
       redrawDisplayCanvas({
         overlayMode: 'grid',
         nextGridBounds: analysis.grid.bounds,
-        nextCols: cols,
-        nextRows: rows,
+        nextDetectedGrid: analysis.grid,
+        nextCols: analysis.gridDimensions.N,
+        nextRows: analysis.gridDimensions.M,
       });
       setStatusMessage(`解析完成：${analysis.totalBeadCount} 颗，${Object.keys(analysis.colorCounts).length} 个颜色`);
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : '图纸解析失败');
     }
+  };
+
+  const handleEnterNextStep = () => {
+    setIsGridControlsCollapsed(true);
+    setIsBoundaryAdjusting(false);
+    handleAnalyze();
+  };
+
+  const handlePaletteNameChange = async (nextPaletteName: string) => {
+    if (nextPaletteName === paletteName) return;
+
+    if (!result) {
+      setPaletteName(nextPaletteName);
+      return;
+    }
+
+    try {
+      const nextPalette = await fetchMardPalette(nextPaletteName);
+      const issues = getPaletteComplianceIssues(result, nextPalette);
+      const issueKeys = issues.map((issue) => issue.colorKey).sort(compareColorKeys);
+      const extraBeadCount = issues.reduce((sum, issue) => sum + issue.count, 0);
+
+      setPaletteName(nextPaletteName);
+      if (issues.length > 0) {
+        setSelectedColorGroupKey(issueKeys[0]);
+        setSelectedCorrectionKeys(issueKeys);
+        setIsGroupCorrectionOpen(false);
+        setStatusMessage(`å·²åˆ‡æ¢åˆ° MARD ${nextPaletteName}ï¼š${issues.length} ä¸ªæ–¹æ¡ˆå¤–é¢œè‰²ï¼Œå…± ${extraBeadCount} é¢—ï¼Œå¯ä¿ç•™æˆ–æŒ‰æŽ¨èè‰²æ›¿æ¢`);
+      } else {
+        setSelectedCorrectionKeys([]);
+        setStatusMessage(`å·²åˆ‡æ¢åˆ° MARD ${nextPaletteName}ï¼Œå½“å‰å›¾çº¸é¢œè‰²éƒ½åœ¨è¯¥æ–¹æ¡ˆå†…`);
+      }
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : 'è‰²æ¿åˆ‡æ¢å¤±è´¥');
+    }
+  };
+
+  const handleApplyPaletteRecommendations = () => {
+    if (!result || !palette.length) return;
+    const issues = getPaletteComplianceIssues(result, palette);
+    if (!issues.length) return;
+
+    const extraBeadCount = issues.reduce((sum, issue) => sum + issue.count, 0);
+    if (!hasConfirmedPaletteRemapRef.current) {
+      const shouldApply = window.confirm(`å°† ${issues.length} ä¸ªæ–¹æ¡ˆå¤–é¢œè‰²ï¼ˆ${extraBeadCount} é¢—ï¼‰æ›¿æ¢ä¸º MARD ${paletteName} ä¸­çš„æœ€è¿‘æŽ¨èè‰²ï¼Ÿ`);
+      if (!shouldApply) return;
+      hasConfirmedPaletteRemapRef.current = true;
+    }
+
+    const updated = remapPatternResultToPalette(result, palette);
+    setResult(updated);
+    setSelectedCorrectionKeys([]);
+    setSelectedColorGroupKey(getFirstColorKey(updated));
+    setIsGroupCorrectionOpen(false);
+    setStatusMessage(`å·²æŒ‰ MARD ${paletteName} æŽ¨èè‰²æ›¿æ¢ ${extraBeadCount} é¢—æ–¹æ¡ˆå¤–é¢œè‰²`);
   };
 
   const handleManualApply = (color: PaletteColor | null) => {
@@ -573,7 +738,12 @@ export default function PatternAnalysisPage() {
   };
 
   const handleSave = async () => {
-    if (!result) return;
+    const resultToSave = displayResult ?? result;
+    if (!resultToSave) return;
+    const extraColorCount = Object.values(resultToSave.colorCounts).filter((entry) => entry.isExtraColor).length;
+    const extraBeadCount = Object.values(resultToSave.colorCounts)
+      .filter((entry) => entry.isExtraColor)
+      .reduce((sum, entry) => sum + entry.count, 0);
     setIsSaving(true);
     setSaveResult(null);
     try {
@@ -587,17 +757,19 @@ export default function PatternAnalysisPage() {
           selectedColorSystem: 'MARD',
           brand: 'MARD',
           paletteName,
-          gridDimensions: result.gridDimensions,
-          mappedPixelData: result.mappedPixelData,
-          colorCounts: result.colorCounts,
-          totalBeadCount: result.totalBeadCount,
+          gridDimensions: resultToSave.gridDimensions,
+          mappedPixelData: resultToSave.mappedPixelData,
+          colorCounts: resultToSave.colorCounts,
+          totalBeadCount: resultToSave.totalBeadCount,
           sourceType: 'analyzed_pattern_sheet',
           analysisMetadata: {
             originalPatternImagePath: '',
             analyzedAt: new Date().toISOString(),
             recognitionMethod: 'background_color',
-            unconfirmedCellCount: result.cells.filter((cell) => cell.status === 'pending').length,
-            gridBounds: result.grid.bounds,
+            unconfirmedCellCount: resultToSave.cells.filter((cell) => cell.status === 'pending').length,
+            extraColorCount,
+            extraBeadCount,
+            gridBounds: resultToSave.grid.bounds,
           },
         }),
       });
@@ -628,6 +800,8 @@ export default function PatternAnalysisPage() {
       source.width,
       source.height
     );
+    setIsGridControlsCollapsed(false);
+    if (target === 'grid') setDetectedGrid(null);
     setBoundsForTarget(target, next);
   };
 
@@ -651,6 +825,8 @@ export default function PatternAnalysisPage() {
 
     event.preventDefault();
     setAdjustMode('manual');
+    setIsGridControlsCollapsed(false);
+    if (target === 'grid') setDetectedGrid(null);
     setIsBoundaryAdjusting(true);
     setActiveBoundaryHandle(mode === 'draw' ? 'move' : mode);
     setBoundaryDrag({
@@ -701,20 +877,129 @@ export default function PatternAnalysisPage() {
 
   const handleColsChange = (value: string) => {
     const nextCols = clampInteger(value, 1, 300);
+    const source = sourceCanvasRef.current;
+    let nextGridBounds = bounds;
+    if (parseStep === 'grid' && bounds && source) {
+      const center = getBoundsCenter(bounds);
+      const cellWidth = (bounds.right - bounds.left) / Math.max(1, cols);
+      nextGridBounds = boundsFromCenterAndSize(
+        center,
+        cellWidth * nextCols,
+        bounds.bottom - bounds.top,
+        source.width,
+        source.height
+      );
+      setBounds(nextGridBounds);
+    }
+    setIsGridControlsCollapsed(false);
+    setDetectedGrid(null);
     setCols(nextCols);
     redrawDisplayCanvas({
       overlayMode: parseStep === 'crop' ? 'crop' : 'grid',
+      nextGridBounds,
       nextCols,
     });
   };
 
   const handleRowsChange = (value: string) => {
     const nextRows = clampInteger(value, 1, 300);
+    const source = sourceCanvasRef.current;
+    let nextGridBounds = bounds;
+    if (parseStep === 'grid' && bounds && source) {
+      const center = getBoundsCenter(bounds);
+      const cellHeight = (bounds.bottom - bounds.top) / Math.max(1, rows);
+      nextGridBounds = boundsFromCenterAndSize(
+        center,
+        bounds.right - bounds.left,
+        cellHeight * nextRows,
+        source.width,
+        source.height
+      );
+      setBounds(nextGridBounds);
+    }
+    setIsGridControlsCollapsed(false);
+    setDetectedGrid(null);
     setRows(nextRows);
     redrawDisplayCanvas({
       overlayMode: parseStep === 'crop' ? 'crop' : 'grid',
+      nextGridBounds,
       nextRows,
     });
+  };
+
+  const handleGridCenterChange = (axis: 'x' | 'y', value: string) => {
+    const numeric = Number(value);
+    const source = sourceCanvasRef.current;
+    if (!source || !Number.isFinite(numeric)) return;
+    const current = bounds ?? getFullCanvasBounds(source);
+    const center = getBoundsCenter(current);
+    const next = shiftBounds(
+      current,
+      axis === 'x' ? numeric - center.x : 0,
+      axis === 'y' ? numeric - center.y : 0,
+      source.width,
+      source.height
+    );
+    setAdjustMode('manual');
+    setAdjustTarget('grid');
+    setIsBoundaryAdjusting(true);
+    setIsGridControlsCollapsed(false);
+    setDetectedGrid(null);
+    setActiveBoundaryHandle('move');
+    setBoundsForTarget('grid', next, 'move');
+  };
+
+  const handleGridCellSizeChange = (axis: 'width' | 'height', value: string) => {
+    const numeric = Number(value);
+    const source = sourceCanvasRef.current;
+    if (!source || !Number.isFinite(numeric) || numeric <= 0) return;
+
+    const current = bounds ?? getFullCanvasBounds(source);
+    const center = getBoundsCenter(current);
+    const currentCellWidth = (current.right - current.left) / Math.max(1, cols);
+    const currentCellHeight = (current.bottom - current.top) / Math.max(1, rows);
+    const nextCellWidth = axis === 'width'
+      ? clampNumber(numeric, 0.2, Math.max(0.2, source.width / Math.max(1, cols)))
+      : currentCellWidth;
+    const nextCellHeight = axis === 'height'
+      ? clampNumber(numeric, 0.2, Math.max(0.2, source.height / Math.max(1, rows)))
+      : currentCellHeight;
+    const next = boundsFromCenterAndSize(
+      center,
+      nextCellWidth * Math.max(1, cols),
+      nextCellHeight * Math.max(1, rows),
+      source.width,
+      source.height
+    );
+
+    setAdjustMode('manual');
+    setAdjustTarget('grid');
+    setIsBoundaryAdjusting(true);
+    setIsGridControlsCollapsed(false);
+    setDetectedGrid(null);
+    setActiveBoundaryHandle('move');
+    setBoundsForTarget('grid', next, 'move');
+  };
+
+  const alignGridCenterToCanvas = () => {
+    const source = sourceCanvasRef.current;
+    if (!source) return;
+    const current = bounds ?? getFullCanvasBounds(source);
+    const center = getBoundsCenter(current);
+    const next = shiftBounds(
+      current,
+      source.width / 2 - center.x,
+      source.height / 2 - center.y,
+      source.width,
+      source.height
+    );
+    setAdjustMode('manual');
+    setAdjustTarget('grid');
+    setIsBoundaryAdjusting(true);
+    setIsGridControlsCollapsed(false);
+    setActiveBoundaryHandle('move');
+    setBoundsForTarget('grid', next, 'move');
+    setStatusMessage('网格中心点已对齐到裁剪后画面中心');
   };
 
   const nudgeActiveTarget = (direction: NudgeDirection) => {
@@ -733,6 +1018,8 @@ export default function PatternAnalysisPage() {
       ? shiftBounds(current, delta.x, delta.y, source.width, source.height)
       : nudgeBoundsByHandle(current, activeBoundaryHandle, direction, source.width, source.height);
     setAdjustMode('manual');
+    setIsGridControlsCollapsed(false);
+    if (target === 'grid') setDetectedGrid(null);
     setBoundsForTarget(target, next, activeBoundaryHandle);
   };
 
@@ -740,6 +1027,7 @@ export default function PatternAnalysisPage() {
     const source = sourceCanvasRef.current;
     if (!source) return;
     const target = parseStep === 'crop' ? 'canvas' : adjustTarget;
+    setIsGridControlsCollapsed(false);
     if (target === 'canvas') {
       const resetBounds = parseStep === 'crop' ? null : getFullCanvasBounds(source);
       setCropBounds(resetBounds);
@@ -831,6 +1119,7 @@ export default function PatternAnalysisPage() {
     overlayMode = parseStep === 'crop' ? 'crop' : 'grid',
     nextGridBounds = bounds,
     nextCropBounds = cropBounds,
+    nextDetectedGrid = detectedGrid,
     nextCols = cols,
     nextRows = rows,
     adjustOptions = {
@@ -860,12 +1149,28 @@ export default function PatternAnalysisPage() {
       drawCropOverlay(ctx, nextCropBounds, adjustOptions);
     }
     if (nextGridBounds) {
-      drawGridOverlay(ctx, nextGridBounds, nextCols, nextRows, adjustOptions);
+      drawGridOverlay(ctx, nextGridBounds, nextCols, nextRows, adjustOptions, nextDetectedGrid);
     }
   };
 
   const activeAdjustmentTarget = parseStep === 'crop' ? 'canvas' : adjustTarget;
   const activeAdjustmentBounds = activeAdjustmentTarget === 'canvas' ? cropBounds : bounds;
+  const gridCenter = detectedGrid?.geometry
+    ? { x: detectedGrid.geometry.centerX, y: detectedGrid.geometry.centerY }
+    : bounds
+      ? getBoundsCenter(bounds)
+      : null;
+  const gridCellSize = detectedGrid?.geometry
+    ? {
+        width: detectedGrid.geometry.pitchX,
+        height: detectedGrid.geometry.pitchY,
+      }
+    : bounds
+    ? {
+        width: (bounds.right - bounds.left) / Math.max(1, cols),
+        height: (bounds.bottom - bounds.top) / Math.max(1, rows),
+      }
+    : null;
   const autoGridSizeLabel =
     detectedGrid?.estimatedCols && detectedGrid?.estimatedRows
       ? `${detectedGrid.estimatedCols}x${detectedGrid.estimatedRows}`
@@ -1020,6 +1325,38 @@ export default function PatternAnalysisPage() {
                       </button>
                     </div>
 
+                    {isGridControlsCollapsed ? (
+                      <div className="mt-3 rounded border border-slate-200 bg-slate-50 p-3">
+                        <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+                          <Stat label="当前网格" value={currentGridSizeLabel} />
+                          <Stat label="中心点" value={gridCenter ? `${Math.round(gridCenter.x)}, ${Math.round(gridCenter.y)}` : '-'} />
+                          <Stat
+                            label="单格"
+                            value={gridCellSize ? `${formatMeasurementForInput(gridCellSize.width)} x ${formatMeasurementForInput(gridCellSize.height)}` : '-'}
+                          />
+                          <Stat label="画布" value={canvasSizeLabel} />
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-2">
+                          <button
+                            type="button"
+                            disabled={!bounds}
+                            onClick={handleReopenGridControls}
+                            className="h-10 rounded border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
+                          >
+                            微调网格
+                          </button>
+                          <button
+                            type="button"
+                            disabled={!bounds || !imageSrc || !palette.length}
+                            onClick={handleEnterNextStep}
+                            className="h-10 rounded bg-blue-600 px-3 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+                          >
+                            进入下一步
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
                     <div className="mt-3 grid grid-cols-2 gap-2">
                       {(['auto', 'manual'] as AdjustMode[]).map((mode) => (
                         <button
@@ -1042,6 +1379,41 @@ export default function PatternAnalysisPage() {
                           {mode === 'auto' ? '自动' : '手动'}
                         </button>
                       ))}
+                    </div>
+
+                    <div className="mt-3 rounded border border-slate-200 bg-slate-50 p-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <label className="block text-sm font-medium text-slate-700">
+                          参考列数
+                          <input
+                            type="number"
+                            min={5}
+                            max={300}
+                            value={autoReferenceCols}
+                            onChange={(event) => setAutoReferenceCols(event.target.value)}
+                            className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm"
+                          />
+                        </label>
+                        <label className="block text-sm font-medium text-slate-700">
+                          参考行数
+                          <input
+                            type="number"
+                            min={5}
+                            max={300}
+                            value={autoReferenceRows}
+                            onChange={(event) => setAutoReferenceRows(event.target.value)}
+                            className="mt-1 h-10 w-full rounded border border-slate-300 bg-white px-3 text-sm"
+                          />
+                        </label>
+                      </div>
+                      <button
+                        type="button"
+                        disabled={isPythonGridDetecting}
+                        onClick={() => handleDetectGrid()}
+                        className="mt-3 h-9 w-full rounded border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
+                      >
+                        {isPythonGridDetecting ? 'Python 检测中' : 'Python 检测'}
+                      </button>
                     </div>
 
                     <div className="mt-3 grid grid-cols-2 gap-3">
@@ -1067,6 +1439,68 @@ export default function PatternAnalysisPage() {
                           className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm"
                         />
                       </label>
+                    </div>
+
+                    <div className="mt-4 rounded border border-slate-200 bg-slate-50 p-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-sm font-semibold text-slate-700">网格中心点</span>
+                        <button
+                          type="button"
+                          disabled={!bounds}
+                          onClick={alignGridCenterToCanvas}
+                          className="h-8 rounded border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
+                        >
+                          对齐画面中心
+                        </button>
+                      </div>
+                      <div className="mt-3 grid grid-cols-2 gap-3">
+                        <label className="block text-sm font-medium text-slate-700">
+                          中心 X
+                          <input
+                            type="number"
+                            disabled={!bounds}
+                            value={Math.round(gridCenter?.x ?? 0)}
+                            onChange={(event) => handleGridCenterChange('x', event.target.value)}
+                            className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm disabled:bg-slate-100"
+                          />
+                        </label>
+                        <label className="block text-sm font-medium text-slate-700">
+                          中心 Y
+                          <input
+                            type="number"
+                            disabled={!bounds}
+                            value={Math.round(gridCenter?.y ?? 0)}
+                            onChange={(event) => handleGridCenterChange('y', event.target.value)}
+                            className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm disabled:bg-slate-100"
+                          />
+                        </label>
+                      </div>
+                      <div className="mt-3 grid grid-cols-2 gap-3">
+                        <label className="block text-sm font-medium text-slate-700">
+                          单格宽
+                          <input
+                            type="number"
+                            min={0.2}
+                            step={0.1}
+                            disabled={!bounds}
+                            value={formatMeasurementForInput(gridCellSize?.width ?? 0)}
+                            onChange={(event) => handleGridCellSizeChange('width', event.target.value)}
+                            className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm disabled:bg-slate-100"
+                          />
+                        </label>
+                        <label className="block text-sm font-medium text-slate-700">
+                          单格高
+                          <input
+                            type="number"
+                            min={0.2}
+                            step={0.1}
+                            disabled={!bounds}
+                            value={formatMeasurementForInput(gridCellSize?.height ?? 0)}
+                            onChange={(event) => handleGridCellSizeChange('height', event.target.value)}
+                            className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm disabled:bg-slate-100"
+                          />
+                        </label>
+                      </div>
                     </div>
 
                     <div className="mt-4 grid grid-cols-2 gap-2">
@@ -1127,6 +1561,26 @@ export default function PatternAnalysisPage() {
                         </label>
                       ))}
                     </div>
+                    <div className="mt-4 grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        disabled={!bounds}
+                        onClick={handleConfirmGrid}
+                        className="h-10 rounded bg-slate-900 px-3 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+                      >
+                        确认网格
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!bounds || !imageSrc || !palette.length}
+                        onClick={handleEnterNextStep}
+                        className="h-10 rounded border border-blue-300 bg-white px-3 text-sm font-medium text-blue-700 hover:bg-blue-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
+                      >
+                        进入下一步
+                      </button>
+                    </div>
+                      </>
+                    )}
                   </div>
 
                   <div className="rounded border border-slate-200 bg-white p-4 shadow-sm">
@@ -1135,7 +1589,9 @@ export default function PatternAnalysisPage() {
                       色板
                       <select
                         value={paletteName}
-                        onChange={(event) => setPaletteName(event.target.value)}
+                        onChange={(event) => {
+                          void handlePaletteNameChange(event.target.value);
+                        }}
                         className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm"
                       >
                         <option value="96">MARD 96</option>
@@ -1209,7 +1665,7 @@ export default function PatternAnalysisPage() {
         {activeTab === 'optimize' && (
           <section className="grid gap-4 lg:grid-cols-[400px_1fr]">
             <SummaryPanel
-              result={result}
+              result={displayResult}
               sortedColorCounts={sortedColorCounts}
               colorCountGroups={colorCountGroups}
               selectedColorGroupKey={selectedColorGroupKey}
@@ -1225,6 +1681,7 @@ export default function PatternAnalysisPage() {
               onSave={handleSave}
               isSaving={isSaving}
               saveResult={saveResult}
+              onApplyPaletteRecommendations={paletteComplianceIssues.length > 0 ? handleApplyPaletteRecommendations : undefined}
             />
             <div className="flex flex-col gap-4">
               <div className="rounded border border-slate-200 bg-white p-4 shadow-sm">
@@ -1319,13 +1776,14 @@ export default function PatternAnalysisPage() {
           <section className="grid gap-4 lg:grid-cols-[360px_1fr]">
             <div className="flex flex-col gap-4">
               <SummaryPanel
-                result={result}
+                result={displayResult}
                 sortedColorCounts={sortedColorCounts}
                 patternName={patternName}
                 setPatternName={setPatternName}
                 onSave={handleSave}
                 isSaving={isSaving}
                 saveResult={saveResult}
+                onApplyPaletteRecommendations={paletteComplianceIssues.length > 0 ? handleApplyPaletteRecommendations : undefined}
               />
               <div className="rounded border border-slate-200 bg-white p-4 shadow-sm">
                 <h2 className="text-base font-semibold">编辑工具</h2>
@@ -1407,6 +1865,46 @@ export default function PatternAnalysisPage() {
     setSourceCanvasVersion((version) => version + 1);
     return nextBounds;
   }
+
+  function cropWorkingCanvases(targetBounds: GridBounds): CropWorkingCanvasResult | null {
+    const source = sourceCanvasRef.current;
+    const display = displayCanvasRef.current;
+    if (!source || source.width === 0 || source.height === 0) return null;
+
+    const safeBounds = normalizeEditableBounds(targetBounds, source.width, source.height);
+    const left = clampNumber(Math.floor(safeBounds.left), 0, source.width - 1);
+    const top = clampNumber(Math.floor(safeBounds.top), 0, source.height - 1);
+    const right = clampNumber(Math.ceil(safeBounds.right), left + 1, source.width);
+    const bottom = clampNumber(Math.ceil(safeBounds.bottom), top + 1, source.height);
+    const width = right - left;
+    const height = bottom - top;
+    const cropped = document.createElement('canvas');
+    cropped.width = width;
+    cropped.height = height;
+    const croppedCtx = cropped.getContext('2d');
+    if (!croppedCtx) return null;
+    croppedCtx.drawImage(source, left, top, width, height, 0, 0, width, height);
+
+    for (const canvas of [source, display]) {
+      if (!canvas) continue;
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d', { willReadFrequently: canvas === source });
+      if (!ctx) continue;
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(cropped, 0, 0);
+    }
+
+    setCanvasSize({ width, height });
+    setSourceCanvasVersion((version) => version + 1);
+    setBoundaryDrag(null);
+    setActiveBoundaryHandle('move');
+
+    return {
+      bounds: { left: 0, top: 0, right: width, bottom: height },
+      dataUrl: cropped.toDataURL('image/png'),
+    };
+  }
 }
 
 function SummaryPanel({
@@ -1423,6 +1921,7 @@ function SummaryPanel({
   onSave,
   isSaving,
   saveResult,
+  onApplyPaletteRecommendations,
 }: {
   result: PatternAnalysisResult | null;
   sortedColorCounts: ColorCountItem[];
@@ -1437,7 +1936,10 @@ function SummaryPanel({
   onSave: () => void;
   isSaving: boolean;
   saveResult: SaveResponse | null;
+  onApplyPaletteRecommendations?: () => void;
 }) {
+  const extraColors = sortedColorCounts.filter((entry) => entry.isExtraColor);
+  const extraBeadCount = extraColors.reduce((sum, entry) => sum + entry.count, 0);
   const groupedStats =
     colorCountGroups.length > 0
       ? colorCountGroups
@@ -1460,10 +1962,11 @@ function SummaryPanel({
           className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm"
         />
       </label>
-      <div className="mt-3 grid grid-cols-3 gap-2 text-center text-sm">
+      <div className="mt-3 grid grid-cols-2 gap-2 text-center text-sm sm:grid-cols-4">
         <Stat label="尺寸" value={result ? `${result.gridDimensions.N}x${result.gridDimensions.M}` : '-'} />
         <Stat label="颜色" value={result ? String(Object.keys(result.colorCounts).length) : '-'} />
         <Stat label="总豆数" value={result ? String(result.totalBeadCount) : '-'} />
+        <Stat label="方案外" value={result ? `${extraColors.length}/${extraBeadCount}` : '-'} />
       </div>
       <button
         type="button"
@@ -1478,6 +1981,25 @@ function SummaryPanel({
       )}
       {saveResult?.error && (
         <p className="mt-2 break-all text-xs text-red-600">{saveResult.error}</p>
+      )}
+
+      {extraColors.length > 0 && (
+        <div className="mt-4 rounded border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <span>
+              当前色板外颜色 {extraColors.length} 个，共 {extraBeadCount} 颗。
+            </span>
+            {onApplyPaletteRecommendations && (
+              <button
+                type="button"
+                onClick={onApplyPaletteRecommendations}
+                className="h-9 rounded bg-amber-600 px-3 text-sm font-medium text-white hover:bg-amber-700"
+              >
+                按推荐色替换
+              </button>
+            )}
+          </div>
+        </div>
       )}
 
       <div className="mt-5 flex items-center justify-between gap-3">
@@ -1507,12 +2029,11 @@ function SummaryPanel({
               {group.colors.map((entry) => {
                 const isSelected = selectedColorGroupKey === entry.colorKey;
                 const isChecked = selectedCorrectionKeys.includes(entry.colorKey);
+                const rowTone = isSelected ? 'bg-amber-50' : entry.isExtraColor ? 'bg-rose-50' : 'bg-white';
                 return (
                   <div
                     key={entry.hex}
-                    className={`grid ${onToggleCorrectionKey ? 'grid-cols-[auto_1fr]' : 'grid-cols-1'} items-center gap-2 border-t border-slate-100 px-2 py-2 ${
-                      isSelected ? 'bg-amber-50' : 'bg-white'
-                    }`}
+                    className={`grid ${onToggleCorrectionKey ? 'grid-cols-[auto_1fr]' : 'grid-cols-1'} items-center gap-2 border-t border-slate-100 px-2 py-2 ${rowTone}`}
                   >
                     {onToggleCorrectionKey && (
                       <input
@@ -1538,6 +2059,7 @@ function SummaryPanel({
                           {entry.hex}
                           {entry.pendingCount > 0 ? ` · 待确认 ${entry.pendingCount}` : ''}
                           {entry.changedCount > 0 ? ` · 已改 ${entry.changedCount}` : ''}
+                          {entry.isExtraColor ? ` · 方案外${entry.recommendedColorKey ? ` -> ${entry.recommendedColorKey}` : ''}` : ''}
                         </span>
                       </span>
                     </button>
@@ -1820,7 +2342,8 @@ function drawGridOverlay(
   bounds: GridBounds,
   cols: number,
   rows: number,
-  options?: DisplayAdjustOptions
+  options?: DisplayAdjustOptions,
+  detectedGrid?: DetectedGrid | null
 ) {
   ctx.save();
   ctx.strokeStyle = '#0F172A';
@@ -1828,27 +2351,88 @@ function drawGridOverlay(
   ctx.strokeRect(bounds.left, bounds.top, bounds.right - bounds.left, bounds.bottom - bounds.top);
   ctx.strokeStyle = 'rgba(14, 165, 233, 0.6)';
   ctx.lineWidth = 1;
-  const width = bounds.right - bounds.left;
-  const height = bounds.bottom - bounds.top;
+  const verticalLines = getDrawableGridLines(detectedGrid?.verticalLines, bounds.left, bounds.right);
+  const horizontalLines = getDrawableGridLines(detectedGrid?.horizontalLines, bounds.top, bounds.bottom);
 
-  for (let col = 1; col < cols; col += 1) {
-    const x = bounds.left + (width * col) / cols;
-    ctx.beginPath();
-    ctx.moveTo(x, bounds.top);
-    ctx.lineTo(x, bounds.bottom);
-    ctx.stroke();
+  if (verticalLines.length > 2 || horizontalLines.length > 2) {
+    verticalLines.slice(1, -1).forEach((x) => {
+      ctx.beginPath();
+      ctx.moveTo(x, bounds.top);
+      ctx.lineTo(x, bounds.bottom);
+      ctx.stroke();
+    });
+    horizontalLines.slice(1, -1).forEach((y) => {
+      ctx.beginPath();
+      ctx.moveTo(bounds.left, y);
+      ctx.lineTo(bounds.right, y);
+      ctx.stroke();
+    });
+  } else {
+    const width = bounds.right - bounds.left;
+    const height = bounds.bottom - bounds.top;
+
+    for (let col = 1; col < cols; col += 1) {
+      const x = bounds.left + (width * col) / cols;
+      ctx.beginPath();
+      ctx.moveTo(x, bounds.top);
+      ctx.lineTo(x, bounds.bottom);
+      ctx.stroke();
+    }
+    for (let row = 1; row < rows; row += 1) {
+      const y = bounds.top + (height * row) / rows;
+      ctx.beginPath();
+      ctx.moveTo(bounds.left, y);
+      ctx.lineTo(bounds.right, y);
+      ctx.stroke();
+    }
   }
-  for (let row = 1; row < rows; row += 1) {
-    const y = bounds.top + (height * row) / rows;
-    ctx.beginPath();
-    ctx.moveTo(bounds.left, y);
-    ctx.lineTo(bounds.right, y);
-    ctx.stroke();
-  }
+
+  drawGridCenterMarker(ctx, bounds, options?.activeHandle === 'move', detectedGrid?.geometry);
 
   if (options?.isAdjusting) {
     drawBoundaryHandles(ctx, bounds, options);
   }
+  ctx.restore();
+}
+
+function getDrawableGridLines(lines: number[] | undefined, start: number, end: number): number[] {
+  if (!lines?.length) return [];
+  const clipped = lines
+    .filter((line) => Number.isFinite(line) && line >= start - 0.5 && line <= end + 0.5)
+    .map((line) => clampNumber(line, start, end))
+    .sort((a, b) => a - b);
+  return dedupeNumbers([start, ...clipped, end], 0.01);
+}
+
+function dedupeNumbers(values: number[], tolerance: number): number[] {
+  const result: number[] = [];
+  values.sort((a, b) => a - b).forEach((value) => {
+    if (!result.length || Math.abs(value - result[result.length - 1]) > tolerance) {
+      result.push(value);
+    }
+  });
+  return result;
+}
+
+function drawGridCenterMarker(ctx: CanvasRenderingContext2D, bounds: GridBounds, isActive: boolean, geometry?: DetectedGrid['geometry']) {
+  const center = geometry
+    ? { x: geometry.centerX, y: geometry.centerY }
+    : getBoundsCenter(bounds);
+  const size = Math.max(10, Math.min(ctx.canvas.width, ctx.canvas.height) * 0.01);
+  ctx.save();
+  ctx.strokeStyle = isActive ? '#F59E0B' : '#DC2626';
+  ctx.fillStyle = isActive ? '#F59E0B' : '#FFFFFF';
+  ctx.lineWidth = isActive ? 3 : 2;
+  ctx.beginPath();
+  ctx.moveTo(center.x - size, center.y);
+  ctx.lineTo(center.x + size, center.y);
+  ctx.moveTo(center.x, center.y - size);
+  ctx.lineTo(center.x, center.y + size);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(center.x, center.y, Math.max(4, size * 0.38), 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
   ctx.restore();
 }
 
@@ -1952,6 +2536,37 @@ function getFullCanvasBounds(canvas: HTMLCanvasElement): GridBounds {
   return { left: 0, top: 0, right: canvas.width, bottom: canvas.height };
 }
 
+function getBoundsCenter(bounds: GridBounds): { x: number; y: number } {
+  return {
+    x: (bounds.left + bounds.right) / 2,
+    y: (bounds.top + bounds.bottom) / 2,
+  };
+}
+
+function boundsFromCenterAndSize(
+  center: { x: number; y: number },
+  gridWidth: number,
+  gridHeight: number,
+  canvasWidth: number,
+  canvasHeight: number
+): GridBounds {
+  return normalizeEditableBounds(
+    {
+      left: center.x - gridWidth / 2,
+      top: center.y - gridHeight / 2,
+      right: center.x + gridWidth / 2,
+      bottom: center.y + gridHeight / 2,
+    },
+    canvasWidth,
+    canvasHeight
+  );
+}
+
+function formatMeasurementForInput(value: number): string {
+  if (!Number.isFinite(value)) return '0';
+  return String(Math.round(value * 100) / 100);
+}
+
 function shiftBounds(bounds: GridBounds, deltaX: number, deltaY: number, width: number, height: number): GridBounds {
   const boxWidth = bounds.right - bounds.left;
   const boxHeight = bounds.bottom - bounds.top;
@@ -1988,6 +2603,11 @@ function pickBoundaryHandle(
   canvasHeight: number
 ): BoundaryHandle | null {
   const threshold = Math.max(24, Math.min(canvasWidth, canvasHeight) * 0.025);
+  const center = getBoundsCenter(bounds);
+  if ((center.x - x) ** 2 + (center.y - y) ** 2 <= threshold ** 2) {
+    return 'move';
+  }
+
   const points = getBoundaryHandlePoints(bounds);
   let closest: { handle: Exclude<BoundaryHandle, 'move'>; distance: number } | null = null;
 
@@ -2096,6 +2716,25 @@ function clampIntegerValue(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, Math.round(value)));
 }
 
+async function fetchMardPalette(paletteName: string): Promise<PaletteColor[]> {
+  const response = await fetch(`/api/palettes/mard?paletteName=${encodeURIComponent(paletteName)}`);
+  const body = await response.json();
+  if (!response.ok) {
+    throw new Error(body.error || '读取色板失败');
+  }
+
+  return (body as PaletteApiResponse).colors
+    .map((color) => paletteColorFromHex(color.key, color.hex))
+    .filter((color): color is PaletteColor => color !== null);
+}
+
+function keepPaletteSelection(current: string, palette: PaletteColor[]): string {
+  if (current && palette.some((color) => color.key === current)) {
+    return current;
+  }
+  return palette[0]?.key || '';
+}
+
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -2122,4 +2761,11 @@ function clampInteger(value: string, min: number, max: number): number {
   const parsed = Number.parseInt(value, 10);
   if (!Number.isFinite(parsed)) return min;
   return Math.min(max, Math.max(min, parsed));
+}
+
+function parseOptionalGridCount(value: string): number | null {
+  if (!value.trim()) return null;
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isFinite(parsed) || parsed < 5 || parsed > 300) return null;
+  return parsed;
 }

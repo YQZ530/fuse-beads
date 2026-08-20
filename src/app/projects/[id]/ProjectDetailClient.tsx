@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import type {
   ProjectDetailFile,
   ProjectPattern,
@@ -28,6 +28,8 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
   const [selectedDraftIds, setSelectedDraftIds] = useState<Set<string>>(new Set());
   const [selectedInProgressIds, setSelectedInProgressIds] = useState<Set<string>>(new Set());
   const [activePreviewId, setActivePreviewId] = useState('');
+  const [isRenamingProject, setIsRenamingProject] = useState(false);
+  const [renameDraft, setRenameDraft] = useState('');
   const [busyAction, setBusyAction] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -49,6 +51,40 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
   const requirementSourceLabel = formatRequirementSourceLabel(project.patterns.filter((pattern) => (
     pattern.status === 'draft' || pattern.status === 'in_progress'
   )));
+
+  async function handleRenameProject(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const nextName = renameDraft.trim();
+    if (!nextName) {
+      setError('项目名称不能为空');
+      return;
+    }
+
+    setBusyAction('rename-project');
+    setMessage('');
+    setError('');
+
+    try {
+      const response = await fetch(`/api/projects/${encodeURIComponent(project.id)}/rename`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: nextName }),
+      });
+      const payload = (await response.json()) as StatusResponse;
+      if (!response.ok || !payload.ok || !payload.project) {
+        throw new Error(payload.error || '修改项目名称失败');
+      }
+
+      setProject(payload.project);
+      setIsRenamingProject(false);
+      setRenameDraft('');
+      setMessage(`已改名为：${payload.project.name}`);
+    } catch (renameError) {
+      setError(renameError instanceof Error ? renameError.message : '修改项目名称失败');
+    } finally {
+      setBusyAction('');
+    }
+  }
 
   async function movePatternSelection({
     patternIds,
@@ -121,12 +157,54 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
         <header className="flex flex-col gap-3 border-b border-slate-200 pb-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="flex flex-wrap gap-3 text-sm font-medium">
-              <Link href="/projects" className="text-slate-500 hover:text-slate-900">返回项目列表</Link>
+              <Link href="/projects" prefetch={false} className="text-slate-500 hover:text-slate-900">返回项目列表</Link>
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl font-semibold tracking-normal">{project.name}</h1>
-              <StatusText status={project.status} />
-            </div>
+            {isRenamingProject ? (
+              <form className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center" onSubmit={handleRenameProject}>
+                <input
+                  value={renameDraft}
+                  onChange={(event) => setRenameDraft(event.target.value)}
+                  className="h-11 min-w-0 rounded border border-slate-300 px-3 text-xl font-semibold outline-none focus:border-blue-500 sm:w-80"
+                  autoFocus
+                />
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    disabled={busyAction === 'rename-project' || !renameDraft.trim()}
+                    className="inline-flex h-10 items-center justify-center rounded bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {busyAction === 'rename-project' ? '保存中' : '保存'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsRenamingProject(false);
+                      setRenameDraft('');
+                    }}
+                    className="inline-flex h-10 items-center justify-center rounded border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                  >
+                    取消
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl font-semibold tracking-normal">{project.name}</h1>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setRenameDraft(project.name);
+                    setIsRenamingProject(true);
+                  }}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded border border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+                  aria-label="修改项目名称"
+                  title="修改项目名称"
+                >
+                  <span aria-hidden="true">✎</span>
+                </button>
+                <StatusText status={project.status} />
+              </div>
+            )}
             <p className="mt-1 text-sm text-slate-500">
               {project.warehouseName} · {project.warehouseBrand || 'MARD'} {project.warehousePaletteName || ''} · 锁定于 {formatDateTime(project.warehouseLockedAt)}
             </p>
@@ -134,12 +212,14 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
           <div className="flex flex-wrap gap-2">
             <Link
               href="/analysis"
+              prefetch={false}
               className="inline-flex h-10 items-center justify-center rounded bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700"
             >
               加载图纸
             </Link>
             <Link
               href="/warehouse"
+              prefetch={false}
               className="inline-flex h-10 items-center justify-center rounded border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
               查看豆仓

@@ -3,11 +3,11 @@
   "warehouses": [
     {
       "id": "warehouse-1",
-      "name": "豆仓1",
+      "name": "亚麻96仓",
       "brand": "MARD",
       "paletteName": "96",
       "createdAt": "2026-08-13T21:37:36.597Z",
-      "updatedAt": "2026-08-14T01:30:16.279Z",
+      "updatedAt": "2026-08-19T22:16:00.288Z",
       "items": [
         {
           "hex": "#9EF780",
@@ -633,6 +633,1024 @@
           "updatedAt": "2026-08-14T01:30:16.279Z"
         }
       ]
+    },
+    {
+      "id": "warehouse-星芒144",
+      "name": "星芒144",
+      "brand": "MARD",
+      "paletteName": "144",
+      "createdAt": "2026-08-19T22:16:37.249Z",
+      "updatedAt": "2026-08-19T22:19:38.063Z",
+      "items": [
+        {
+          "hex": "#C4D4F6",
+          "colorKey": "D17",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#B9BAE1",
+          "colorKey": "D11",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#858EDD",
+          "colorKey": "D2",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#1557A8",
+          "colorKey": "C16",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E3E1EE",
+          "colorKey": "D16",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#AEB4F2",
+          "colorKey": "D1",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#3677D2",
+          "colorKey": "C7",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#2F54AF",
+          "colorKey": "D3",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#CDE8FF",
+          "colorKey": "C13",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#04D1F6",
+          "colorKey": "C17",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#50AAF0",
+          "colorKey": "C6",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#324BCA",
+          "colorKey": "C9",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#A0E2FB",
+          "colorKey": "C3",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#3EBCE2",
+          "colorKey": "C10",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#01ACEB",
+          "colorKey": "C5",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#0F54C0",
+          "colorKey": "C8",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#A9F9FC",
+          "colorKey": "C2",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#41CCFF",
+          "colorKey": "C4",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#28DDDE",
+          "colorKey": "C11",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#3DAF80",
+          "colorKey": "B7",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#95D3C2",
+          "colorKey": "B10",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#65E2A6",
+          "colorKey": "B6",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#22C4C6",
+          "colorKey": "C15",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#24B88C",
+          "colorKey": "B19",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#D5B9F8",
+          "colorKey": "D9",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#AC7BDE",
+          "colorKey": "D6",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#A45EC7",
+          "colorKey": "D18",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#2F1F90",
+          "colorKey": "D15",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E2D3FF",
+          "colorKey": "D8",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#DE9AD4",
+          "colorKey": "D12",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#9C32B2",
+          "colorKey": "D20",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#8854B3",
+          "colorKey": "D7",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#D8C3D7",
+          "colorKey": "D19",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E970CC",
+          "colorKey": "E9",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#B90095",
+          "colorKey": "D13",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#8B279B",
+          "colorKey": "D14",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFDBE9",
+          "colorKey": "E8",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFB7E7",
+          "colorKey": "E3",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#B843C5",
+          "colorKey": "D5",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#9A009B",
+          "colorKey": "D21",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FEC0DF",
+          "colorKey": "E2",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E8649E",
+          "colorKey": "E4",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#D33793",
+          "colorKey": "E10",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#B5006D",
+          "colorKey": "E13",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F78FC3",
+          "colorKey": "E12",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F13D74",
+          "colorKey": "E6",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F551A2",
+          "colorKey": "E5",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#C63478",
+          "colorKey": "E7",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#B0A782",
+          "colorKey": "M6",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#8A4526",
+          "colorKey": "F10",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#5A2121",
+          "colorKey": "F11",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#753832",
+          "colorKey": "G8",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#D0CCAA",
+          "colorKey": "M5",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#B7714A",
+          "colorKey": "G13",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#9D5B3E",
+          "colorKey": "G7",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#5D722A",
+          "colorKey": "B11",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E6EE49",
+          "colorKey": "B18",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E6EE31",
+          "colorKey": "B1",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#ADE946",
+          "colorKey": "B14",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#9BB13A",
+          "colorKey": "B17",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E8FFE7",
+          "colorKey": "C1",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#CAEB7B",
+          "colorKey": "B13",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#63F347",
+          "colorKey": "B2",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#1C9C4F",
+          "colorKey": "B8",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#C2F0CC",
+          "colorKey": "B20",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#C5ED9C",
+          "colorKey": "B16",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#5DE035",
+          "colorKey": "B4",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#166F41",
+          "colorKey": "B12",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#D5FDFF",
+          "colorKey": "C14",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#9EF780",
+          "colorKey": "B3",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#35E352",
+          "colorKey": "B5",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#2E5132",
+          "colorKey": "B15",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FD4E6A",
+          "colorKey": "F12",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F74941",
+          "colorKey": "F3",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#943630",
+          "colorKey": "F6",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#971937",
+          "colorKey": "F7",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFA9AD",
+          "colorKey": "F14",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FC3D46",
+          "colorKey": "F2",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E2677A",
+          "colorKey": "F9",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#BC0028",
+          "colorKey": "F8",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FF995B",
+          "colorKey": "A9",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FD957B",
+          "colorKey": "F1",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F35744",
+          "colorKey": "F13",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E7002F",
+          "colorKey": "F5",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFDD99",
+          "colorKey": "A11",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FEAC4C",
+          "colorKey": "A6",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FE8B4C",
+          "colorKey": "A7",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FC283C",
+          "colorKey": "F4",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FEFF8B",
+          "colorKey": "A3",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFC365",
+          "colorKey": "A13",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F77C31",
+          "colorKey": "A10",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FD543D",
+          "colorKey": "A14",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFF365",
+          "colorKey": "A15",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FBED56",
+          "colorKey": "A4",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F4D738",
+          "colorKey": "A5",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFDA45",
+          "colorKey": "A8",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FDFBFF",
+          "colorKey": "H1",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFF5ED",
+          "colorKey": "H12",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#89858C",
+          "colorKey": "H4",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#000000",
+          "colorKey": "H7",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FEFFFF",
+          "colorKey": "H2",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FAF4C8",
+          "colorKey": "A1",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#B6B1BA",
+          "colorKey": "H3",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#2F2B2F",
+          "colorKey": "H6",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FCDDD2",
+          "colorKey": "E11",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFE2CE",
+          "colorKey": "G1",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#A58767",
+          "colorKey": "M9",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#48464E",
+          "colorKey": "H5",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFD1BA",
+          "colorKey": "E14",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFC4AA",
+          "colorKey": "G2",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E6B483",
+          "colorKey": "G9",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#78524B",
+          "colorKey": "G17",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FDD3CC",
+          "colorKey": "E1",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F4C3A5",
+          "colorKey": "G3",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#EDB045",
+          "colorKey": "G5",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#644749",
+          "colorKey": "M12",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F8C7C9",
+          "colorKey": "E15",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FE9F72",
+          "colorKey": "A12",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E99C17",
+          "colorKey": "G6",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#8D614C",
+          "colorKey": "G14",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#EDEDED",
+          "colorKey": "H9",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#CFD7D3",
+          "colorKey": "H14",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#CECDD5",
+          "colorKey": "H11",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#757D78",
+          "colorKey": "M15",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F2D9BA",
+          "colorKey": "G16",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E3D2BC",
+          "colorKey": "M4",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#B4A497",
+          "colorKey": "M7",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#B38281",
+          "colorKey": "M8",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#F5ECD2",
+          "colorKey": "H13",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E1B383",
+          "colorKey": "G4",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#D19066",
+          "colorKey": "M13",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#C77362",
+          "colorKey": "M14",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFFFD5",
+          "colorKey": "A2",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E0C593",
+          "colorKey": "G11",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FFC890",
+          "colorKey": "G12",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#D98C39",
+          "colorKey": "G10",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#FCF9E0",
+          "colorKey": "G15",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#BCC6B8",
+          "colorKey": "M1",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#8AA386",
+          "colorKey": "M2",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#697D80",
+          "colorKey": "M3",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#E7D6DB",
+          "colorKey": "H8",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#EEE9EA",
+          "colorKey": "H10",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#C5B2BC",
+          "colorKey": "M10",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        },
+        {
+          "hex": "#9F7594",
+          "colorKey": "M11",
+          "ownedCount": 500,
+          "sourcePaletteName": "144",
+          "isExtraColor": false
+        }
+      ]
     }
   ],
   "transactions": [
@@ -799,6 +1817,14 @@
           "after": 546
         }
       ]
+    },
+    {
+      "id": "c9941dcf-7459-40a9-9c2e-0f924882f5fd",
+      "warehouseId": "warehouse-星芒144",
+      "type": "create_warehouse",
+      "createdAt": "2026-08-19T22:16:37.249Z",
+      "note": "创建豆仓：星芒144",
+      "items": []
     }
   ]
 }

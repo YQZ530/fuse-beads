@@ -6,7 +6,7 @@ const path = require('path');
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = '0.0.0.0';
-const port = 3001;
+const port = Number(process.env.PORT || 3002);
 
 const app = next({ dev });
 const handle = app.getRequestHandler();
