@@ -9,6 +9,7 @@ import math
 import re
 from collections import defaultdict
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -27,6 +28,8 @@ DEFAULT_OUTPUT_DIR = Path("results") / "color-legend"
 DEFAULT_MAPPING_PATH = Path("src") / "app" / "colorSystemMapping.json"
 DEFAULT_PALETTE_SETS_PATH = Path("src") / "data" / "mardPaletteSets.csv"
 DEFAULT_TESSERACT = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+DETAIL_PAGE = "detail_page"
+COLOR_MODAL = "color_modal"
 
 
 @dataclass
@@ -48,6 +51,8 @@ class LegendCircle:
     match_distance: float
     count: int | None
     count_text: str
+    inside_text: str = ""
+    color_key_source: str = "palette_match"
 
 
 @dataclass
@@ -68,10 +73,16 @@ class LegendAnalysis:
     transparent_token: NumberToken | None
 
 
+def log(message: str) -> None:
+    timestamp = datetime.now().strftime("%H:%M:%S")
+    print(f"[{timestamp}] {message}", flush=True)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Analyze bottom legend color keys/counts from screenshots.")
-    parser.add_argument("input", help="Image file or directory. Example: C:\\Users\\z5308\\Desktop\\batch_pic")
+    parser.add_argument("input", nargs="?", help="Image file or directory. Example: C:\\Users\\z5308\\Desktop\\batch_pic")
     parser.add_argument("--out", default="", help="Output JSON path.")
+    parser.add_argument("--manifest", default="", help="groups.manifest.json from group_similar_pattern_images.py.")
     parser.add_argument("--palette", default="291", help="MARD palette set: 96, 144, 291, or all.")
     parser.add_argument("--legend-ratio", type=float, default=0.38, help="Bottom image ratio scanned for legend circles.")
     parser.add_argument("--tesseract", default=str(DEFAULT_TESSERACT), help="Path to tesseract.exe.")
@@ -82,12 +93,26 @@ def main() -> int:
 
     configure_tesseract(Path(args.tesseract))
 
+    palette = load_mard_palette(DEFAULT_MAPPING_PATH, DEFAULT_PALETTE_SETS_PATH, args.palette)
+
+    if args.manifest:
+        manifest_path = Path(args.manifest)
+        out_path = Path(args.out) if args.out else default_output_path(manifest_path)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = analyze_manifest_groups(manifest_path, palette, args.max_distance)
+        out_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        log(f"Wrote grouped color analysis: {out_path}")
+        print(str(out_path))
+        return 0
+
+    if not args.input:
+        raise SystemExit("Input image/directory is required unless --manifest is provided.")
+
     input_path = Path(args.input)
     images = discover_images(input_path)
     if not images:
         raise SystemExit(f"No image files found: {input_path}")
 
-    palette = load_mard_palette(DEFAULT_MAPPING_PATH, DEFAULT_PALETTE_SETS_PATH, args.palette)
     palette_keys = {color.key for color in palette}
     out_path = Path(args.out) if args.out else default_output_path(input_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -95,9 +120,11 @@ def main() -> int:
     page_results = []
     for index, image_path in enumerate(images, start=1):
         image_id = f"p{index}"
+        log(f"[{index}/{len(images)}] analyzing legend: {image_path}")
         image = read_image(image_path)
         if image is None:
             page_results.append(error_result(image_id, image_path, "Could not read image"))
+            log(f"[{index}/{len(images)}] ERROR could not read: {image_path}")
             continue
 
         analysis = analyze_image_legend(
@@ -213,6 +240,183 @@ def analyze_image_legend(
     )
 
 
+def analyze_manifest_groups(
+    manifest_path: Path,
+    palette: list[PaletteColor],
+    max_distance: float,
+) -> dict[str, Any]:
+    if not manifest_path.exists():
+        raise SystemExit(f"Manifest not found: {manifest_path}")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    groups = manifest.get("groups", [])
+    if not isinstance(groups, list):
+        raise SystemExit(f"Manifest has no groups array: {manifest_path}")
+
+    log(f"Loaded manifest: {manifest_path}")
+    log(f"Found {len(groups)} grouped image(s).")
+
+    results = []
+    analyzed_count = 0
+    error_count = 0
+    for index, group in enumerate(groups, start=1):
+        result = analyze_manifest_group(index, len(groups), group, palette, max_distance)
+        results.append(result)
+        if result.get("error"):
+            error_count += 1
+        else:
+            analyzed_count += 1
+
+    if analyzed_count == 0:
+        raise SystemExit("No groups contained detail_page or color_modal images to analyze.")
+
+    return {
+        "input": str(manifest_path),
+        "palette": "manifest",
+        "mode": "grouped_manifest_color_legend_analysis",
+        "sourceManifest": {
+            "input": manifest.get("input"),
+            "output": manifest.get("output"),
+            "groupCount": manifest.get("groupCount"),
+            "imageCount": manifest.get("imageCount"),
+        },
+        "groupCount": len(groups),
+        "analyzedGroupCount": analyzed_count,
+        "errorGroupCount": error_count,
+        "images": results,
+    }
+
+
+def analyze_manifest_group(
+    index: int,
+    total: int,
+    group: dict[str, Any],
+    palette: list[PaletteColor],
+    max_distance: float,
+) -> dict[str, Any]:
+    group_name = str(group.get("groupName") or group.get("folderName") or group.get("id") or f"group_{index}")
+    items = [item for item in group.get("items", []) if isinstance(item, dict)]
+    available_types = sorted({str(item.get("pageType") or "") for item in items if item.get("pageType")})
+    detail_items = [item for item in items if item.get("pageType") == DETAIL_PAGE]
+    modal_items = [item for item in items if item.get("pageType") == COLOR_MODAL]
+    selected_items = detail_items if detail_items else modal_items
+    source_type = DETAIL_PAGE if detail_items else COLOR_MODAL if modal_items else ""
+
+    log(f"[{index}/{total}] group {group_name}: available pageTypes={available_types or ['none']}")
+    if not selected_items:
+        message = f"group {group_name} has no detail_page or color_modal image"
+        log(f"[{index}/{total}] ERROR {message}")
+        return {
+            "id": group_name,
+            "source": group_name,
+            "groupName": group_name,
+            "analysisMethod": "grouped_manifest_color_legend_analysis",
+            "analysisStatus": "error_no_detail_or_color_modal",
+            "availablePageTypes": available_types,
+            "error": message,
+            "totalColorKeys": 0,
+            "totalBeads": 0,
+            "colorCounts": {},
+            "colors": [],
+            "legendItems": [],
+            "pages": [],
+        }
+
+    log(f"[{index}/{total}] group {group_name}: using {len(selected_items)} {source_type} image(s).")
+    page_results = []
+    for page_index, item in enumerate(selected_items, start=1):
+        source = Path(str(item.get("source") or ""))
+        image_id = f"{group_name}_p{page_index}"
+        log(f"[{index}/{total}] group {group_name}: analyzing {source_type} {source.name}")
+        image = read_image(source)
+        if image is None:
+            log(f"[{index}/{total}] ERROR group {group_name}: could not read {source}")
+            page_results.append(error_result(image_id, source, "Could not read image"))
+            continue
+        if source_type == COLOR_MODAL:
+            analysis = analyze_color_modal(image, palette)
+            result = build_result(image_id, source, image, analysis, max_distance)
+            result["analysisMethod"] = "color_modal_circle_key_plus_count_ocr"
+        else:
+            analysis = analyze_image_legend(image, palette, legend_ratio=0.38)
+            result = build_result(image_id, source, image, analysis, max_distance)
+        result["groupName"] = group_name
+        result["sourcePageType"] = source_type
+        page_results.append(result)
+
+    merged = build_merged_group_result(group_name, group, page_results)
+    merged["analysisStatus"] = f"analyzed_from_{source_type}"
+    merged["sourcePageType"] = source_type
+    merged["availablePageTypes"] = available_types
+    if int(merged.get("totalColorKeys") or 0) == 0:
+        message = f"group {group_name} produced no color entries from {source_type}"
+        log(f"[{index}/{total}] ERROR {message}")
+        merged["analysisStatus"] = "error_no_colors_extracted"
+        merged["error"] = message
+    return merged
+
+
+def build_merged_group_result(group_name: str, group: dict[str, Any], page_results: list[dict[str, Any]]) -> dict[str, Any]:
+    merged = build_merged_folder_result(Path(group_name), page_results)
+    merged["id"] = group_name
+    merged["source"] = group_name
+    merged["groupName"] = group_name
+    merged["groupCount"] = group.get("count")
+    merged["analysisMethod"] = "grouped_manifest_color_legend_analysis"
+    return merged
+
+
+def analyze_color_modal(image: np.ndarray, palette: list[PaletteColor]) -> LegendAnalysis:
+    box = find_modal_box(image)
+    if box is None:
+        log("ERROR color_modal parser could not locate modal panel")
+        return LegendAnalysis(circles=[], legend_top=0, expected_total=None, transparent_count=None, transparent_token=None)
+
+    raw_circles = detect_modal_circles(image, box)
+    number_tokens = read_modal_number_tokens(image, box)
+    palette_by_key = {color.key: color for color in palette}
+    circles: list[LegendCircle] = []
+
+    for x, y, radius in raw_circles:
+        sampled_rgb = sample_circle_rgb(image, x, y, radius)
+        if sampled_rgb is None:
+            continue
+        matched, distance = match_palette(sampled_rgb, palette)
+        matched_key = matched.key
+        matched_hex = matched.hex
+        inside_key = read_circle_key(image, x, y, radius, set(palette_by_key))
+        color_key_source = "palette_match"
+        if inside_key in palette_by_key:
+            matched_key = inside_key
+            matched_hex = palette_by_key[inside_key].hex
+            color_key_source = "inside_ocr"
+        token = find_count_below_circle(number_tokens, (x, y, radius))
+        count_text = token.text if token else read_count_below_circle(image, x, y, radius)
+        circles.append(
+            LegendCircle(
+                x=x,
+                y=y,
+                radius=radius,
+                sampled_rgb=sampled_rgb,
+                matched_key=matched_key,
+                matched_hex=matched_hex,
+                match_distance=distance,
+                count=int(count_text) if count_text else None,
+                count_text=count_text,
+                inside_text=inside_key,
+                color_key_source=color_key_source,
+            )
+        )
+
+    expected_total = sum(circle.count or 0 for circle in circles) if circles else None
+    return LegendAnalysis(
+        circles=sort_circles_reading_order(circles),
+        legend_top=box[1],
+        expected_total=expected_total,
+        transparent_count=None,
+        transparent_token=None,
+    )
+
+
 def detect_circles(image: np.ndarray, legend_top: int) -> list[tuple[int, int, int]]:
     height, width = image.shape[:2]
     legend = image[legend_top:, :]
@@ -246,6 +450,142 @@ def detect_circles(image: np.ndarray, legend_top: int) -> list[tuple[int, int, i
             detected.append((int(x), absolute_y, int(radius)))
 
     return merge_duplicate_circles(detected)
+
+
+def find_modal_box(image: np.ndarray) -> tuple[int, int, int, int] | None:
+    height, width = image.shape[:2]
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    mask = (gray > 245).astype(np.uint8) * 255
+    kernel = np.ones((15, 15), np.uint8)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    candidates: list[tuple[int, int, int, int]] = []
+    page_area = height * width
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        area = w * h
+        if page_area * 0.12 <= area <= page_area * 0.85 and w > width * 0.45 and h > height * 0.25:
+            candidates.append((x, y, w, h))
+    if not candidates:
+        return None
+    return max(candidates, key=lambda item: item[2] * item[3])
+
+
+def detect_modal_circles(image: np.ndarray, box: tuple[int, int, int, int]) -> list[tuple[int, int, int]]:
+    x, y, w, h = box
+    content_top = y + int(h * 0.12)
+    content_bottom = y + int(h * 0.72)
+    content = image[content_top:content_bottom, x:x + w]
+    if content.size == 0:
+        return []
+
+    gray = cv2.cvtColor(content, cv2.COLOR_BGR2GRAY)
+    gray = cv2.medianBlur(gray, 5)
+    min_radius = max(20, int(round(min(w, h) * 0.018)))
+    max_radius = max(min_radius + 8, int(round(min(w, h) * 0.045)))
+    min_dist = max(70, int(round(w * 0.10)))
+    detected: list[tuple[int, int, int]] = []
+
+    for param2 in (18, 22, 26, 30):
+        circles = cv2.HoughCircles(
+            gray,
+            cv2.HOUGH_GRADIENT,
+            dp=1.2,
+            minDist=min_dist,
+            param1=85,
+            param2=param2,
+            minRadius=min_radius,
+            maxRadius=max_radius,
+        )
+        if circles is None:
+            continue
+        for cx, cy, radius in np.round(circles[0]).astype(int):
+            absolute_x = int(cx + x)
+            absolute_y = int(cy + content_top)
+            if absolute_x < x + radius or absolute_x > x + w - radius:
+                continue
+            if absolute_y < content_top + radius or absolute_y > content_bottom - radius:
+                continue
+            detected.append((absolute_x, absolute_y, int(radius)))
+
+    return merge_duplicate_circles(detected)
+
+
+def read_modal_number_tokens(image: np.ndarray, box: tuple[int, int, int, int]) -> list[NumberToken]:
+    x, y, w, h = box
+    content_top = y + int(h * 0.12)
+    content_bottom = y + int(h * 0.72)
+    crop = image[content_top:content_bottom, x:x + w]
+    if crop.size == 0:
+        return []
+
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    gray = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    config = "--psm 6 -c tessedit_char_whitelist=0123456789"
+    try:
+        data = pytesseract.image_to_data(Image.fromarray(gray), config=config, output_type=pytesseract.Output.DICT)
+    except Exception:
+        return []
+
+    tokens: list[NumberToken] = []
+    for index, raw_text in enumerate(data.get("text", [])):
+        text = digits_only(raw_text)
+        if not text:
+            continue
+        left = int(round(data["left"][index] / 2)) + x
+        top = int(round(data["top"][index] / 2)) + content_top
+        width = int(round(data["width"][index] / 2))
+        height = int(round(data["height"][index] / 2))
+        if len(text) > 4 or height < 8 or width < 3:
+            continue
+        tokens.append(NumberToken(left, top, width, height, text))
+    return tokens
+
+
+def find_count_below_circle(tokens: list[NumberToken], circle: tuple[int, int, int]) -> NumberToken | None:
+    x, y, radius = circle
+    candidates: list[tuple[float, NumberToken]] = []
+    for token in tokens:
+        token_cx = token.x + token.width / 2
+        token_cy = token.y + token.height / 2
+        dx = abs(token_cx - x)
+        dy = token_cy - y
+        if dx > max(radius * 1.35, 44):
+            continue
+        if dy < radius * 0.75 or dy > radius * 2.35:
+            continue
+        score = dx + abs(dy - radius * 1.55) * 0.5
+        candidates.append((score, token))
+    if not candidates:
+        return None
+    return min(candidates, key=lambda item: item[0])[1]
+
+
+def read_count_below_circle(image: np.ndarray, x: int, y: int, radius: int) -> str:
+    crop = crop_box(image, x, y + int(radius * 1.55), int(radius * 1.55), int(radius * 0.55))
+    if crop.size == 0:
+        return ""
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    gray = cv2.resize(gray, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+    variants = [
+        cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1],
+        cv2.threshold(gray, 185, 255, cv2.THRESH_BINARY)[1],
+        cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1],
+    ]
+    config = "--psm 7 -c tessedit_char_whitelist=0123456789"
+    candidates: list[str] = []
+    for variant in variants:
+        try:
+            text = pytesseract.image_to_string(Image.fromarray(variant), config=config)
+        except Exception:
+            continue
+        digits = digits_only(text)
+        if 1 <= len(digits) <= 4:
+            candidates.append(digits)
+    if not candidates:
+        return ""
+    return max(candidates, key=lambda value: (len(value), int(value)))
 
 
 def merge_duplicate_circles(circles: list[tuple[int, int, int]]) -> list[tuple[int, int, int]]:
@@ -582,6 +922,8 @@ def build_result(
                 "colorKey": circle.matched_key,
                 "count": circle.count,
                 "countText": circle.count_text,
+                "insideText": circle.inside_text,
+                "colorKeySource": circle.color_key_source,
                 "matchedHex": circle.matched_hex,
                 "sampledRgb": list(circle.sampled_rgb),
                 "distance": round(circle.match_distance, 3),

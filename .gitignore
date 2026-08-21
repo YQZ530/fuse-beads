@@ -53,3 +53,5 @@ public/fallback-*.js
 node-v24.19.0-win-x64.zip
 plan.MD
 /.paddle_deps
+/.ocr_home
+/.paddlex_cache
