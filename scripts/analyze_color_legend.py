@@ -53,6 +53,7 @@ class LegendCircle:
     count_text: str
     inside_text: str = ""
     color_key_source: str = "palette_match"
+    special_key: str = ""
 
 
 @dataclass
@@ -193,9 +194,16 @@ def analyze_image_legend(
     legend_ratio: float,
 ) -> LegendAnalysis:
     height, width = image.shape[:2]
-    legend_top = int(round(height * (1.0 - clamp(legend_ratio, 0.12, 0.7))))
-    raw_circles = detect_circles(image, legend_top)
-    number_tokens = read_number_tokens(image, legend_top)
+    legend_box = choose_bottom_legend_rect(image)
+    if legend_box is None:
+        legend_top = int(round(height * (1.0 - clamp(legend_ratio, 0.12, 0.7))))
+        log("WARNING detail_page legend rectangle not found; falling back to bottom-ratio crop")
+        raw_circles = detect_circles(image, legend_top)
+        number_tokens = read_number_tokens(image, legend_top)
+    else:
+        legend_top = legend_box[1]
+        raw_circles = detect_circles_in_box(image, legend_box)
+        number_tokens = read_number_tokens_in_box(image, legend_box)
     count_tokens, expected_total, transparent_token = select_legend_count_tokens(number_tokens)
     palette_by_key = {color.key: color for color in palette}
     circles: list[LegendCircle] = []
@@ -212,11 +220,23 @@ def analyze_image_legend(
         matched, distance = match_palette(sampled_rgb, palette)
         matched_key = matched.key
         matched_hex = matched.hex
+        ocr_key = ""
+        inside_text = ""
+        special_key = ""
+        mosaic_stat_circle = looks_like_mosaic_stat_circle(image, x, y, radius)
+        if mosaic_stat_circle or distance > 4.0:
+            ocr_key, inside_text = read_circle_key(image, x, y, radius, set(palette_by_key))
+            if ocr_key not in palette_by_key:
+                if mosaic_stat_circle:
+                    continue
         if distance > 4.0:
-            ocr_key = read_circle_key(image, x, y, radius, set(palette_by_key))
+            special_key = special_circle_key(inside_text)
+            if special_key:
+                continue
             if ocr_key in palette_by_key:
                 matched_key = ocr_key
                 matched_hex = palette_by_key[ocr_key].hex
+        count_text = read_count_below_circle(image, x, y, radius) or token.text
         circles.append(
             LegendCircle(
                 x=x,
@@ -226,8 +246,10 @@ def analyze_image_legend(
                 matched_key=matched_key,
                 matched_hex=matched_hex,
                 match_distance=distance,
-                count=int(token.text),
-                count_text=token.text,
+                count=int(count_text),
+                count_text=count_text,
+                inside_text=inside_text or ocr_key,
+                special_key=special_key,
             )
         )
 
@@ -338,6 +360,11 @@ def analyze_manifest_group(
             result["analysisMethod"] = "color_modal_circle_key_plus_count_ocr"
         else:
             analysis = analyze_image_legend(image, palette, legend_ratio=0.38)
+            if len(selected_items) > 1:
+                removed = drop_incomplete_detail_edge_circles(analysis, image, page_index)
+                if removed:
+                    edge = "right" if page_index == 1 else "left"
+                    log(f"[{index}/{total}] group {group_name}: dropped {removed} incomplete {edge}-edge circle(s) from {source.name}")
             result = build_result(image_id, source, image, analysis, max_distance)
         result["groupName"] = group_name
         result["sourcePageType"] = source_type
@@ -353,6 +380,28 @@ def analyze_manifest_group(
         merged["analysisStatus"] = "error_no_colors_extracted"
         merged["error"] = message
     return merged
+
+
+def drop_incomplete_detail_edge_circles(analysis: LegendAnalysis, image: np.ndarray, page_index: int) -> int:
+    box = choose_bottom_legend_rect(image)
+    if box is None:
+        return 0
+    x, _y, w, _h = box
+    margin = max(4, int(round(w * 0.004)))
+    before = len(analysis.circles)
+    if page_index == 1:
+        right_edge = x + w
+        analysis.circles = [
+            circle for circle in analysis.circles
+            if circle.x + circle.radius < right_edge - margin
+        ]
+    else:
+        left_edge = x
+        analysis.circles = [
+            circle for circle in analysis.circles
+            if circle.x - circle.radius > left_edge + margin
+        ]
+    return before - len(analysis.circles)
 
 
 def build_merged_group_result(group_name: str, group: dict[str, Any], page_results: list[dict[str, Any]]) -> dict[str, Any]:
@@ -383,7 +432,10 @@ def analyze_color_modal(image: np.ndarray, palette: list[PaletteColor]) -> Legen
         matched, distance = match_palette(sampled_rgb, palette)
         matched_key = matched.key
         matched_hex = matched.hex
-        inside_key = read_circle_key(image, x, y, radius, set(palette_by_key))
+        inside_key, inside_text = read_circle_key(image, x, y, radius, set(palette_by_key))
+        special_key = special_circle_key(inside_text)
+        if special_key:
+            continue
         color_key_source = "palette_match"
         if inside_key in palette_by_key:
             matched_key = inside_key
@@ -402,8 +454,9 @@ def analyze_color_modal(image: np.ndarray, palette: list[PaletteColor]) -> Legen
                 match_distance=distance,
                 count=int(count_text) if count_text else None,
                 count_text=count_text,
-                inside_text=inside_key,
+                inside_text=inside_text or inside_key,
                 color_key_source=color_key_source,
+                special_key=special_key,
             )
         )
 
@@ -448,6 +501,76 @@ def detect_circles(image: np.ndarray, legend_top: int) -> list[tuple[int, int, i
             if x < radius or x > width - radius:
                 continue
             detected.append((int(x), absolute_y, int(radius)))
+
+    return merge_duplicate_circles(detected)
+
+
+def choose_bottom_legend_rect(image: np.ndarray) -> tuple[int, int, int, int] | None:
+    rects = bottom_white_rects(image)
+    if not rects:
+        return None
+    height, width = image.shape[:2]
+    for x, y, w, h, _area in rects:
+        if w > width * 0.45 and y > height * 0.62:
+            return (x, y, w, h)
+    x, y, w, h, _area = max(rects, key=lambda rect: rect[4])
+    return (x, y, w, h)
+
+
+def bottom_white_rects(image: np.ndarray) -> list[tuple[int, int, int, int, int]]:
+    height, width = image.shape[:2]
+    search_top = int(height * (0.50 if height > width else 0.55))
+    roi = image[search_top:height, :]
+    if roi.size == 0:
+        return []
+    gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    mask = (gray > 242).astype(np.uint8) * 255
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (max(35, width // 35), max(11, height // 150)))
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    rects: list[tuple[int, int, int, int, int]] = []
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        y += search_top
+        area = w * h
+        if w > width * 0.18 and h > height * 0.012 and area > width * height * 0.004:
+            rects.append((x, y, w, h, area))
+    return sorted(rects, key=lambda rect: (rect[1], -rect[4]))
+
+
+def detect_circles_in_box(image: np.ndarray, box: tuple[int, int, int, int]) -> list[tuple[int, int, int]]:
+    x, y, w, h = box
+    crop = image[y:y + h, x:x + w]
+    if crop.size == 0:
+        return []
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    gray = cv2.medianBlur(gray, 5)
+
+    height, width = image.shape[:2]
+    min_radius = max(12, int(round(min(width, height) * 0.012)))
+    max_radius = max(min_radius + 8, int(round(min(width, height) * 0.045)))
+    min_dist = max(34, int(round(width * 0.038)))
+    detected: list[tuple[int, int, int]] = []
+
+    for param2 in (20, 24, 28, 32):
+        circles = cv2.HoughCircles(
+            gray,
+            cv2.HOUGH_GRADIENT,
+            dp=1.2,
+            minDist=min_dist,
+            param1=85,
+            param2=param2,
+            minRadius=min_radius,
+            maxRadius=max_radius,
+        )
+        if circles is None:
+            continue
+        for cx, cy, radius in np.round(circles[0]).astype(int):
+            absolute_x = int(cx + x)
+            absolute_y = int(cy + y)
+            if absolute_y < y + min_radius:
+                continue
+            detected.append((absolute_x, absolute_y, int(radius)))
 
     return merge_duplicate_circles(detected)
 
@@ -641,6 +764,37 @@ def is_non_color_stat_circle(rgb: tuple[int, int, int]) -> bool:
     return saturation < 16 and value > 210
 
 
+def looks_like_mosaic_stat_circle(image: np.ndarray, x: int, y: int, radius: int) -> bool:
+    crop = crop_box(image, x, y, int(radius * 0.86), int(radius * 0.86))
+    if crop.size == 0:
+        return False
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    height, width = gray.shape[:2]
+    yy, xx = np.ogrid[:height, :width]
+    cx = (width - 1) / 2.0
+    cy = (height - 1) / 2.0
+    mask_radius = min(width, height) * 0.46
+    mask = (xx - cx) ** 2 + (yy - cy) ** 2 <= mask_radius ** 2
+    pixels = gray[mask]
+    if pixels.size < 50:
+        return False
+
+    white_ratio = float(np.mean(pixels > 245))
+    light_gray_ratio = float(np.mean((pixels >= 185) & (pixels <= 238)))
+    dark_ratio = float(np.mean(pixels < 90))
+    stddev = float(np.std(pixels))
+
+    edges = cv2.Canny(gray, 60, 140)
+    edge_ratio = float(np.mean(edges[mask] > 0))
+    return (
+        white_ratio >= 0.18
+        and light_gray_ratio >= 0.18
+        and stddev >= 22.0
+        and edge_ratio >= 0.035
+        and dark_ratio <= 0.22
+    )
+
+
 def read_number_tokens(image: np.ndarray, legend_top: int) -> list[NumberToken]:
     legend = image[legend_top:, :]
     gray = cv2.cvtColor(legend, cv2.COLOR_BGR2GRAY)
@@ -662,6 +816,35 @@ def read_number_tokens(image: np.ndarray, legend_top: int) -> list[NumberToken]:
         width = int(round(data["width"][index] / 2))
         height = int(round(data["height"][index] / 2))
         if len(text) > 4 or height < 10 or width < 3:
+            continue
+        tokens.append(NumberToken(left, top, width, height, text))
+    return tokens
+
+
+def read_number_tokens_in_box(image: np.ndarray, box: tuple[int, int, int, int]) -> list[NumberToken]:
+    x, y, w, h = box
+    crop = image[y:y + h, x:x + w]
+    if crop.size == 0:
+        return []
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    gray = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    config = "--psm 6 -c tessedit_char_whitelist=0123456789"
+    try:
+        data = pytesseract.image_to_data(Image.fromarray(gray), config=config, output_type=pytesseract.Output.DICT)
+    except Exception:
+        return []
+
+    tokens: list[NumberToken] = []
+    for index, raw_text in enumerate(data.get("text", [])):
+        text = digits_only(raw_text)
+        if not text:
+            continue
+        left = int(round(data["left"][index] / 2)) + x
+        top = int(round(data["top"][index] / 2)) + y
+        width = int(round(data["width"][index] / 2))
+        height = int(round(data["height"][index] / 2))
+        if len(text) > 4 or height < 8 or width < 3:
             continue
         tokens.append(NumberToken(left, top, width, height, text))
     return tokens
@@ -785,10 +968,10 @@ def find_circle_above_token(circles: list[tuple[int, int, int]], token: NumberTo
     return min(candidates, key=lambda item: item[0])[1]
 
 
-def read_circle_key(image: np.ndarray, x: int, y: int, radius: int, palette_keys: set[str]) -> str:
+def read_circle_key(image: np.ndarray, x: int, y: int, radius: int, palette_keys: set[str]) -> tuple[str, str]:
     crop = crop_box(image, x, y, int(radius * 1.2), int(radius * 0.95))
     if crop.size == 0:
-        return ""
+        return "", ""
     gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
     gray = cv2.resize(gray, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
     variants = [
@@ -796,15 +979,19 @@ def read_circle_key(image: np.ndarray, x: int, y: int, radius: int, palette_keys
         cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1],
     ]
     config = "--psm 8 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    first_text = ""
     for variant in variants:
         try:
             text = pytesseract.image_to_string(Image.fromarray(variant), config=config)
         except Exception:
             continue
+        cleaned_text = text.strip()
+        if cleaned_text and not first_text:
+            first_text = cleaned_text
         key = normalize_key_text(text)
         if key in palette_keys:
-            return key
-    return ""
+            return key, cleaned_text
+    return "", first_text
 
 
 def crop_box(image: np.ndarray, x: int, y: int, half_width: int, half_height: int) -> np.ndarray:
@@ -819,6 +1006,15 @@ def normalize_key_text(text: str) -> str:
     clean = re.sub(r"[^A-Za-z0-9]", "", text).upper()
     match = re.search(r"([A-Z]{1,3})(\d{1,2})", clean)
     return match.group(1) + match.group(2) if match else clean
+
+
+def special_circle_key(text: str) -> str:
+    compact = re.sub(r"\s+", "", text)
+    if "空" in compact:
+        return "transparent"
+    if "全" in compact:
+        return "full"
+    return ""
 
 
 def digits_only(text: str) -> str:
@@ -924,6 +1120,7 @@ def build_result(
                 "countText": circle.count_text,
                 "insideText": circle.inside_text,
                 "colorKeySource": circle.color_key_source,
+                "specialKey": circle.special_key,
                 "matchedHex": circle.matched_hex,
                 "sampledRgb": list(circle.sampled_rgb),
                 "distance": round(circle.match_distance, 3),
