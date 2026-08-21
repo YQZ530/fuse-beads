@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Group iPad Perler-bead screenshots into logical ImageN projects.
 
 Key assumptions documented from the working batch:
@@ -102,13 +102,11 @@ def main() -> int:
     parser.add_argument("--out", default="", help="Output directory. Defaults to <input_dir>.")
     parser.add_argument("--action", choices=("copy", "move"), default="move", help="Copy or move images into group folders.")
     parser.add_argument("--dry-run", action="store_true", help="Only write JSON plan; do not copy/move files.")
-    parser.add_argument("--include-singletons", action="store_true", help="Also create folders for groups that contain only one image.")
     parser.add_argument("--recursive", action="store_true", help="Scan images recursively. Default only scans direct child files.")
     parser.add_argument("--top-ratio", type=float, default=0.08, help="Crop this ratio from the top before comparing.")
     parser.add_argument("--bottom-ratio", type=float, default=0.38, help="Crop this ratio from the bottom before comparing.")
     parser.add_argument("--side-ratio", type=float, default=0.02, help="Crop this ratio from left/right before comparing.")
     parser.add_argument("--phash-threshold", type=int, default=10, help="Max pHash Hamming distance for same-pattern match.")
-    parser.add_argument("--thumb-threshold", type=float, default=18.0, help="Deprecated compatibility option; colorHist is used now.")
     parser.add_argument("--local-window", type=int, default=DEFAULT_LOCAL_WINDOW, help="Prefer grouping images within +/- N filename positions before global fallback.")
     parser.add_argument("--tesseract", default=str(DEFAULT_TESSERACT), help="Path to tesseract.exe.")
     parser.add_argument("--manifest", default="", help="Manifest JSON path. Defaults to <out>/groups.manifest.json.")
@@ -182,7 +180,7 @@ def main() -> int:
         features.append(feature)
 
     log(f"Grouping {len(features)} analyzed image(s).")
-    groups, review_candidates = cluster_features(features, args.phash_threshold, args.thumb_threshold, args.local_window)
+    groups, review_candidates = cluster_features(features, args.phash_threshold, args.local_window)
     review_candidates = pre_review_candidates + review_candidates
     log_group_summary(groups)
     output_names = assign_output_names(groups, out_dir)
@@ -437,21 +435,6 @@ def apply_adjacent_modal_pair_fallback(features: list[ImageFeature]) -> None:
     # summary_view + color_modal is handled in group_match_score only when both
     # sides already have the same pairKey. detail_page is never converted.
     return None
-
-
-def adjacent_modal_pair(a: ImageFeature, b: ImageFeature) -> tuple[ImageFeature | None, ImageFeature | None]:
-    if a.page_type == COLOR_MODAL and b.page_type != COLOR_MODAL:
-        return a, b
-    if b.page_type == COLOR_MODAL and a.page_type != COLOR_MODAL:
-        return b, a
-    return None, None
-
-
-def trailing_number(value: str) -> int | None:
-    match = re.search(r"(\d+)$", value)
-    if not match:
-        return None
-    return int(match.group(1))
 
 
 def looks_like_color_modal(image: np.ndarray) -> bool:
@@ -759,93 +742,6 @@ def parse_pair_key_text(text: str) -> str | None:
     return None
 
 
-def repair_pair_numbers_from_text(text: str) -> list[int]:
-    candidate = repair_pair_candidate_from_text(text)
-    if candidate:
-        return list(candidate[:2])
-
-    return []
-
-
-def repair_pair_candidate_from_text(text: str) -> tuple[int, int, int] | None:
-    run_candidates = pair_candidates_from_digit_runs(text)
-    if run_candidates:
-        return min(run_candidates, key=pair_candidate_score)
-
-    digits = re.sub(r"\D", "", text)
-    if len(digits) < 5:
-        return None
-    # The UI text often OCRs as "52829558" for "52 色号 · 2955 豆":
-    # two-ish leading digits for color count, then a 4-digit bead count,
-    # sometimes with one stray trailing digit from icons/punctuation.
-    candidates: list[tuple[int, int, int]] = []
-    for color_len in (2, 3, 1):
-        if len(digits) <= color_len + 2:
-            continue
-        color_count = int(digits[:color_len])
-        if not (1 <= color_count <= 400):
-            continue
-        tail = digits[color_len:]
-        for start in range(0, max(0, len(tail) - 3)):
-            bead_text = tail[start:start + 4]
-            if len(bead_text) != 4:
-                continue
-            bead_count = int(bead_text)
-            if 100 <= bead_count <= 9999:
-                candidates.append((color_count, bead_count, 5))
-    if not candidates:
-        return None
-
-    return min(candidates, key=pair_candidate_score)
-
-
-def pair_candidates_from_digit_runs(text: str) -> list[tuple[int, int, int]]:
-    runs = re.findall(r"\d+", text)
-    if len(runs) < 2:
-        return []
-
-    color_candidates: list[tuple[int, int, bool]] = []
-    first = runs[0]
-    if 1 <= len(first) <= 3:
-        color_candidates.append((int(first), 1, False))
-    if len(first) == 2 and first[0] == first[1]:
-        color_candidates.append((int(first[0]), 0, True))
-
-    bead_candidates: list[tuple[int, int]] = []
-    for run in runs[1:]:
-        if len(run) in {3, 4}:
-            bead_candidates.append((int(run), 1))
-        if len(run) >= 4:
-            bead_candidates.append((int(run[:4]), 0))
-
-    candidates: list[tuple[int, int, int]] = []
-    for color_count, color_priority, duplicated_color in color_candidates:
-        if not (1 <= color_count <= 400):
-            continue
-        for bead_count, bead_priority in bead_candidates:
-            if 100 <= bead_count <= 9999:
-                candidates.append((color_count, bead_count, color_priority + bead_priority))
-        if duplicated_color:
-            for run in runs[1:]:
-                if len(run) == 4 and 100 <= int(run[:3]) <= 999:
-                    candidates.append((color_count, int(run[:3]), color_priority))
-        for index, run in enumerate(runs[1:-1], start=1):
-            next_run = runs[index + 1]
-            if len(run) == 1 and len(next_run) == 4 and 100 <= int(next_run[:3]) <= 999:
-                candidates.append((color_count, int(next_run[:3]), color_priority))
-    return candidates
-
-
-def pair_candidate_score(pair: tuple[int, int, int]) -> tuple[int, int, int, int]:
-    color_count, bead_count, priority = pair
-    return (
-        priority,
-        0 if 100 <= bead_count <= 5000 else 1,
-        0 if color_count <= 120 else 1,
-        abs(color_count - 40),
-    )
-
-
 def choose_pair_numbers(numbers: list[int]) -> tuple[int | None, int | None]:
     color_candidates = [value for value in numbers if 1 <= value <= 400]
     bead_candidates = [value for value in numbers if 100 <= value <= 20000]
@@ -932,10 +828,8 @@ def fingerprint_json(feature: ImageFeature) -> dict[str, Any]:
 def cluster_features(
     features: list[ImageFeature],
     phash_threshold: int,
-    thumb_threshold: float,
     local_window: int = DEFAULT_LOCAL_WINDOW,
 ) -> tuple[list[Group], list[dict[str, Any]]]:
-    del thumb_threshold
     groups: list[Group] = []
     review_candidates: list[dict[str, Any]] = []
     feature_order = {cache_key(feature.path): index for index, feature in enumerate(features)}
@@ -1260,7 +1154,6 @@ def build_manifest(
         "action": args.action,
         "dryRun": bool(args.dry_run),
         "recursive": bool(args.recursive),
-        "includeSingletons": bool(args.include_singletons),
         "analysisCache": {
             "version": CACHE_VERSION,
             "key": "source + size + mtimeNs",
@@ -1392,12 +1285,6 @@ def print_review_candidates(review_candidates: list[dict[str, Any]]) -> None:
 
 def natural_key(value: str) -> list[Any]:
     return [int(part) if part.isdigit() else part.lower() for part in re.split(r"(\d+)", value)]
-
-
-def safe_filename(value: str) -> str:
-    import re
-
-    return re.sub(r"[^A-Za-z0-9._-]+", "_", value).strip("._") or "image"
 
 
 def safe_resolve(path: Path) -> Path:
