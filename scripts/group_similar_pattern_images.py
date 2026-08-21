@@ -310,7 +310,7 @@ def looks_like_preview_view(image: np.ndarray) -> bool:
     gray = cv2.cvtColor(bottom, cv2.COLOR_BGR2GRAY)
     white_ratio = float(np.mean(gray > 238))
     # Preview pages have one or two wide white option bars at the bottom.
-    return white_ratio > 0.55 and extract_pair_key_from_region(image, PREVIEW_VIEW) is not None
+    return white_ratio > 0.55
 
 
 def find_modal_box(image: np.ndarray) -> tuple[int, int, int, int] | None:
@@ -488,12 +488,9 @@ def pair_key_crops(image: np.ndarray, page_type: str) -> list[np.ndarray]:
         x, y, w, h = box
         return [
             image[y + int(h * 0.02):y + int(h * 0.16), x + int(w * 0.02):x + int(w * 0.78)],
-            image[y + int(h * 0.00):y + int(h * 0.20), x:x + int(w * 0.92)],
         ]
     return [
         image[int(height * 0.91):int(height * 0.965), int(width * 0.02):int(width * 0.58)],
-        image[int(height * 0.90):int(height * 0.97), :int(width * 0.70)],
-        image[int(height * 0.88):int(height * 0.98), :],
     ]
 
 
