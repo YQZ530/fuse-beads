@@ -30,3 +30,5 @@ M2,Image15,23,1000,buy need23 Image15 need23
 M4,Image26,2,1000,buy need2 Image26 need2
 M7,Image30,25,1000,buy need25 Image30 need25
 A7,all selected shortage,122,1000,buy need122 all selected shortage
+C4,Image4,13,1000,buy need13 Image4 need13
+B26,Image27,8,1000,buy need8 Image27 need8

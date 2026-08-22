@@ -1,11 +1,13 @@
 imageId,totalBeads,status,substitutions,extraBuy
 Image3,230,selected,F15->F8; A8->A4; A26->A3,
+Image4,2955,selected,A9->A10 dE7.00; A16->A3 dE2.80; B26->M9 dE12.64; H8->H10 dE6.67; H17->H2 dE4.26; H18->H12 dE5.30; C4 unchanged,C4 13
 Image5,2652,selected,A26->A20 dE5.39; D22->D15 dE7.37; F19->F5 dE8.07; G10->G6 dE7.70; G12->G4 dE6.06; H17->H9 dE1.98; E16 unchanged,
 Image6,803,selected,,
 Image8,705,selected,F18->G19 dE3.29; G20->F10 dE7.06,G19 12
 Image9,188,selected,G10->G6 dE7.70; H17->H2 dE4.26; M1 unchanged,M1 31
 Image10,1303,selected,A24->A5 dE13.40; F18->G13 dE6.76; G10->G6 dE7.70; G18->G16 dE4.07; G19->G13 dE9.45; H9->D16 dE6.89; E16 unchanged; G13 unchanged; H2 unchanged,E16 244; G13 192; H2 52; A5 37
 Image11,1494,selected,A15->A4; A17->A4; H9->H2,
+Image14,1299,selected,H18->H12 dE5.30; others unchanged,
 Image15,1200,selected,G18->G1; A18 unchanged; A8 unchanged; B25 unchanged; M2 unchanged; H2 unchanged,A18 29; A8 54; B25 20; M2 23
 Image17,503,selected,A17->A8; B21->B19; B6->B19; C20->C7; F15->F5; H2 unchanged,H2 12
 Image18,715,selected,F24->F14; G4->G9; R22->G8,
@@ -13,13 +15,14 @@ Image19,714,selected,A19 recognized as G19; E16 unchanged; G19 unchanged,E16 171
 Image22,894,selected,G4->G9; H14->H11,H11 183
 Image24,1426,selected,A25->A20; A9->A7; G18->G1; M10->H3; E2 unchanged; D17 unchanged; F11 unchanged; F21 unchanged; G16 unchanged; G6 unchanged,E2 313; D17 6; F11 57; F21 53; G16 66; G6 25
 Image26,1485,selected,G2->G3 dE3.51; F11->H7 dE24.96; F18->H7 dE52.94; F23->F1 dE5.39; G20->H7 dE38.57; A12 unchanged; F24 unchanged; G18 unchanged; G19 unchanged; M4 unchanged,A12 6; F24 4; G18 403; G19 26; M4 2
+Image27,327,selected,F18->G19 dE3.29; F19->F15 dE8.51; B26 unchanged,B26 8
 Image28,893,selected,F22 unchanged; H2 unchanged; H7 unchanged; E8 unchanged; F14 unchanged,H2 484
 Image30,847,selected,A6->A4; A16->A4; A5->A4; A21->A11; C26->C10; F24->F14; M15->H4; A20 unchanged; F22 unchanged; H2 unchanged; M7 unchanged,A20 15; F22 316; M7 25 if not owned
 Image31,535,selected,C4->C10; E19->F22; F6->F10; G19->A10; H16->H7; A1 unchanged; F15 unchanged; G11 unchanged; H2 unchanged; H7 unchanged,A1 11; F15 28; G11 11; H2 8; H7 77
-Image32,705,selected,A20->A11 dE6.77; F24->F14 dE7.15; F8->M14 dE20.90; F5->G13 dE19.99,M14 3
+Image32,705,selected,A20->A11 dE6.77; F24->F14 dE7.15; F8->M14 dE20.90; F5->G13 dE19.99; H3->H11 dE7.29; H9->H11 0,M14 3
 Image33,499,selected,E17->E8 dE3.20; E18->F22 dE2.36; F21 unchanged,F21 2
 Image35,705,selected,E16 unchanged; F24 unchanged; G4 unchanged; G8 unchanged; G13 unchanged; G14 unchanged; H2 unchanged,G4 254; H2 91
-Image36,978,selected,F20->F14 dE9.85; H20->H3 dE11.16; F8->F15 dE5.69; M14->F14 dE18.14; H13->A1 dE5.79; H21->A1 dE5.40; R22->G8 dE2.27,
+Image36,978,selected,F20->F14 dE9.85; H20->H3 dE11.16; H3->H11 dE7.29; F8->F15 dE5.69; M14->F14 dE18.14; H13->A1 dE5.79; H21->A1 dE5.40; R22->G8 dE2.27,
 
 大图（不改色）
 imageId,totalBeads,status,substitutions,extraBuy
