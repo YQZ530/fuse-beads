@@ -3,7 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const rootDir = path.resolve(__dirname, '..');
-const defaultInventoryPath = path.join(rootDir, 'warehouse', 'inventory.json');
+const defaultInventoryPath = path.join(rootDir, 'results', 'warehouse', 'inventory.json');
 const args = process.argv.slice(2);
 
 function readArg(name) {
@@ -87,7 +87,7 @@ function loadInput() {
     projectName: readArg('--project-name') || readArg('--name') || 'project',
     projectStatus: readArg('--status'),
     warehouseId: readArg('--warehouse') || 'warehouse-1',
-    inventoryPath: readArg('--inventory') || 'warehouse/inventory.json',
+    inventoryPath: readArg('--inventory') || 'results/warehouse/inventory.json',
     outputPath: readArg('--out'),
     copyPatterns: !hasFlag('--no-copy-patterns'),
     patterns,

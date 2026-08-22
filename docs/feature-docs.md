@@ -1,13 +1,13 @@
-# 豆仓 Feature Log
+# 豆仓 Feature Docs
 
 Last updated: 2026-08-14
 
 ## Scope
 
-- 工作目录：`C:\Users\z5308\Desktop\perler-beads-warehouse`
+- 工作目录：`C:\Users\z5308\Desktop\perler-beads-batch_analy2`
 - 主要页面：`src/app/warehouse`
 - 主要 API：`src/app/api/warehouse`
-- 主要数据文件：`warehouse/inventory.json`
+- 主要数据文件：`results/warehouse/inventory.json`
 - 主要服务逻辑：`src/lib/warehouseStore.ts`
 - 豆仓开发不改 `/analysis`、`/projects` 的大逻辑。
 
@@ -67,10 +67,10 @@ Last updated: 2026-08-14
 ### 删除豆仓
 
 - 最近库存记录下方有单独“删除豆仓”危险区域。
-- 区域说明：删除后会从 `warehouse/inventory.json` 移除这个豆仓和它的库存记录。
+- 区域说明：删除后会从 `results/warehouse/inventory.json` 移除这个豆仓和它的库存记录。
 - 按钮文案为 `删除`，执行中为 `删除中`。
 - 删除前会确认豆仓名和不可撤销风险。
-- 删除豆仓会从 `warehouse/inventory.json.warehouses` 移除对应豆仓。
+- 删除豆仓会从 `results/warehouse/inventory.json.warehouses` 移除对应豆仓。
 - 删除豆仓会同步移除该豆仓相关 `transactions`。
 - 如果有 project 绑定该豆仓，后端会拒绝删除。
 
@@ -85,7 +85,7 @@ Last updated: 2026-08-14
 ### 数据存储
 
 - 当前豆仓库存使用 JSON 存储。
-- 主文件为 `warehouse/inventory.json`。
+- 主文件为 `results/warehouse/inventory.json`。
 - 库存记录存放在 `inventory.transactions`。
 - 当前没有实现 CSV 文件作为持久化存储。
 - 补货导入当前是“文本解析输入 -> 后端写入 JSON transaction”，不是 CSV 文件导入。
@@ -126,7 +126,7 @@ Last updated: 2026-08-14
 
 ## 当前 Assumptions
 
-- 豆仓线以 `warehouse/inventory.json` 为当前事实来源。
+- 豆仓线以 `results/warehouse/inventory.json` 为当前事实来源。
 - 交易记录先以 JSON transaction 形式保存，不引入 CSV 持久化。
 - 删除 transaction 的语义是删除记录且回滚库存数量。
 - 删除豆仓的语义是删除豆仓本身和它的 transaction。

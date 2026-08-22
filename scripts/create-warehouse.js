@@ -4,7 +4,7 @@ const path = require('path');
 const rootDir = path.resolve(__dirname, '..');
 const paletteSetsPath = path.join(rootDir, 'src', 'data', 'mardPaletteSets.csv');
 const colorMappingPath = path.join(rootDir, 'src', 'app', 'colorSystemMapping.json');
-const defaultInventoryPath = path.join(rootDir, 'warehouse', 'inventory.json');
+const defaultInventoryPath = path.join(rootDir, 'results', 'warehouse', 'inventory.json');
 const args = process.argv.slice(2);
 
 const options = {
