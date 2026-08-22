@@ -211176,8 +211176,42 @@
       "availablePageTypes": [
         "manual"
       ]
+    },
+    {
+      "id": "Image36",
+      "sourcePageType": "manual_entry",
+      "analysisStatus": "manual_from_user",
+      "totalColorKeys": 19,
+      "totalBeads": 978,
+      "expected": "19_978",
+      "matchesExpected": true,
+      "colorCounts": {
+        "A20": 10,
+        "E16": 64,
+        "F8": 12,
+        "F20": 18,
+        "G8": 38,
+        "G14": 2,
+        "H2": 207,
+        "H5": 6,
+        "H6": 93,
+        "H7": 50,
+        "H13": 75,
+        "H16": 217,
+        "H20": 75,
+        "H21": 55,
+        "M7": 2,
+        "M9": 5,
+        "M10": 1,
+        "M14": 46,
+        "R22": 2
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": []
     }
   ],
   "conflictImages": [],
-  "conflictCount": 0
+  "conflictCount": 0,
+  "imageCount": 34
 }

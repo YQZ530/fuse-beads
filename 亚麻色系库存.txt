@@ -125,3 +125,4 @@ M14,1000,buy need3 Image32 need3
 M2,1000,buy need23 Image15 need23
 M4,1000,buy need2 Image26 need2
 M7,1000,buy need25 Image30 need25
+A7,1000,buy need122 all selected shortage
