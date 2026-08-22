@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Read color keys/counts from the bottom legend of Perler bead screenshots."""
+"""Read color keys/counts from the bottom legend of Perler bead screenshots.
+
+Batch run:
+    python scripts/analyze_color_legend.py --manifest debug/groups.manifest.json --out results/batch_pic/analyze_color_legend.debug.json
+"""
 
 from __future__ import annotations
 
@@ -7,7 +11,7 @@ import argparse
 import json
 import math
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -25,6 +29,9 @@ except ImportError:  # pragma: no cover
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}
 DEFAULT_OUTPUT_DIR = Path("results") / "color-legend"
+DEFAULT_BATCH_OUTPUT_DIR = Path("results") / "batch_pic"
+DEFAULT_BATCH_DEBUG_NAME = "analyze_color_legend.debug.json"
+DEFAULT_BATCH_FINAL_NAME = "analyze_color_legend.main.json"
 DEFAULT_MAPPING_PATH = Path("src") / "app" / "colorSystemMapping.json"
 DEFAULT_PALETTE_SETS_PATH = Path("src") / "data" / "mardPaletteSets.csv"
 DEFAULT_TESSERACT = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
@@ -54,6 +61,15 @@ class LegendCircle:
     inside_text: str = ""
     color_key_source: str = "palette_match"
     special_key: str = ""
+    count_source: str = "ocr"
+    tesseract_count_text: str = ""
+    preprocessing_vote_text: str = ""
+    preprocessing_vote_observations: list[dict[str, str]] | None = None
+    opencv_count_text: str = ""
+    count_candidates: list[dict[str, str]] | None = None
+    count_vote_sources: list[str] | None = None
+    count_conflict: bool = False
+    opencv_scores: list[float] | None = None
 
 
 @dataclass
@@ -98,12 +114,16 @@ def main() -> int:
 
     if args.manifest:
         manifest_path = Path(args.manifest)
-        out_path = Path(args.out) if args.out else default_output_path(manifest_path)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
         payload = analyze_manifest_groups(manifest_path, palette, args.max_distance)
-        out_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        log(f"Wrote grouped color analysis: {out_path}")
-        print(str(out_path))
+        debug_path = Path(args.out) if args.out else DEFAULT_BATCH_OUTPUT_DIR / DEFAULT_BATCH_DEBUG_NAME
+        final_path = debug_path.with_name(DEFAULT_BATCH_FINAL_NAME)
+        debug_path.parent.mkdir(parents=True, exist_ok=True)
+        debug_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        final_path.write_text(json.dumps(build_final_payload(payload), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        log(f"Wrote grouped color analysis debug: {debug_path}")
+        log(f"Wrote grouped color analysis final: {final_path}")
+        print(str(debug_path))
+        print(str(final_path))
         return 0
 
     if not args.input:
@@ -204,14 +224,14 @@ def analyze_image_legend(
         legend_top = legend_box[1]
         raw_circles = detect_circles_in_box(image, legend_box)
         number_tokens = read_number_tokens_in_box(image, legend_box)
-    count_tokens, expected_total, transparent_token = select_legend_count_tokens(number_tokens)
+    count_components = count_components_in_box(image, legend_box) if legend_box is not None else []
+    digit_templates = build_digit_templates(number_tokens, count_components, legend_box) if legend_box is not None else {}
+    _count_tokens, expected_total, transparent_token = select_legend_count_tokens(number_tokens)
+    color_circles, _row_diagnostics = choose_color_circle_row(raw_circles, number_tokens)
     palette_by_key = {color.key: color for color in palette}
     circles: list[LegendCircle] = []
 
-    for token in count_tokens:
-        circle = find_circle_above_token(raw_circles, token)
-        if circle is None:
-            continue
+    for circle in color_circles:
         x, y, radius = circle
         sampled_rgb = sample_circle_rgb(image, x, y, radius)
         if sampled_rgb is None:
@@ -236,7 +256,20 @@ def analyze_image_legend(
             if ocr_key in palette_by_key:
                 matched_key = ocr_key
                 matched_hex = palette_by_key[ocr_key].hex
-        count_text = read_count_below_circle(image, x, y, radius) or token.text
+        token = find_count_below_circle(number_tokens, circle)
+        token_text = token.text if token else ""
+        preprocessing_vote_text, preprocessing_vote_observations = preprocessing_vote_count_crop(image, x, y, radius)
+        opencv_count_text, opencv_scores = opencv_count_for_circle((x, y, radius), count_components, digit_templates, legend_box) if legend_box is not None else ("", [])
+        count_candidates = [preprocessing_vote_text, opencv_count_text, token_text]
+        if expected_total is not None and any(candidate and int(candidate) == int(expected_total) for candidate in count_candidates):
+            continue
+        count_text, count_source, count_vote_sources = choose_count_text(preprocessing_vote_text, opencv_count_text, token_text)
+        if not count_text:
+            count_text = read_count_below_circle(image, x, y, radius) or token_text
+            count_source = "legacy_count_ocr" if count_text != token_text else "tesseract_token"
+            count_vote_sources = [count_source]
+        if not count_text:
+            continue
         circles.append(
             LegendCircle(
                 x=x,
@@ -250,6 +283,19 @@ def analyze_image_legend(
                 count_text=count_text,
                 inside_text=inside_text or ocr_key,
                 special_key=special_key,
+                count_source=count_source,
+                tesseract_count_text=token_text,
+                preprocessing_vote_text=preprocessing_vote_text,
+                preprocessing_vote_observations=preprocessing_vote_observations,
+                opencv_count_text=opencv_count_text,
+                count_candidates=[
+                    {"source": "preprocessing_vote", "text": preprocessing_vote_text},
+                    {"source": "opencv_components", "text": opencv_count_text},
+                    {"source": "tesseract_token", "text": token_text},
+                ],
+                count_vote_sources=count_vote_sources,
+                count_conflict=len({value for value in count_candidates if value}) > 1,
+                opencv_scores=opencv_scores,
             )
         )
 
@@ -305,6 +351,46 @@ def analyze_manifest_groups(
         "analyzedGroupCount": analyzed_count,
         "errorGroupCount": error_count,
         "images": results,
+    }
+
+
+def build_final_payload(debug_payload: dict[str, Any]) -> dict[str, Any]:
+    images = []
+    conflict_images = []
+    for row in debug_payload.get("images", []):
+        color_counts = dict(row.get("colorCounts", {}) or {})
+        expected = str(row.get("expectedPairKey") or row.get("groupCount") or "")
+        current = f"{int(row.get('totalColorKeys') or 0)}_{int(row.get('totalBeads') or 0)}"
+        image = {
+            "id": row.get("id"),
+            "sourcePageType": row.get("sourcePageType"),
+            "analysisStatus": row.get("analysisStatus"),
+            "totalColorKeys": row.get("totalColorKeys"),
+            "totalBeads": row.get("totalBeads"),
+            "expected": expected,
+            "matchesExpected": expected == current if expected else None,
+            "colorCounts": color_counts,
+        }
+        transparent_count = row.get("transparentCount")
+        if transparent_count is not None:
+            image["transparentCount"] = transparent_count
+            image["countsWithTransparent"] = dict(row.get("countsWithTransparent", color_counts))
+        images.append(image)
+        if expected and expected != current:
+            conflict_images.append({
+                "id": row.get("id"),
+                "current": current,
+                "expected": expected,
+                "sourcePageType": row.get("sourcePageType"),
+            })
+
+    return {
+        "input": debug_payload.get("input"),
+        "mode": "grouped_manifest_color_legend_final",
+        "imageCount": len(images),
+        "conflictCount": len(conflict_images),
+        "images": images,
+        "conflictImages": conflict_images,
     }
 
 
@@ -405,13 +491,27 @@ def drop_incomplete_detail_edge_circles(analysis: LegendAnalysis, image: np.ndar
 
 
 def build_merged_group_result(group_name: str, group: dict[str, Any], page_results: list[dict[str, Any]]) -> dict[str, Any]:
-    merged = build_merged_folder_result(Path(group_name), page_results)
+    expected_pair_key = pair_key_from_group(group)
+    merged = build_merged_folder_result(Path(group_name), page_results, expected_pair_key=expected_pair_key)
     merged["id"] = group_name
     merged["source"] = group_name
     merged["groupName"] = group_name
     merged["groupCount"] = group.get("count")
+    merged["expectedPairKey"] = expected_pair_key
+    merged["matchesPairKey"] = expected_pair_key == f"{int(merged.get('totalColorKeys') or 0)}_{int(merged.get('totalBeads') or 0)}" if expected_pair_key else None
     merged["analysisMethod"] = "grouped_manifest_color_legend_analysis"
     return merged
+
+
+def pair_key_from_group(group: dict[str, Any]) -> str | None:
+    keys = []
+    for item in group.get("items", []):
+        pair_key = item.get("pairKey")
+        if isinstance(pair_key, str) and re.match(r"^\d+_\d+$", pair_key):
+            keys.append(pair_key)
+    if not keys:
+        return None
+    return Counter(keys).most_common(1)[0][0]
 
 
 def analyze_color_modal(image: np.ndarray, palette: list[PaletteColor]) -> LegendAnalysis:
@@ -709,6 +809,200 @@ def read_count_below_circle(image: np.ndarray, x: int, y: int, radius: int) -> s
     if not candidates:
         return ""
     return max(candidates, key=lambda value: (len(value), int(value)))
+
+
+def preprocessing_vote_count_crop(image: np.ndarray, x: int, y: int, radius: int) -> tuple[str, list[dict[str, str]]]:
+    crop = crop_box(image, x, y + int(radius * 1.55), int(radius * 1.55), int(radius * 0.55))
+    if crop.size == 0:
+        return "", []
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    big = cv2.resize(gray, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+    variants = [
+        ("gray4x", big),
+        ("otsu4x", cv2.threshold(big, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]),
+        ("otsu_inv4x", cv2.threshold(big, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]),
+    ]
+    config = "--psm 7 -c tessedit_char_whitelist=0123456789"
+    observations: list[dict[str, str]] = []
+    for name, variant in variants:
+        try:
+            raw_text = pytesseract.image_to_string(Image.fromarray(variant), config=config, timeout=5)
+        except Exception as exc:
+            observations.append({"variant": name, "raw": f"ERROR:{exc}", "digits": ""})
+            continue
+        digits = digits_only(raw_text)
+        observations.append({"variant": name, "raw": raw_text.strip(), "digits": digits})
+    votes = [item["digits"] for item in observations if 1 <= len(item["digits"]) <= 4]
+    if not votes:
+        return "", observations
+    counts = Counter(votes)
+    winner, winner_count = counts.most_common(1)[0]
+    if winner_count >= 2:
+        return winner, observations
+    if len(set(votes)) == 1:
+        return votes[0], observations
+    return "", observations
+
+
+def count_components_in_box(image: np.ndarray, box: tuple[int, int, int, int]) -> list[dict[str, Any]]:
+    x0, y0, w, h = box
+    legend = image[y0:y0 + h, x0:x0 + w]
+    gray = cv2.cvtColor(legend, cv2.COLOR_BGR2GRAY)
+    row_top = int(h * 0.55)
+    row_bottom = int(h * 0.90)
+    row = gray[row_top:row_bottom, :]
+    mask = cv2.inRange(row, 90, 235)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((1, 1), np.uint8))
+    n, _labels, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+    comps: list[dict[str, Any]] = []
+    for index in range(1, n):
+        x, y, cw, ch, area = stats[index]
+        if 4 <= cw <= 26 and 8 <= ch <= 24 and 8 <= area <= 220:
+            comps.append({
+                "x": int(x),
+                "y": int(y + row_top),
+                "w": int(cw),
+                "h": int(ch),
+                "area": int(area),
+                "img": mask[y:y + ch, x:x + cw],
+            })
+    return comps
+
+
+def build_digit_templates(
+    tokens: list[NumberToken],
+    comps: list[dict[str, Any]],
+    box: tuple[int, int, int, int],
+) -> dict[str, list[np.ndarray]]:
+    x0, y0, _w, _h = box
+    templates: dict[str, list[np.ndarray]] = defaultdict(list)
+    for token in tokens:
+        local_x = token.x - x0
+        local_y = token.y - y0
+        inside = [
+            comp
+            for comp in comps
+            if comp["x"] >= local_x - 3
+            and comp["x"] + comp["w"] <= local_x + token.width + 3
+            and abs(comp["y"] - local_y) <= 8
+        ]
+        inside = sorted(inside, key=lambda comp: comp["x"])
+        if len(inside) == len(token.text):
+            for digit, comp in zip(token.text, inside):
+                templates[digit].append(cv2.resize(comp["img"], (24, 32), interpolation=cv2.INTER_NEAREST))
+    return dict(templates)
+
+
+def classify_digit_component(comp: dict[str, Any], templates: dict[str, list[np.ndarray]]) -> tuple[str, float]:
+    if not templates:
+        return "", 0.0
+    char = cv2.resize(comp["img"], (24, 32), interpolation=cv2.INTER_NEAREST)
+    best = ("", -1.0)
+    for digit, samples in templates.items():
+        score = max(float(cv2.matchTemplate(char, sample, cv2.TM_CCOEFF_NORMED)[0][0]) for sample in samples)
+        if score > best[1]:
+            best = (digit, score)
+    return best
+
+
+def opencv_count_for_circle(
+    circle: tuple[int, int, int],
+    comps: list[dict[str, Any]],
+    templates: dict[str, list[np.ndarray]],
+    box: tuple[int, int, int, int],
+) -> tuple[str, list[float]]:
+    x0, y0, _w, _h = box
+    cx, cy, radius = circle
+    lx = cx - x0
+    ly = cy - y0
+    candidates = []
+    for comp in comps:
+        comp_cx = comp["x"] + comp["w"] / 2
+        comp_cy = comp["y"] + comp["h"] / 2
+        dx = abs(comp_cx - lx)
+        dy = comp_cy - ly
+        if dx <= max(radius * 1.15, 32) and radius * 0.75 <= dy <= radius * 2.05:
+            candidates.append(comp)
+    candidates = sorted(candidates, key=lambda comp: comp["x"])
+    if not candidates:
+        return "", []
+    recognized = [classify_digit_component(comp, templates) for comp in candidates]
+    if any(not digit or score < 0.35 for digit, score in recognized):
+        return "", [round(score, 3) for _digit, score in recognized]
+    return "".join(digit for digit, _score in recognized), [round(score, 3) for _digit, score in recognized]
+
+
+def choose_count_text(
+    preprocessing_vote_text: str,
+    opencv_text: str,
+    token_text: str,
+) -> tuple[str, str, list[str]]:
+    candidates = [
+        ("preprocessing_vote", preprocessing_vote_text),
+        ("opencv_components", opencv_text),
+        ("tesseract_token", token_text),
+    ]
+    non_empty = [(source, text) for source, text in candidates if text]
+    if not non_empty:
+        return "", "missing", []
+    counts = Counter(text for _source, text in non_empty)
+    text, count = counts.most_common(1)[0]
+    sources = [source for source, candidate_text in non_empty if candidate_text == text]
+    if count >= 2:
+        if len(counts) > 1:
+            return text, "majority_vote", sources
+        return text, sources[0], sources
+    source, text = non_empty[0]
+    return text, source, [source]
+
+
+def group_circles_by_y(circles: list[tuple[int, int, int]]) -> list[list[tuple[int, int, int]]]:
+    if not circles:
+        return []
+    radii = [radius for _x, _y, radius in circles]
+    tolerance = max(18, int(round(float(np.median(radii)) * 0.90)))
+    rows: list[list[tuple[int, int, int]]] = []
+    for circle in sorted(circles, key=lambda item: item[1]):
+        for row in rows:
+            row_y = float(np.median([item[1] for item in row]))
+            if abs(circle[1] - row_y) <= tolerance:
+                row.append(circle)
+                break
+        else:
+            rows.append([circle])
+    return [sorted(row, key=lambda item: item[0]) for row in rows]
+
+
+def choose_color_circle_row(
+    circles: list[tuple[int, int, int]],
+    tokens: list[NumberToken],
+) -> tuple[list[tuple[int, int, int]], list[dict[str, Any]]]:
+    rows = group_circles_by_y(circles)
+    diagnostics = []
+    for index, row in enumerate(rows):
+        token_matches = sum(1 for circle in row if find_count_below_circle(tokens, circle) is not None)
+        median_y = float(np.median([circle[1] for circle in row])) if row else 0.0
+        diagnostics.append(
+            {
+                "rowIndex": index,
+                "circleCount": len(row),
+                "tokenMatchCount": token_matches,
+                "medianY": round(median_y, 3),
+                "circles": [{"x": x, "y": y, "radius": radius} for x, y, radius in row],
+            }
+        )
+    if not rows:
+        return [], diagnostics
+    best_index, best_row = max(
+        enumerate(rows),
+        key=lambda pair: (
+            sum(1 for circle in pair[1] if find_count_below_circle(tokens, circle) is not None),
+            len(pair[1]),
+            float(np.median([circle[1] for circle in pair[1]])),
+        ),
+    )
+    diagnostics[best_index]["selected"] = True
+    return best_row, diagnostics
 
 
 def merge_duplicate_circles(circles: list[tuple[int, int, int]]) -> list[tuple[int, int, int]]:
@@ -1062,11 +1356,20 @@ def build_result(
             {
                 "colorKey": key,
                 "count": count,
+                "countText": str(count),
                 "hex": best.matched_hex,
                 "sampledRgb": list(best.sampled_rgb),
                 "distance": round(best.match_distance, 3),
                 "uncertain": best.match_distance > max_distance,
-                "countSource": "ocr",
+                "countSource": best.count_source,
+                "tesseractCountText": best.tesseract_count_text,
+                "preprocessingVoteText": best.preprocessing_vote_text,
+                "preprocessingVoteObservations": best.preprocessing_vote_observations or [],
+                "opencvCountText": best.opencv_count_text,
+                "countCandidates": best.count_candidates or [],
+                "countVoteSources": best.count_vote_sources or [],
+                "countConflict": best.count_conflict,
+                "opencvScores": best.opencv_scores or [],
             }
         )
 
@@ -1121,6 +1424,15 @@ def build_result(
                 "insideText": circle.inside_text,
                 "colorKeySource": circle.color_key_source,
                 "specialKey": circle.special_key,
+                "countSource": circle.count_source,
+                "tesseractCountText": circle.tesseract_count_text,
+                "preprocessingVoteText": circle.preprocessing_vote_text,
+                "preprocessingVoteObservations": circle.preprocessing_vote_observations or [],
+                "opencvCountText": circle.opencv_count_text,
+                "countCandidates": circle.count_candidates or [],
+                "countVoteSources": circle.count_vote_sources or [],
+                "countConflict": circle.count_conflict,
+                "opencvScores": circle.opencv_scores or [],
                 "matchedHex": circle.matched_hex,
                 "sampledRgb": list(circle.sampled_rgb),
                 "distance": round(circle.match_distance, 3),
@@ -1153,8 +1465,126 @@ def build_result(
     }
 
 
-def build_merged_folder_result(input_path: Path, page_results: list[dict[str, Any]]) -> dict[str, Any]:
-    best_colors: dict[str, dict[str, Any]] = {}
+def total_from_pair_key(pair_key: str | None) -> int | None:
+    if not pair_key:
+        return None
+    match = re.match(r"^\d+_(\d+)$", pair_key)
+    return int(match.group(1)) if match else None
+
+
+def item_count_candidates(item: dict[str, Any]) -> list[int]:
+    values = []
+    for candidate in item.get("countCandidates", []):
+        text = str(candidate.get("text") or "")
+        if text.isdigit():
+            values.append(int(text))
+    count = item.get("count")
+    if count is not None:
+        values.append(int(count))
+    return sorted(set(values))
+
+
+def candidate_source_votes(items: list[dict[str, Any]]) -> Counter[int]:
+    votes: Counter[int] = Counter()
+    for item in items:
+        for candidate in item.get("countCandidates", []):
+            text = str(candidate.get("text") or "")
+            if text.isdigit():
+                votes[int(text)] += 1
+    return votes
+
+
+def choose_fallback_count(items: list[dict[str, Any]]) -> int:
+    votes = candidate_source_votes(items)
+    if votes:
+        best_count, _best_votes = votes.most_common(1)[0]
+        return int(best_count)
+    return max(int(item.get("count") or 0) for item in items)
+
+
+def reconcile_group_counts(
+    by_key: dict[str, list[dict[str, Any]]],
+    expected_pair_key: str | None,
+    fallback_expected_total: int | None,
+) -> tuple[dict[str, int], dict[str, dict[str, Any]], dict[str, Any]]:
+    expected_total = total_from_pair_key(expected_pair_key)
+    expected_total = expected_total if expected_total is not None else fallback_expected_total
+    chosen: dict[str, int] = {}
+    uncertain: dict[str, list[int]] = {}
+    diagnostics: dict[str, Any] = {
+        "expectedPairKey": expected_pair_key,
+        "expectedTotal": expected_total,
+        "uncertainColorKeys": [],
+    }
+
+    for key, items in by_key.items():
+        observed_counts = {int(item.get("count") or 0) for item in items}
+        has_conflict = any(bool(item.get("countConflict")) for item in items)
+        choices = sorted({value for item in items for value in item_count_candidates(item)})
+        if has_conflict or len(observed_counts) > 1:
+            uncertain[key] = choices or [choose_fallback_count(items)]
+        else:
+            chosen[key] = next(iter(observed_counts))
+
+    diagnostics["uncertainColorKeys"] = sorted(uncertain, key=color_key_sort)
+    if not uncertain or expected_total is None:
+        for key, items in by_key.items():
+            chosen.setdefault(key, choose_fallback_count(items))
+        diagnostics["reconcileStatus"] = "skipped_no_uncertain_or_expected_total"
+        return chosen, {}, diagnostics
+
+    fixed_sum = sum(chosen.values())
+    target = expected_total - fixed_sum
+    diagnostics["fixedSum"] = fixed_sum
+    diagnostics["targetUncertainSum"] = target
+    if target < 0:
+        for key, items in by_key.items():
+            chosen.setdefault(key, choose_fallback_count(items))
+        diagnostics["reconcileStatus"] = "skipped_negative_target"
+        return chosen, {}, diagnostics
+
+    ordered_keys = sorted(uncertain, key=color_key_sort)
+    dp: dict[int, list[tuple[str, int]]] = {0: []}
+    for key in ordered_keys:
+        next_dp: dict[int, list[tuple[str, int]]] = {}
+        for current_sum, selected in dp.items():
+            for value in uncertain[key]:
+                new_sum = current_sum + value
+                if new_sum > target:
+                    continue
+                if new_sum not in next_dp:
+                    next_dp[new_sum] = selected + [(key, value)]
+        dp = next_dp
+        if not dp:
+            break
+
+    selected = dp.get(target) if dp else None
+    overrides: dict[str, dict[str, Any]] = {}
+    if selected is None:
+        diagnostics["reconcileStatus"] = "no_exact_combo"
+        for key, items in by_key.items():
+            chosen.setdefault(key, choose_fallback_count(items))
+        return chosen, overrides, diagnostics
+
+    diagnostics["reconcileStatus"] = "exact_combo"
+    for key, value in selected:
+        fallback = choose_fallback_count(by_key[key])
+        chosen[key] = value
+        overrides[key] = {
+            "countBeforeGroupReconcile": fallback,
+            "countReconciled": value != fallback,
+            "countReconcileReason": f"group expected total {expected_total} minus fixed sum {fixed_sum}",
+        }
+
+    return chosen, overrides, diagnostics
+
+
+def build_merged_folder_result(
+    input_path: Path,
+    page_results: list[dict[str, Any]],
+    expected_pair_key: str | None = None,
+) -> dict[str, Any]:
+    by_key: dict[str, list[dict[str, Any]]] = defaultdict(list)
     sources_by_key: dict[str, list[str]] = defaultdict(list)
     pages: list[dict[str, Any]] = []
 
@@ -1172,21 +1602,11 @@ def build_merged_folder_result(input_path: Path, page_results: list[dict[str, An
             key = str(row.get("colorKey", ""))
             if not key:
                 continue
-            count = int(row.get("count") or 0)
-            current = best_colors.get(key)
-            if current is None or count > int(current.get("count") or 0):
-                best_colors[key] = dict(row)
+            by_key[key].append(dict(row))
             source = str(page.get("source", ""))
             if source and source not in sources_by_key[key]:
                 sources_by_key[key].append(source)
 
-    rows = list(best_colors.values())
-    rows.sort(key=lambda row: (-int(row["count"]), color_key_sort(str(row["colorKey"]))))
-    for row in rows:
-        row["sources"] = sources_by_key.get(str(row["colorKey"]), [])
-
-    color_counts = {row["colorKey"]: row["count"] for row in rows}
-    color_total = sum(int(row["count"]) for row in rows)
     expected_total = max(
         (int(page["expectedTotalBeads"]) for page in page_results if page.get("expectedTotalBeads") is not None),
         default=None,
@@ -1195,6 +1615,37 @@ def build_merged_folder_result(input_path: Path, page_results: list[dict[str, An
         (int(page["transparentCount"]) for page in page_results if page.get("transparentCount") is not None),
         default=None,
     )
+
+    chosen_counts, overrides, reconcile_diagnostics = reconcile_group_counts(by_key, expected_pair_key, expected_total)
+    rows: list[dict[str, Any]] = []
+    for key, items in by_key.items():
+        best = min(items, key=lambda item: float(item.get("distance") or 999999))
+        row = dict(best)
+        row["count"] = int(chosen_counts[key])
+        row["countText"] = str(chosen_counts[key])
+        row["sources"] = sources_by_key.get(key, [])
+        row["duplicateDetections"] = [
+            {
+                "count": int(item.get("count") or 0),
+                "countText": item.get("countText"),
+                "countSource": item.get("countSource"),
+                "countConflict": item.get("countConflict"),
+                "preprocessingVoteText": item.get("preprocessingVoteText"),
+                "opencvCountText": item.get("opencvCountText"),
+                "tesseractCountText": item.get("tesseractCountText"),
+            }
+            for item in items
+        ]
+        if key in overrides:
+            row.update(overrides[key])
+            row["countSource"] = "group_expected_total_reconcile"
+        elif len({int(item.get("count") or 0) for item in items}) > 1:
+            row["countSource"] = "cross_page_vote"
+        rows.append(row)
+
+    rows.sort(key=lambda row: (-int(row["count"]), color_key_sort(str(row["colorKey"]))))
+    color_counts = {row["colorKey"]: row["count"] for row in rows}
+    color_total = sum(int(row["count"]) for row in rows)
 
     counts_with_transparent = dict(color_counts)
     entries_with_transparent = list(rows)
@@ -1229,8 +1680,9 @@ def build_merged_folder_result(input_path: Path, page_results: list[dict[str, An
             "fullTotalFromLegend": expected_total,
             "transparentCount": transparent_count,
             "colorPlusTransparent": color_total + transparent_count if transparent_count is not None else None,
-            "dedupeRule": "same colorKey across pages keeps the largest count",
+            "dedupeRule": "same colorKey across pages is reconciled by count candidates and expected total when available",
         },
+        "groupReconcile": reconcile_diagnostics,
         "colorCounts": color_counts,
         "countsWithTransparent": counts_with_transparent,
         "colors": rows,
