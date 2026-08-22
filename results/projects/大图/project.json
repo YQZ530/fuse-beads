@@ -1,0 +1,1258 @@
+{
+  "schemaVersion": 1,
+  "id": "b136cb3f-929e-4738-8795-9178aa51000e",
+  "name": "大图",
+  "createdAt": "2026-08-22T01:25:16.914Z",
+  "updatedAt": "2026-08-22T03:22:23.034Z",
+  "warehouseId": "warehouse-星芒144",
+  "warehouseName": "星芒144",
+  "warehouseBrand": "MARD",
+  "warehousePaletteName": "144",
+  "warehouseLockedAt": "2026-08-22T01:25:16.914Z",
+  "status": "draft",
+  "patterns": [
+    {
+      "id": "Image1",
+      "name": "Image1",
+      "thumbnailPath": "results/batch_pic/Image1/Image1_1.PNG",
+      "totalBeadCount": 2704,
+      "colorCount": 61,
+      "colorCounts": {
+        "E3": 322,
+        "E2": 211,
+        "E18": 158,
+        "D19": 146,
+        "D11": 123,
+        "F22": 114,
+        "E20": 113,
+        "A1": 99,
+        "C24": 92,
+        "D26": 92,
+        "H3": 77,
+        "D17": 73,
+        "E1": 68,
+        "E15": 68,
+        "E19": 66,
+        "C6": 56,
+        "G1": 56,
+        "E14": 55,
+        "D12": 54,
+        "E10": 54,
+        "G14": 49,
+        "D8": 46,
+        "F21": 46,
+        "C26": 41,
+        "M10": 37,
+        "G2": 31,
+        "H4": 29,
+        "M7": 25,
+        "M9": 23,
+        "A23": 22,
+        "C10": 22,
+        "M8": 20,
+        "M15": 18,
+        "C20": 17,
+        "H20": 14,
+        "M12": 14,
+        "F16": 13,
+        "E12": 12,
+        "F14": 12,
+        "H14": 12,
+        "D1": 11,
+        "D2": 10,
+        "C13": 9,
+        "C16": 8,
+        "H5": 8,
+        "H15": 7,
+        "G17": 6,
+        "H11": 6,
+        "E22": 5,
+        "E23": 5,
+        "C5": 4,
+        "C28": 3,
+        "D16": 3,
+        "G7": 3,
+        "G13": 3,
+        "H16": 3,
+        "M3": 3,
+        "C18": 2,
+        "G21": 2,
+        "H23": 2,
+        "G8": 1
+      },
+      "expected": "61_2704",
+      "matchesExpected": true,
+      "sourcePageType": "detail_page",
+      "analysisStatus": "analyzed_from_detail_page",
+      "status": "draft",
+      "addedToPlanAt": "2026-08-22T03:22:23.034Z"
+    },
+    {
+      "id": "Image2",
+      "name": "Image2",
+      "thumbnailPath": "results/batch_pic/Image2.PNG",
+      "totalBeadCount": 2704,
+      "colorCount": 10,
+      "colorCounts": {
+        "H16": 2144,
+        "M15": 231,
+        "H5": 91,
+        "H10": 67,
+        "M7": 56,
+        "H4": 44,
+        "H11": 38,
+        "H3": 27,
+        "M12": 5,
+        "H6": 1
+      },
+      "expected": "10_2704",
+      "matchesExpected": true,
+      "sourcePageType": "detail_page",
+      "analysisStatus": "analyzed_from_detail_page",
+      "status": "draft",
+      "addedToPlanAt": "2026-08-22T03:22:23.034Z"
+    },
+    {
+      "id": "Image7",
+      "name": "Image7",
+      "thumbnailPath": "results/batch_pic/Image7.PNG",
+      "totalBeadCount": 2304,
+      "colorCount": 2,
+      "colorCounts": {
+        "F15": 2134,
+        "H7": 170
+      },
+      "expected": "2_2304",
+      "matchesExpected": true,
+      "sourcePageType": "detail_page",
+      "analysisStatus": "analyzed_from_detail_page",
+      "status": "draft",
+      "addedToPlanAt": "2026-08-22T03:22:23.034Z"
+    },
+    {
+      "id": "Image23",
+      "name": "Image23",
+      "thumbnailPath": "results/batch_pic/Image23.PNG",
+      "totalBeadCount": 2704,
+      "colorCount": 6,
+      "colorCounts": {
+        "B17": 1819,
+        "H12": 270,
+        "B29": 220,
+        "B1": 191,
+        "A22": 103,
+        "B18": 101
+      },
+      "expected": "6_2704",
+      "matchesExpected": true,
+      "sourcePageType": "detail_page",
+      "analysisStatus": "analyzed_from_detail_page",
+      "status": "draft",
+      "addedToPlanAt": "2026-08-22T03:22:23.034Z"
+    },
+    {
+      "id": "Image25",
+      "name": "Image25",
+      "thumbnailPath": "results/batch_pic/Image25.png",
+      "totalBeadCount": 2704,
+      "colorCount": 11,
+      "colorCounts": {
+        "F8": 1649,
+        "C12": 382,
+        "M7": 177,
+        "G17": 163,
+        "M9": 100,
+        "G14": 61,
+        "H5": 53,
+        "H2": 46,
+        "M15": 40,
+        "H23": 23,
+        "F6": 10
+      },
+      "expected": "11_2704",
+      "matchesExpected": true,
+      "sourcePageType": "detail_page",
+      "analysisStatus": "analyzed_from_detail_page",
+      "status": "draft",
+      "addedToPlanAt": "2026-08-22T03:22:23.034Z"
+    },
+    {
+      "id": "Image20",
+      "name": "Image20",
+      "thumbnailPath": "results/batch_pic/Image20.PNG",
+      "totalBeadCount": 2499,
+      "colorCount": 4,
+      "colorCounts": {
+        "H2": 1420,
+        "D3": 518,
+        "D4": 471,
+        "C29": 90
+      },
+      "expected": "4_2499",
+      "matchesExpected": true,
+      "sourcePageType": "detail_page",
+      "analysisStatus": "analyzed_from_detail_page",
+      "status": "draft",
+      "addedToPlanAt": "2026-08-22T03:22:23.034Z"
+    },
+    {
+      "id": "Image12",
+      "name": "Image12",
+      "thumbnailPath": "results/batch_pic/Image12.PNG",
+      "totalBeadCount": 2704,
+      "colorCount": 2,
+      "colorCounts": {
+        "H7": 1591,
+        "G18": 1113
+      },
+      "expected": "2_2704",
+      "matchesExpected": true,
+      "sourcePageType": "detail_page",
+      "analysisStatus": "analyzed_from_detail_page",
+      "status": "draft",
+      "addedToPlanAt": "2026-08-22T03:22:23.034Z"
+    },
+    {
+      "id": "Image34",
+      "name": "Image34",
+      "thumbnailPath": "results/batch_pic/Image34/Image34_1.PNG",
+      "totalBeadCount": 2704,
+      "colorCount": 21,
+      "colorCounts": {
+        "F11": 486,
+        "G14": 426,
+        "H16": 366,
+        "M9": 366,
+        "G17": 208,
+        "M7": 171,
+        "M12": 120,
+        "G8": 99,
+        "G7": 91,
+        "M15": 85,
+        "F10": 59,
+        "H23": 53,
+        "M1": 36,
+        "G21": 33,
+        "F6": 30,
+        "G13": 25,
+        "M8": 14,
+        "G4": 13,
+        "M3": 10,
+        "M4": 10,
+        "F7": 3
+      },
+      "expected": "21_2704",
+      "matchesExpected": true,
+      "sourcePageType": "detail_page",
+      "analysisStatus": "analyzed_from_detail_page",
+      "status": "draft",
+      "addedToPlanAt": "2026-08-22T03:22:23.034Z"
+    },
+    {
+      "id": "Image29",
+      "name": "Image29",
+      "thumbnailPath": "results/batch_pic/Image29.PNG",
+      "totalBeadCount": 2498,
+      "colorCount": 4,
+      "colorCounts": {
+        "B15": 1818,
+        "M2": 334,
+        "H2": 194,
+        "B11": 152
+      },
+      "expected": "4_2498",
+      "matchesExpected": true,
+      "sourcePageType": "detail_page",
+      "analysisStatus": "analyzed_from_detail_page",
+      "status": "draft",
+      "addedToPlanAt": "2026-08-22T03:22:23.034Z"
+    }
+  ],
+  "summary": {
+    "totalNeeded": 23525,
+    "totalOwned": 9315,
+    "totalMissing": 14210,
+    "colorsNeeded": 88,
+    "missingColorCount": 34
+  },
+  "items": [
+    {
+      "hex": "#FAF4C8",
+      "colorKey": "A1",
+      "needed": 99,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 401
+    },
+    {
+      "hex": "#00FA41",
+      "colorKey": "A22",
+      "needed": 103,
+      "owned": 0,
+      "missing": 103,
+      "remainingAfterProject": -103
+    },
+    {
+      "hex": "#00FA42",
+      "colorKey": "A23",
+      "needed": 22,
+      "owned": 0,
+      "missing": 22,
+      "remainingAfterProject": -22
+    },
+    {
+      "hex": "#E6EE31",
+      "colorKey": "B1",
+      "needed": 191,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 309
+    },
+    {
+      "hex": "#5D722A",
+      "colorKey": "B11",
+      "needed": 152,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 348
+    },
+    {
+      "hex": "#2E5132",
+      "colorKey": "B15",
+      "needed": 1818,
+      "owned": 500,
+      "missing": 1318,
+      "remainingAfterProject": -1318
+    },
+    {
+      "hex": "#9BB13A",
+      "colorKey": "B17",
+      "needed": 1819,
+      "owned": 500,
+      "missing": 1319,
+      "remainingAfterProject": -1319
+    },
+    {
+      "hex": "#E6EE49",
+      "colorKey": "B18",
+      "needed": 101,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 399
+    },
+    {
+      "hex": "#00FE09",
+      "colorKey": "B29",
+      "needed": 220,
+      "owned": 0,
+      "missing": 220,
+      "remainingAfterProject": -220
+    },
+    {
+      "hex": "#01ACEB",
+      "colorKey": "C5",
+      "needed": 4,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 496
+    },
+    {
+      "hex": "#50AAF0",
+      "colorKey": "C6",
+      "needed": 56,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 444
+    },
+    {
+      "hex": "#3EBCE2",
+      "colorKey": "C10",
+      "needed": 22,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 478
+    },
+    {
+      "hex": "#0101A4",
+      "colorKey": "C12",
+      "needed": 382,
+      "owned": 0,
+      "missing": 382,
+      "remainingAfterProject": -382
+    },
+    {
+      "hex": "#CDE8FF",
+      "colorKey": "C13",
+      "needed": 9,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 491
+    },
+    {
+      "hex": "#1557A8",
+      "colorKey": "C16",
+      "needed": 8,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 492
+    },
+    {
+      "hex": "#0101AA",
+      "colorKey": "C18",
+      "needed": 2,
+      "owned": 0,
+      "missing": 2,
+      "remainingAfterProject": -2
+    },
+    {
+      "hex": "#0101C1",
+      "colorKey": "C20",
+      "needed": 17,
+      "owned": 0,
+      "missing": 17,
+      "remainingAfterProject": -17
+    },
+    {
+      "hex": "#0101C5",
+      "colorKey": "C24",
+      "needed": 92,
+      "owned": 0,
+      "missing": 92,
+      "remainingAfterProject": -92
+    },
+    {
+      "hex": "#0101C7",
+      "colorKey": "C26",
+      "needed": 41,
+      "owned": 0,
+      "missing": 41,
+      "remainingAfterProject": -41
+    },
+    {
+      "hex": "#0101C9",
+      "colorKey": "C28",
+      "needed": 3,
+      "owned": 0,
+      "missing": 3,
+      "remainingAfterProject": -3
+    },
+    {
+      "hex": "#0101CA",
+      "colorKey": "C29",
+      "needed": 90,
+      "owned": 0,
+      "missing": 90,
+      "remainingAfterProject": -90
+    },
+    {
+      "hex": "#AEB4F2",
+      "colorKey": "D1",
+      "needed": 11,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 489
+    },
+    {
+      "hex": "#858EDD",
+      "colorKey": "D2",
+      "needed": 10,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 490
+    },
+    {
+      "hex": "#2F54AF",
+      "colorKey": "D3",
+      "needed": 518,
+      "owned": 500,
+      "missing": 18,
+      "remainingAfterProject": -18
+    },
+    {
+      "hex": "#000870",
+      "colorKey": "D4",
+      "needed": 471,
+      "owned": 0,
+      "missing": 471,
+      "remainingAfterProject": -471
+    },
+    {
+      "hex": "#E2D3FF",
+      "colorKey": "D8",
+      "needed": 46,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 454
+    },
+    {
+      "hex": "#B9BAE1",
+      "colorKey": "D11",
+      "needed": 123,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 377
+    },
+    {
+      "hex": "#DE9AD4",
+      "colorKey": "D12",
+      "needed": 54,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 446
+    },
+    {
+      "hex": "#E3E1EE",
+      "colorKey": "D16",
+      "needed": 3,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 497
+    },
+    {
+      "hex": "#C4D4F6",
+      "colorKey": "D17",
+      "needed": 73,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 427
+    },
+    {
+      "hex": "#D8C3D7",
+      "colorKey": "D19",
+      "needed": 146,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 354
+    },
+    {
+      "hex": "#010588",
+      "colorKey": "D26",
+      "needed": 92,
+      "owned": 0,
+      "missing": 92,
+      "remainingAfterProject": -92
+    },
+    {
+      "hex": "#FDD3CC",
+      "colorKey": "E1",
+      "needed": 68,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 432
+    },
+    {
+      "hex": "#FEC0DF",
+      "colorKey": "E2",
+      "needed": 211,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 289
+    },
+    {
+      "hex": "#FFB7E7",
+      "colorKey": "E3",
+      "needed": 322,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 178
+    },
+    {
+      "hex": "#D33793",
+      "colorKey": "E10",
+      "needed": 54,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 446
+    },
+    {
+      "hex": "#F78FC3",
+      "colorKey": "E12",
+      "needed": 12,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 488
+    },
+    {
+      "hex": "#FFD1BA",
+      "colorKey": "E14",
+      "needed": 55,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 445
+    },
+    {
+      "hex": "#F8C7C9",
+      "colorKey": "E15",
+      "needed": 68,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 432
+    },
+    {
+      "hex": "#01092C",
+      "colorKey": "E18",
+      "needed": 158,
+      "owned": 0,
+      "missing": 158,
+      "remainingAfterProject": -158
+    },
+    {
+      "hex": "#01092D",
+      "colorKey": "E19",
+      "needed": 66,
+      "owned": 0,
+      "missing": 66,
+      "remainingAfterProject": -66
+    },
+    {
+      "hex": "#010943",
+      "colorKey": "E20",
+      "needed": 113,
+      "owned": 0,
+      "missing": 113,
+      "remainingAfterProject": -113
+    },
+    {
+      "hex": "#010945",
+      "colorKey": "E22",
+      "needed": 5,
+      "owned": 0,
+      "missing": 5,
+      "remainingAfterProject": -5
+    },
+    {
+      "hex": "#010946",
+      "colorKey": "E23",
+      "needed": 5,
+      "owned": 0,
+      "missing": 5,
+      "remainingAfterProject": -5
+    },
+    {
+      "hex": "#943630",
+      "colorKey": "F6",
+      "needed": 40,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 460
+    },
+    {
+      "hex": "#971937",
+      "colorKey": "F7",
+      "needed": 3,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 497
+    },
+    {
+      "hex": "#BC0028",
+      "colorKey": "F8",
+      "needed": 1649,
+      "owned": 500,
+      "missing": 1149,
+      "remainingAfterProject": -1149
+    },
+    {
+      "hex": "#8A4526",
+      "colorKey": "F10",
+      "needed": 59,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 441
+    },
+    {
+      "hex": "#5A2121",
+      "colorKey": "F11",
+      "needed": 486,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 14
+    },
+    {
+      "hex": "#FFA9AD",
+      "colorKey": "F14",
+      "needed": 12,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 488
+    },
+    {
+      "hex": "#010CEA",
+      "colorKey": "F15",
+      "needed": 2134,
+      "owned": 0,
+      "missing": 2134,
+      "remainingAfterProject": -2134
+    },
+    {
+      "hex": "#010CEB",
+      "colorKey": "F16",
+      "needed": 13,
+      "owned": 0,
+      "missing": 13,
+      "remainingAfterProject": -13
+    },
+    {
+      "hex": "#010D05",
+      "colorKey": "F21",
+      "needed": 46,
+      "owned": 0,
+      "missing": 46,
+      "remainingAfterProject": -46
+    },
+    {
+      "hex": "#010D06",
+      "colorKey": "F22",
+      "needed": 114,
+      "owned": 0,
+      "missing": 114,
+      "remainingAfterProject": -114
+    },
+    {
+      "hex": "#FFE2CE",
+      "colorKey": "G1",
+      "needed": 56,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 444
+    },
+    {
+      "hex": "#FFC4AA",
+      "colorKey": "G2",
+      "needed": 31,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 469
+    },
+    {
+      "hex": "#E1B383",
+      "colorKey": "G4",
+      "needed": 13,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 487
+    },
+    {
+      "hex": "#9D5B3E",
+      "colorKey": "G7",
+      "needed": 94,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 406
+    },
+    {
+      "hex": "#753832",
+      "colorKey": "G8",
+      "needed": 100,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 400
+    },
+    {
+      "hex": "#B7714A",
+      "colorKey": "G13",
+      "needed": 28,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 472
+    },
+    {
+      "hex": "#8D614C",
+      "colorKey": "G14",
+      "needed": 536,
+      "owned": 500,
+      "missing": 36,
+      "remainingAfterProject": -36
+    },
+    {
+      "hex": "#78524B",
+      "colorKey": "G17",
+      "needed": 377,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 123
+    },
+    {
+      "hex": "#0110AE",
+      "colorKey": "G18",
+      "needed": 1113,
+      "owned": 0,
+      "missing": 1113,
+      "remainingAfterProject": -1113
+    },
+    {
+      "hex": "#0110C6",
+      "colorKey": "G21",
+      "needed": 35,
+      "owned": 0,
+      "missing": 35,
+      "remainingAfterProject": -35
+    },
+    {
+      "hex": "#FEFFFF",
+      "colorKey": "H2",
+      "needed": 1660,
+      "owned": 500,
+      "missing": 1160,
+      "remainingAfterProject": -1160
+    },
+    {
+      "hex": "#B6B1BA",
+      "colorKey": "H3",
+      "needed": 104,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 396
+    },
+    {
+      "hex": "#89858C",
+      "colorKey": "H4",
+      "needed": 73,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 427
+    },
+    {
+      "hex": "#48464E",
+      "colorKey": "H5",
+      "needed": 152,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 348
+    },
+    {
+      "hex": "#2F2B2F",
+      "colorKey": "H6",
+      "needed": 1,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 499
+    },
+    {
+      "hex": "#000000",
+      "colorKey": "H7",
+      "needed": 1761,
+      "owned": 500,
+      "missing": 1261,
+      "remainingAfterProject": -1261
+    },
+    {
+      "hex": "#EEE9EA",
+      "colorKey": "H10",
+      "needed": 67,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 433
+    },
+    {
+      "hex": "#CECDD5",
+      "colorKey": "H11",
+      "needed": 44,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 456
+    },
+    {
+      "hex": "#FFF5ED",
+      "colorKey": "H12",
+      "needed": 270,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 230
+    },
+    {
+      "hex": "#CFD7D3",
+      "colorKey": "H14",
+      "needed": 12,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 488
+    },
+    {
+      "hex": "#01146C",
+      "colorKey": "H15",
+      "needed": 7,
+      "owned": 0,
+      "missing": 7,
+      "remainingAfterProject": -7
+    },
+    {
+      "hex": "#01146D",
+      "colorKey": "H16",
+      "needed": 2513,
+      "owned": 0,
+      "missing": 2513,
+      "remainingAfterProject": -2513
+    },
+    {
+      "hex": "#011486",
+      "colorKey": "H20",
+      "needed": 14,
+      "owned": 0,
+      "missing": 14,
+      "remainingAfterProject": -14
+    },
+    {
+      "hex": "#011489",
+      "colorKey": "H23",
+      "needed": 78,
+      "owned": 0,
+      "missing": 78,
+      "remainingAfterProject": -78
+    },
+    {
+      "hex": "#BCC6B8",
+      "colorKey": "M1",
+      "needed": 36,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 464
+    },
+    {
+      "hex": "#8AA386",
+      "colorKey": "M2",
+      "needed": 334,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 166
+    },
+    {
+      "hex": "#697D80",
+      "colorKey": "M3",
+      "needed": 13,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 487
+    },
+    {
+      "hex": "#E3D2BC",
+      "colorKey": "M4",
+      "needed": 10,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 490
+    },
+    {
+      "hex": "#B4A497",
+      "colorKey": "M7",
+      "needed": 429,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 71
+    },
+    {
+      "hex": "#B38281",
+      "colorKey": "M8",
+      "needed": 34,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 466
+    },
+    {
+      "hex": "#A58767",
+      "colorKey": "M9",
+      "needed": 489,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 11
+    },
+    {
+      "hex": "#C5B2BC",
+      "colorKey": "M10",
+      "needed": 37,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 463
+    },
+    {
+      "hex": "#644749",
+      "colorKey": "M12",
+      "needed": 139,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 361
+    },
+    {
+      "hex": "#757D78",
+      "colorKey": "M15",
+      "needed": 374,
+      "owned": 500,
+      "missing": 0,
+      "remainingAfterProject": 126
+    }
+  ],
+  "missingItems": [
+    {
+      "hex": "#00FA41",
+      "colorKey": "A22",
+      "needed": 103,
+      "owned": 0,
+      "missing": 103,
+      "remainingAfterProject": -103
+    },
+    {
+      "hex": "#00FA42",
+      "colorKey": "A23",
+      "needed": 22,
+      "owned": 0,
+      "missing": 22,
+      "remainingAfterProject": -22
+    },
+    {
+      "hex": "#2E5132",
+      "colorKey": "B15",
+      "needed": 1818,
+      "owned": 500,
+      "missing": 1318,
+      "remainingAfterProject": -1318
+    },
+    {
+      "hex": "#9BB13A",
+      "colorKey": "B17",
+      "needed": 1819,
+      "owned": 500,
+      "missing": 1319,
+      "remainingAfterProject": -1319
+    },
+    {
+      "hex": "#00FE09",
+      "colorKey": "B29",
+      "needed": 220,
+      "owned": 0,
+      "missing": 220,
+      "remainingAfterProject": -220
+    },
+    {
+      "hex": "#0101A4",
+      "colorKey": "C12",
+      "needed": 382,
+      "owned": 0,
+      "missing": 382,
+      "remainingAfterProject": -382
+    },
+    {
+      "hex": "#0101AA",
+      "colorKey": "C18",
+      "needed": 2,
+      "owned": 0,
+      "missing": 2,
+      "remainingAfterProject": -2
+    },
+    {
+      "hex": "#0101C1",
+      "colorKey": "C20",
+      "needed": 17,
+      "owned": 0,
+      "missing": 17,
+      "remainingAfterProject": -17
+    },
+    {
+      "hex": "#0101C5",
+      "colorKey": "C24",
+      "needed": 92,
+      "owned": 0,
+      "missing": 92,
+      "remainingAfterProject": -92
+    },
+    {
+      "hex": "#0101C7",
+      "colorKey": "C26",
+      "needed": 41,
+      "owned": 0,
+      "missing": 41,
+      "remainingAfterProject": -41
+    },
+    {
+      "hex": "#0101C9",
+      "colorKey": "C28",
+      "needed": 3,
+      "owned": 0,
+      "missing": 3,
+      "remainingAfterProject": -3
+    },
+    {
+      "hex": "#0101CA",
+      "colorKey": "C29",
+      "needed": 90,
+      "owned": 0,
+      "missing": 90,
+      "remainingAfterProject": -90
+    },
+    {
+      "hex": "#2F54AF",
+      "colorKey": "D3",
+      "needed": 518,
+      "owned": 500,
+      "missing": 18,
+      "remainingAfterProject": -18
+    },
+    {
+      "hex": "#000870",
+      "colorKey": "D4",
+      "needed": 471,
+      "owned": 0,
+      "missing": 471,
+      "remainingAfterProject": -471
+    },
+    {
+      "hex": "#010588",
+      "colorKey": "D26",
+      "needed": 92,
+      "owned": 0,
+      "missing": 92,
+      "remainingAfterProject": -92
+    },
+    {
+      "hex": "#01092C",
+      "colorKey": "E18",
+      "needed": 158,
+      "owned": 0,
+      "missing": 158,
+      "remainingAfterProject": -158
+    },
+    {
+      "hex": "#01092D",
+      "colorKey": "E19",
+      "needed": 66,
+      "owned": 0,
+      "missing": 66,
+      "remainingAfterProject": -66
+    },
+    {
+      "hex": "#010943",
+      "colorKey": "E20",
+      "needed": 113,
+      "owned": 0,
+      "missing": 113,
+      "remainingAfterProject": -113
+    },
+    {
+      "hex": "#010945",
+      "colorKey": "E22",
+      "needed": 5,
+      "owned": 0,
+      "missing": 5,
+      "remainingAfterProject": -5
+    },
+    {
+      "hex": "#010946",
+      "colorKey": "E23",
+      "needed": 5,
+      "owned": 0,
+      "missing": 5,
+      "remainingAfterProject": -5
+    },
+    {
+      "hex": "#BC0028",
+      "colorKey": "F8",
+      "needed": 1649,
+      "owned": 500,
+      "missing": 1149,
+      "remainingAfterProject": -1149
+    },
+    {
+      "hex": "#010CEA",
+      "colorKey": "F15",
+      "needed": 2134,
+      "owned": 0,
+      "missing": 2134,
+      "remainingAfterProject": -2134
+    },
+    {
+      "hex": "#010CEB",
+      "colorKey": "F16",
+      "needed": 13,
+      "owned": 0,
+      "missing": 13,
+      "remainingAfterProject": -13
+    },
+    {
+      "hex": "#010D05",
+      "colorKey": "F21",
+      "needed": 46,
+      "owned": 0,
+      "missing": 46,
+      "remainingAfterProject": -46
+    },
+    {
+      "hex": "#010D06",
+      "colorKey": "F22",
+      "needed": 114,
+      "owned": 0,
+      "missing": 114,
+      "remainingAfterProject": -114
+    },
+    {
+      "hex": "#8D614C",
+      "colorKey": "G14",
+      "needed": 536,
+      "owned": 500,
+      "missing": 36,
+      "remainingAfterProject": -36
+    },
+    {
+      "hex": "#0110AE",
+      "colorKey": "G18",
+      "needed": 1113,
+      "owned": 0,
+      "missing": 1113,
+      "remainingAfterProject": -1113
+    },
+    {
+      "hex": "#0110C6",
+      "colorKey": "G21",
+      "needed": 35,
+      "owned": 0,
+      "missing": 35,
+      "remainingAfterProject": -35
+    },
+    {
+      "hex": "#FEFFFF",
+      "colorKey": "H2",
+      "needed": 1660,
+      "owned": 500,
+      "missing": 1160,
+      "remainingAfterProject": -1160
+    },
+    {
+      "hex": "#000000",
+      "colorKey": "H7",
+      "needed": 1761,
+      "owned": 500,
+      "missing": 1261,
+      "remainingAfterProject": -1261
+    },
+    {
+      "hex": "#01146C",
+      "colorKey": "H15",
+      "needed": 7,
+      "owned": 0,
+      "missing": 7,
+      "remainingAfterProject": -7
+    },
+    {
+      "hex": "#01146D",
+      "colorKey": "H16",
+      "needed": 2513,
+      "owned": 0,
+      "missing": 2513,
+      "remainingAfterProject": -2513
+    },
+    {
+      "hex": "#011486",
+      "colorKey": "H20",
+      "needed": 14,
+      "owned": 0,
+      "missing": 14,
+      "remainingAfterProject": -14
+    },
+    {
+      "hex": "#011489",
+      "colorKey": "H23",
+      "needed": 78,
+      "owned": 0,
+      "missing": 78,
+      "remainingAfterProject": -78
+    }
+  ]
+}
