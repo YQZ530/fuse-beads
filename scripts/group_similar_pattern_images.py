@@ -50,6 +50,7 @@ except ImportError:  # pragma: no cover
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}
 DEFAULT_TESSERACT = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+DEFAULT_MANIFEST_PATH = Path("results") / "grouping" / "groups.manifest.json"
 CACHE_VERSION = 5
 DEFAULT_LOCAL_WINDOW = 5
 SUMMARY_VIEW = "summary_view"
@@ -109,7 +110,7 @@ def main() -> int:
     parser.add_argument("--phash-threshold", type=int, default=10, help="Max pHash Hamming distance for same-pattern match.")
     parser.add_argument("--local-window", type=int, default=DEFAULT_LOCAL_WINDOW, help="Prefer grouping images within +/- N filename positions before global fallback.")
     parser.add_argument("--tesseract", default=str(DEFAULT_TESSERACT), help="Path to tesseract.exe.")
-    parser.add_argument("--manifest", default="", help="Manifest JSON path. Defaults to <out>/groups.manifest.json.")
+    parser.add_argument("--manifest", default="", help="Manifest JSON path. Defaults to results/grouping/groups.manifest.json.")
     args = parser.parse_args()
 
     configure_tesseract(Path(args.tesseract))
@@ -119,7 +120,7 @@ def main() -> int:
         raise SystemExit(f"Input is not a directory: {input_dir}")
 
     out_dir = Path(args.out) if args.out else input_dir
-    manifest_path = Path(args.manifest) if args.manifest else input_dir / "groups.manifest.json"
+    manifest_path = Path(args.manifest) if args.manifest else DEFAULT_MANIFEST_PATH
     feature_cache = load_feature_cache(manifest_path)
     cache_stats = {"hit": 0, "miss": 0}
 

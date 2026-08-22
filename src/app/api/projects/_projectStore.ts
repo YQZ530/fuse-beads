@@ -743,7 +743,7 @@ function normalizeAvailablePattern(input: BatchAnalyzeImage): AvailablePattern |
 
   const colorCounts = normalizePlainColorCounts(input.colorCounts);
   const sourceImages = Array.isArray(input.sourceImages) ? input.sourceImages.map(String) : [];
-  const thumbnailPath = findBatchThumbnailPath(id, sourceImages);
+  const thumbnailPath = findBatchThumbnailPath(id, sourceImages, input.analysisStatus);
 
   return {
     id,
@@ -770,14 +770,26 @@ function normalizePlainColorCounts(input: unknown): Record<string, number> {
   );
 }
 
-function findBatchThumbnailPath(id: string, sourceImages: string[]): string | undefined {
-  const candidates = [
-    ...sourceImages,
-    `results/batch_pic/${id}.PNG`,
-    `results/batch_pic/${id}.png`,
+function findBatchThumbnailPath(id: string, sourceImages: string[], analysisStatus?: string): string | undefined {
+  const primaryImageCandidates = [
     `results/batch_pic/${id}/${id}_1.PNG`,
     `results/batch_pic/${id}/${id}_1.png`,
   ];
+  const singleImageCandidates = [
+    `results/batch_pic/${id}.PNG`,
+    `results/batch_pic/${id}.png`,
+  ];
+  const candidates = analysisStatus === 'analyzed_from_color_modal'
+    ? [
+        ...primaryImageCandidates,
+        ...sourceImages,
+        ...singleImageCandidates,
+      ]
+    : [
+        ...sourceImages,
+        ...singleImageCandidates,
+        ...primaryImageCandidates,
+      ];
   for (const candidate of candidates) {
     const normalized = mapBatchImagePath(candidate);
     if (normalized) return normalized;

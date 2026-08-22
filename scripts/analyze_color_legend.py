@@ -2,7 +2,7 @@
 """Read color keys/counts from the bottom legend of Perler bead screenshots.
 
 Batch run:
-    python scripts/analyze_color_legend.py --manifest debug/groups.manifest.json --out results/batch_pic/analyze_color_legend.debug.json
+    python scripts/analyze_color_legend.py --manifest results/grouping/groups.manifest.json --out results/batch_pic/analyze_color_legend.debug.json
 """
 
 from __future__ import annotations

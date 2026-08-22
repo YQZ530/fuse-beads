@@ -2,7 +2,7 @@
 """Analyze color modal pages with the modal-specific 6-column circle grid.
 
 Standalone test run:
-    python scripts/analyze_color_modal_legend.py --manifest debug/groups.manifest.json --only Image4
+    python scripts/analyze_color_modal_legend.py --manifest results/grouping/groups.manifest.json --only Image4
 """
 
 import argparse
@@ -18,7 +18,7 @@ from typing import Any
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "analyze_color_legend.py"
-MANIFEST = ROOT / "debug" / "groups.manifest.json"
+MANIFEST = ROOT / "results" / "grouping" / "groups.manifest.json"
 OUT_DEBUG = ROOT / "test_scr" / "output" / "color_modal_grid_ocr.debug.json"
 OUT_FINAL = ROOT / "test_scr" / "output" / "color_modal_grid_ocr.final.json"
 OUT_COMPARE = ROOT / "test_scr" / "output" / "color_modal_grid_ocr.compare.json"

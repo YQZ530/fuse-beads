@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { FormEvent, useMemo, useState } from 'react';
 import type {
   AvailablePattern,
@@ -25,7 +24,6 @@ interface StatusResponse {
 type DraftViewMode = 'list' | 'thumbnail';
 
 export default function ProjectDetailClient({ initialProject }: ProjectDetailClientProps) {
-  const router = useRouter();
   const [project, setProject] = useState(initialProject);
   const [availableViewMode, setAvailableViewMode] = useState<DraftViewMode>('list');
   const [draftViewMode, setDraftViewMode] = useState<DraftViewMode>('list');
@@ -203,7 +201,7 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
       if (!response.ok || !payload.ok) {
         throw new Error(payload.error || '删除项目失败');
       }
-      router.push('/projects');
+      window.location.assign('/projects');
     } catch (deleteError) {
       setError(deleteError instanceof Error ? deleteError.message : '删除项目失败');
     } finally {
@@ -993,6 +991,7 @@ function PatternThumbnail({ path, size }: { path?: string; size: 'sm' | 'tile' |
   }
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={`/api/projects/pattern-image?path=${encodeURIComponent(path)}`}
       alt=""
