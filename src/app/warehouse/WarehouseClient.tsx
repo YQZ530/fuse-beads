@@ -790,7 +790,7 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
 
               <section className="rounded border border-red-200 bg-white p-4 shadow-sm">
                 <h3 className="text-base font-semibold text-red-700">删除豆仓</h3>
-                <p className="mt-1 text-sm text-slate-500">删除后会从 warehouse/inventory.json 移除这个豆仓和它的库存记录。</p>
+                <p className="mt-1 text-sm text-slate-500">删除后会从 results/warehouse/inventory.json 移除这个豆仓和它的库存记录。</p>
                 <button
                   type="button"
                   disabled={busyAction === 'delete-warehouse'}

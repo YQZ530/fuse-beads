@@ -61,3 +61,7 @@ dev-3000-current.err.log
 /.ocr_home
 /.paddlex_cache
 /.paddle_deps
+/.ocr_home
+/.paddlex_cache
+/test_scr/output
+/scripts/__pycache__

@@ -16,9 +16,8 @@ before(async () => {
 });
 
 beforeEach(async () => {
-  await rm(path.join(tempRoot, 'warehouse'), { recursive: true, force: true });
   await rm(path.join(tempRoot, 'results'), { recursive: true, force: true });
-  await mkdir(path.join(tempRoot, 'warehouse'), { recursive: true });
+  await mkdir(path.join(tempRoot, 'results', 'warehouse'), { recursive: true });
   await mkdir(path.join(tempRoot, 'results', 'projects'), { recursive: true });
 });
 
@@ -103,14 +102,14 @@ test('deleteWarehouseTransaction rejects records from another warehouse', async 
 
 async function writeInventory(inventory: WarehouseInventory) {
   await writeFile(
-    path.join(tempRoot, 'warehouse', 'inventory.json'),
+    path.join(tempRoot, 'results', 'warehouse', 'inventory.json'),
     `${JSON.stringify(inventory, null, 2)}\n`,
     'utf8'
   );
 }
 
 async function readInventory(): Promise<WarehouseInventory> {
-  const text = await readFile(path.join(tempRoot, 'warehouse', 'inventory.json'), 'utf8');
+  const text = await readFile(path.join(tempRoot, 'results', 'warehouse', 'inventory.json'), 'utf8');
   return JSON.parse(text) as WarehouseInventory;
 }
 

@@ -148,7 +148,7 @@ interface InventoryStockFile {
 
 const ROOT_DIR = process.cwd();
 const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'projects');
-const INVENTORY_PATH = path.join(ROOT_DIR, 'warehouse', 'inventory.json');
+const INVENTORY_PATH = path.join(ROOT_DIR, 'results', 'warehouse', 'inventory.json');
 
 export async function readProjectList(): Promise<ProjectListItem[]> {
   const projectRefs = await readProjectRefs();
