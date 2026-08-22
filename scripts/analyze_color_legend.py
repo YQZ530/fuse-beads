@@ -11,6 +11,7 @@ import argparse
 import json
 import math
 import re
+import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime
@@ -25,6 +26,8 @@ try:
     import pytesseract
 except ImportError:  # pragma: no cover
     pytesseract = None
+
+import analyze_color_modal_legend
 
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}
@@ -370,6 +373,8 @@ def build_final_payload(debug_payload: dict[str, Any]) -> dict[str, Any]:
             "expected": expected,
             "matchesExpected": expected == current if expected else None,
             "colorCounts": color_counts,
+            "needsReviewCount": row.get("needsReviewCount", 0),
+            "needsReview": row.get("needsReview", []),
         }
         transparent_count = row.get("transparentCount")
         if transparent_count is not None:
@@ -382,6 +387,8 @@ def build_final_payload(debug_payload: dict[str, Any]) -> dict[str, Any]:
                 "current": current,
                 "expected": expected,
                 "sourcePageType": row.get("sourcePageType"),
+                "needsReviewCount": row.get("needsReviewCount", 0),
+                "needsReview": row.get("needsReview", []),
             })
 
     return {
@@ -441,9 +448,29 @@ def analyze_manifest_group(
             page_results.append(error_result(image_id, source, "Could not read image"))
             continue
         if source_type == COLOR_MODAL:
-            analysis = analyze_color_modal(image, palette)
-            result = build_result(image_id, source, image, analysis, max_distance)
-            result["analysisMethod"] = "color_modal_circle_key_plus_count_ocr"
+            result = analyze_color_modal_legend.analyze_modal(source, palette, sys.modules[__name__])
+            result["id"] = image_id
+            result["source"] = str(source)
+            result["analysisMethod"] = "color_modal_grid_6_per_row_palette_match_plus_count_ocr"
+            result["legendTop"] = int(result.get("modalBox", {}).get("y", 0))
+            result["expectedTotalBeads"] = None
+            result["transparentCount"] = None
+            result["totalCellsWithTransparent"] = None
+            result["countsWithTransparent"] = dict(result.get("colorCounts", {}))
+            result["entriesWithTransparent"] = list(result.get("colors", []))
+            result["needsReview"] = analyze_color_modal_legend.count_review_items(result)
+            result["needsReviewCount"] = len(result["needsReview"])
+            result["validation"] = {
+                "colorCountsEqualFullTotal": None,
+                "colorTotal": int(result.get("totalBeads") or 0),
+                "fullTotalFromLegend": None,
+                "transparentCount": None,
+                "colorPlusTransparent": None,
+            }
+            if result["needsReview"]:
+                review_result = dict(result)
+                review_result["id"] = group_name
+                analyze_color_modal_legend.print_review_items(review_result)
         else:
             analysis = analyze_image_legend(image, palette, legend_ratio=0.38)
             if len(selected_items) > 1:
@@ -1597,6 +1624,8 @@ def build_merged_folder_result(
             "expectedTotalBeads": page.get("expectedTotalBeads"),
             "transparentCount": page.get("transparentCount"),
             "validation": page.get("validation", {}),
+            "needsReviewCount": page.get("needsReviewCount", 0),
+            "needsReview": page.get("needsReview", []),
         })
         for row in page.get("colors", []):
             key = str(row.get("colorKey", ""))
@@ -1662,6 +1691,11 @@ def build_merged_folder_result(
             "sources": [page["source"] for page in pages if page.get("transparentCount") == transparent_count],
         })
     entries_with_transparent.sort(key=lambda row: (-int(row["count"]), color_key_sort(str(row["colorKey"]))))
+    needs_review = [
+        item
+        for page in page_results
+        for item in page.get("needsReview", [])
+    ]
 
     return {
         "id": input_path.name or "merged",
@@ -1687,6 +1721,8 @@ def build_merged_folder_result(
         "countsWithTransparent": counts_with_transparent,
         "colors": rows,
         "entriesWithTransparent": entries_with_transparent,
+        "needsReviewCount": len(needs_review),
+        "needsReview": needs_review,
         "pages": page_results,
     }
 
