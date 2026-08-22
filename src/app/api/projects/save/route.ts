@@ -20,7 +20,7 @@ interface SavePatternRequest {
 
 const ROOT_DIR = process.cwd();
 const RESULTS_DIR = path.join(ROOT_DIR, 'results', 'patterns');
-const PIC_DIR = path.join(ROOT_DIR, 'pic');
+const PIC_DIR = path.join(ROOT_DIR, 'results', 'pic');
 const HEX_COLOR_PATTERN = /^#[0-9A-F]{6}$/i;
 const TRANSPARENT_KEY = 'ERASE';
 
