@@ -1,0 +1,21 @@
+colorKey,neededFor,count,buyCount,note
+H11,Image22,183,1000,buy need183
+A20,Image30,15,1000,buy need15
+F22,Image30,316,1000,buy need316
+M7,Image30,25,1000,buy need25
+H2,Image28,484,1000,buy need484
+A18,Image15,29,1000,buy need29
+A8,Image15,54,1000,buy need54
+B25,Image15,20,1000,buy need20
+M2,Image15,23,1000,buy need23
+A1,Image31,11,1000,buy need11
+F15,Image31,28,1000,buy need28
+G11,Image31,11,1000,buy need11
+H2,Image31,8,1000,buy need8
+H7,Image31,77,1000,buy need77
+E2,Image24,313,1000,buy need313
+D17,Image24,6,1000,buy need6
+F11,Image24,57,1000,buy need57
+F21,Image24,53,1000,buy need53
+G16,Image24,66,1000,buy need66
+G6,Image24,25,1000,buy need25
