@@ -364,9 +364,10 @@ def build_final_payload(debug_payload: dict[str, Any]) -> dict[str, Any]:
         color_counts = dict(row.get("colorCounts", {}) or {})
         expected = str(row.get("expectedPairKey") or row.get("groupCount") or "")
         current = f"{int(row.get('totalColorKeys') or 0)}_{int(row.get('totalBeads') or 0)}"
+        source_images = final_source_images(row)
         image = {
             "id": row.get("id"),
-            "sourceImages": row.get("sourceImages", []),
+            "sourceImages": source_images,
             "sourcePageType": row.get("sourcePageType"),
             "analysisStatus": row.get("analysisStatus"),
             "totalColorKeys": row.get("totalColorKeys"),
@@ -385,7 +386,7 @@ def build_final_payload(debug_payload: dict[str, Any]) -> dict[str, Any]:
         if expected and expected != current:
             conflict_images.append({
                 "id": row.get("id"),
-                "sourceImages": row.get("sourceImages", []),
+                "sourceImages": source_images,
                 "current": current,
                 "expected": expected,
                 "sourcePageType": row.get("sourcePageType"),
@@ -401,6 +402,13 @@ def build_final_payload(debug_payload: dict[str, Any]) -> dict[str, Any]:
         "images": images,
         "conflictImages": conflict_images,
     }
+
+
+def final_source_images(row: dict[str, Any]) -> list[str]:
+    source_images = [str(path) for path in row.get("sourceImages", [])]
+    if row.get("analysisStatus") != "analyzed_from_color_modal":
+        return source_images
+    return [re.sub(r"([\\/][^\\/]+_)2(\.[^\\/\\.]+)$", r"\g<1>1\2", path) for path in source_images]
 
 
 def analyze_manifest_group(

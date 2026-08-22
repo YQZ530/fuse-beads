@@ -80,6 +80,9 @@ Important new final JSON behavior:
 
 - Each final image now includes `sourceImages`.
 - `sourceImages` is copied from the debug merged group, so multi-page images like `Image1` show all page files.
+- For `analyzed_from_color_modal`, final `sourceImages` is display-normalized from the actual modal page suffix `_2` to `_1`.
+- Debug JSON still preserves the actual analyzed source page, for example `Image4_2.PNG`.
+- The `_2` to `_1` final-only mapping is intentional because the user-facing source picture for color modal groups should point at the first project image, while debug should preserve the parser input.
 - `needsReview` and `needsReviewCount` are included in final.
 - Confirmed review items can be cleared after human review.
 - `conflictImages` also includes `sourceImages` when conflicts exist.
@@ -136,6 +139,12 @@ analyze_color_modal_legend.analyze_modal(source, palette, sys.modules[__name__])
 This keeps the color modal parser separate while reusing the main script helpers and palette.
 
 Color modal page results are merged into the same debug/final JSON shape as detail pages.
+
+Important source image display rule:
+
+- `debug.json` keeps the actual color modal parser input, usually `ImageN_2.PNG`.
+- `main.json` shows the user-facing source picture as `ImageN_1.PNG` for `analyzed_from_color_modal`.
+- This is done only in the final payload, not in the raw debug evidence.
 
 ## `scripts/analyze_color_modal_legend.py`
 

@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { existsSync } from 'fs';
 import { mkdir, readdir, readFile, rename, rm, writeFile } from 'fs/promises';
 import path from 'path';
 
@@ -792,7 +793,7 @@ function findBatchThumbnailPath(id: string, sourceImages: string[], analysisStat
       ];
   for (const candidate of candidates) {
     const normalized = mapBatchImagePath(candidate);
-    if (normalized) return normalized;
+    if (normalized && existsSync(normalizeInputPath(normalized))) return normalized;
   }
   return undefined;
 }
@@ -891,12 +892,16 @@ function normalizeProject(input: Partial<ProjectFile>, directoryName: string): P
 }
 
 function normalizePattern(input: Partial<ProjectPattern>): ProjectPattern {
+  const id = String(input.id || crypto.randomUUID());
+  const colorModalThumbnail = input.analysisStatus === 'analyzed_from_color_modal'
+    ? findBatchThumbnailPath(id, [], input.analysisStatus)
+    : undefined;
   return {
-    id: String(input.id || crypto.randomUUID()),
+    id,
     name: String(input.name || input.fileName || '未命名图纸'),
     fileName: input.fileName,
     path: input.path,
-    thumbnailPath: input.thumbnailPath,
+    thumbnailPath: colorModalThumbnail || input.thumbnailPath,
     gridDimensions: input.gridDimensions,
     totalBeadCount: Number(input.totalBeadCount || 0),
     colorCount: Number(input.colorCount || 0),
