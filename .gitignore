@@ -55,5 +55,5 @@ plan.MD
 /.paddle_deps
 /.ocr_home
 /.paddlex_cache
-/test_scr
+/test_scr/output
 /scripts/__pycache__
