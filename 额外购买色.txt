@@ -1,21 +1,31 @@
 colorKey,neededFor,count,buyCount,note
-H11,Image22,183,1000,buy need183
-A20,Image30,15,1000,buy need15
-F22,Image30,316,1000,buy need316
-M7,Image30,25,1000,buy need25
-H2,Image28,484,1000,buy need484
-A18,Image15,29,1000,buy need29
-A8,Image15,54,1000,buy need54
-B25,Image15,20,1000,buy need20
-M2,Image15,23,1000,buy need23
-A1,Image31,11,1000,buy need11
-F15,Image31,28,1000,buy need28
-G11,Image31,11,1000,buy need11
-H2,Image31,8,1000,buy need8
-H7,Image31,77,1000,buy need77
-E2,Image24,313,1000,buy need313
-D17,Image24,6,1000,buy need6
-F11,Image24,57,1000,buy need57
-F21,Image24,53,1000,buy need53
-G16,Image24,66,1000,buy need66
-G6,Image24,25,1000,buy need25
+A1,Image31,11,1000,buy need11 Image31 need11
+A12,Image26,6,1000,buy need6 Image26 need6
+A18,Image15,29,1000,buy need29 Image15 need29
+A20,Image30,15,1000,buy need15 Image30 need15
+A5,Image10,37,1000,buy need37 Image10 need37
+A8,Image15,54,1000,buy need54 Image15 need54
+B25,Image15,20,1000,buy need20 Image15 need20
+D17,Image24,6,1000,buy need6 Image24 need6
+E16,multiple,415,1000,buy need415 Image10 need244; Image19 need171
+E2,Image24,313,1000,buy need313 Image24 need313
+F11,Image24,57,1000,buy need57 Image24 need57
+F15,Image31,28,1000,buy need28 Image31 need28
+F21,multiple,55,1000,buy need55 Image24 need53; Image33 need2
+F22,Image30,316,1000,buy need316 Image30 need316
+F24,Image26,4,1000,buy need4 Image26 need4
+G11,Image31,11,1000,buy need11 Image31 need11
+G13,Image10,192,1000,buy need192 Image10 need192
+G16,Image24,66,1000,buy need66 Image24 need66
+G18,Image26,403,1000,buy need403 Image26 need403
+G19,multiple,122,1000,buy need122 Image26 need26; Image19 need84; Image8 need12
+G4,Image35,254,1000,buy need254 Image35 need254
+G6,Image24,25,1000,buy need25 Image24 need25
+H11,Image22,183,1000,buy need183 Image22 need183
+H2,multiple,647,1000,buy need647 Image28 need484; Image17 need12; Image31 need8; Image10 need52; Image35 need91
+H7,Image31,77,1000,buy need77 Image31 need77
+M1,Image9,31,1000,buy need31 Image9 need31
+M14,Image32,3,1000,buy need3 Image32 need3
+M2,Image15,23,1000,buy need23 Image15 need23
+M4,Image26,2,1000,buy need2 Image26 need2
+M7,Image30,25,1000,buy need25 Image30 need25

@@ -95,23 +95,33 @@ M5,541,
 M6,541,
 M9,541,
 M12,541,
-H11,1000,buy need183 Image22
-A20,1000,buy need15 Image30
-F22,1000,buy need316 Image30
-M7,1000,buy need25 Image30
-H2,1000,buy need484 Image28
-A18,1000,buy need29 Image15
-A8,1000,buy need54 Image15
-B25,1000,buy need20 Image15
-M2,1000,buy need23 Image15
-A1,1000,buy need11 Image31
-F15,1000,buy need28 Image31
-G11,1000,buy need11 Image31
-H2,1000,buy need8 Image31
-H7,1000,buy need77 Image31
-E2,1000,buy need313 Image24
-D17,1000,buy need6 Image24
-F11,1000,buy need57 Image24
-F21,1000,buy need53 Image24
-G16,1000,buy need66 Image24
-G6,1000,buy need25 Image24
+A1,1000,buy need11 Image31 need11
+A12,1000,buy need6 Image26 need6
+A18,1000,buy need29 Image15 need29
+A20,1000,buy need15 Image30 need15
+A5,1000,buy need37 Image10 need37
+A8,1000,buy need54 Image15 need54
+B25,1000,buy need20 Image15 need20
+D17,1000,buy need6 Image24 need6
+E16,1000,buy need415 Image10 need244; Image19 need171
+E2,1000,buy need313 Image24 need313
+F11,1000,buy need57 Image24 need57
+F15,1000,buy need28 Image31 need28
+F21,1000,buy need55 Image24 need53; Image33 need2
+F22,1000,buy need316 Image30 need316
+F24,1000,buy need4 Image26 need4
+G11,1000,buy need11 Image31 need11
+G13,1000,buy need192 Image10 need192
+G16,1000,buy need66 Image24 need66
+G18,1000,buy need403 Image26 need403
+G19,1000,buy need122 Image26 need26; Image19 need84; Image8 need12
+G4,1000,buy need254 Image35 need254
+G6,1000,buy need25 Image24 need25
+H11,1000,buy need183 Image22 need183
+H2,1000,buy need647 Image28 need484; Image17 need12; Image31 need8; Image10 need52; Image35 need91
+H7,1000,buy need77 Image31 need77
+M1,1000,buy need31 Image9 need31
+M14,1000,buy need3 Image32 need3
+M2,1000,buy need23 Image15 need23
+M4,1000,buy need2 Image26 need2
+M7,1000,buy need25 Image30 need25
