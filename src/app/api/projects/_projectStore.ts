@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { mkdir, readdir, readFile, rename, writeFile } from 'fs/promises';
+import { mkdir, readdir, readFile, rename, rm, writeFile } from 'fs/promises';
 import path from 'path';
 
 export type ProjectStatus = 'draft' | 'in_progress' | 'completed';
@@ -30,6 +30,11 @@ export interface ProjectPattern {
   gridDimensions?: { N: number; M: number };
   totalBeadCount: number;
   colorCount: number;
+  colorCounts?: Record<string, number>;
+  expected?: string;
+  matchesExpected?: boolean;
+  sourcePageType?: string;
+  analysisStatus?: string;
   status: ProjectStatus;
   addedToPlanAt?: string;
   completedAt?: string;
@@ -74,6 +79,22 @@ export interface ProjectFile {
 
 export interface ProjectDetailFile extends ProjectFile {
   patternDetails: Record<string, ProjectPatternDetail>;
+  availablePatterns: AvailablePattern[];
+}
+
+export interface AvailablePattern {
+  id: string;
+  name: string;
+  totalBeadCount: number;
+  colorCount: number;
+  colorCounts: Record<string, number>;
+  expected?: string;
+  matchesExpected?: boolean;
+  sourcePageType?: string;
+  analysisStatus?: string;
+  thumbnailPath?: string;
+  sourceImages?: string[];
+  isGrouped: boolean;
 }
 
 export interface ProjectListItem {
@@ -125,6 +146,21 @@ export interface UpdateProjectPatternStatusInput {
   status: ProjectStatus;
 }
 
+export interface AddPatternsToProjectInput {
+  projectId: string;
+  patternIds: string[];
+}
+
+export interface RemoveProjectPatternsInput {
+  projectId: string;
+  patternIds: string[];
+}
+
+export interface DeleteProjectInput {
+  projectId: string;
+  confirmName: string;
+}
+
 interface PatternGridFile {
   mappedPixelData?: Array<Array<{ color?: string; key?: string }>>;
   colorCounts?: Record<string, {
@@ -146,9 +182,37 @@ interface InventoryStockFile {
   }>;
 }
 
+interface PatternAssignmentsFile {
+  [patternId: string]: {
+    projectId: string;
+    projectName: string;
+    assignedAt: string;
+  };
+}
+
+interface BatchAnalyzeFile {
+  images?: BatchAnalyzeImage[];
+}
+
+interface BatchAnalyzeImage {
+  id?: string;
+  totalBeads?: number;
+  totalColorKeys?: number;
+  colorCounts?: Record<string, number>;
+  expected?: string;
+  matchesExpected?: boolean;
+  sourcePageType?: string;
+  analysisStatus?: string;
+  sourceImages?: string[];
+}
+
 const ROOT_DIR = process.cwd();
 const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'projects');
 const INVENTORY_PATH = path.join(ROOT_DIR, 'results', 'warehouse', 'inventory.json');
+const BATCH_ANALYSIS_PATH = path.join(ROOT_DIR, 'results', 'batch_pic', 'analyze_color_legend.main.json');
+const ASSIGNMENTS_PATH = path.join(PROJECTS_DIR, 'pattern-assignments.json');
+const PROJECT_DATA_FILE = 'project_data.json';
+const LEGACY_PROJECT_FILE = 'project.json';
 
 export async function readProjectList(): Promise<ProjectListItem[]> {
   const projectRefs = await readProjectRefs();
@@ -181,6 +245,25 @@ export async function readProjectDetailById(idOrDirectoryName: string): Promise<
   const match = await readProjectRefById(idOrDirectoryName);
   if (!match) return null;
   return enrichProjectDetail(match.project, match.directoryName);
+}
+
+export async function readAvailablePatterns(projectId?: string): Promise<AvailablePattern[]> {
+  const assignments = await readAssignments();
+  const occupiedByProject = new Map<string, string>();
+  for (const { project } of await readProjectRefs()) {
+    for (const pattern of project.patterns) {
+      occupiedByProject.set(pattern.id, project.id);
+    }
+  }
+  const batch = await readJsonFile<BatchAnalyzeFile>(BATCH_ANALYSIS_PATH, { images: [] });
+  return (batch.images ?? [])
+    .map(normalizeAvailablePattern)
+    .filter((pattern): pattern is AvailablePattern => Boolean(pattern))
+    .filter((pattern) => {
+      const assignment = assignments[pattern.id];
+      const occupiedProjectId = assignment?.projectId || occupiedByProject.get(pattern.id);
+      return !occupiedProjectId || occupiedProjectId === projectId;
+    });
 }
 
 export async function readProjectWarehouseOptions(): Promise<ProjectWarehouseOption[]> {
@@ -227,7 +310,7 @@ export async function createProject(input: CreateProjectInput): Promise<ProjectF
     missingItems: [],
   };
   const directoryName = await nextProjectDirectoryName(name);
-  const projectPath = path.join(PROJECTS_DIR, directoryName, 'project.json');
+  const projectPath = path.join(PROJECTS_DIR, directoryName, PROJECT_DATA_FILE);
   await writeJsonAtomic(projectPath, project);
   return project;
 }
@@ -293,6 +376,136 @@ export async function updateProjectPatternStatuses(input: UpdateProjectPatternSt
   return enrichProjectDetail(recalculated, match.directoryName);
 }
 
+export async function addPatternsToProject(input: AddPatternsToProjectInput): Promise<ProjectDetailFile> {
+  const patternIds = Array.from(new Set(input.patternIds.map((id) => String(id || '').trim()).filter(Boolean)));
+  if (patternIds.length === 0) {
+    throw new Error('请选择要添加的图纸');
+  }
+
+  const match = await readProjectRefById(input.projectId);
+  if (!match) {
+    throw new Error('找不到项目');
+  }
+
+  const assignments = await readAssignments();
+  const availableById = new Map((await readAvailablePatterns()).map((pattern) => [pattern.id, pattern]));
+  const now = new Date().toISOString();
+  const existingIds = new Set(match.project.patterns.map((pattern) => pattern.id));
+  const nextPatterns = [...match.project.patterns];
+
+  for (const patternId of patternIds) {
+    const assignment = assignments[patternId];
+    if (assignment && assignment.projectId !== match.project.id) {
+      throw new Error(`图纸 ${patternId} 已被其他项目占用`);
+    }
+    if (existingIds.has(patternId)) continue;
+
+    const available = availableById.get(patternId);
+    if (!available) {
+      throw new Error(`找不到可用图纸 ${patternId}`);
+    }
+
+    nextPatterns.push({
+      id: available.id,
+      name: available.name,
+      thumbnailPath: available.thumbnailPath,
+      totalBeadCount: available.totalBeadCount,
+      colorCount: available.colorCount,
+      colorCounts: available.colorCounts,
+      expected: available.expected,
+      matchesExpected: available.matchesExpected,
+      sourcePageType: available.sourcePageType,
+      analysisStatus: available.analysisStatus,
+      status: 'draft',
+      addedToPlanAt: now,
+    });
+    assignments[patternId] = {
+      projectId: match.project.id,
+      projectName: match.project.name,
+      assignedAt: now,
+    };
+  }
+
+  const nextProject = await recalculateProject({
+    ...match.project,
+    patterns: nextPatterns,
+    updatedAt: now,
+  }, match.directoryName);
+  await Promise.all([
+    writeJsonAtomic(match.projectPath, nextProject),
+    writeAssignments(assignments),
+  ]);
+  return enrichProjectDetail(nextProject, match.directoryName);
+}
+
+export async function removeProjectPatterns(input: RemoveProjectPatternsInput): Promise<ProjectDetailFile> {
+  const patternIds = new Set(input.patternIds.map((id) => String(id || '').trim()).filter(Boolean));
+  if (patternIds.size === 0) {
+    throw new Error('请选择要移除的图纸');
+  }
+
+  const match = await readProjectRefById(input.projectId);
+  if (!match) {
+    throw new Error('找不到项目');
+  }
+
+  for (const pattern of match.project.patterns) {
+    if (patternIds.has(pattern.id) && pattern.status !== 'draft') {
+      throw new Error('第一版只支持从草稿移除图纸');
+    }
+  }
+
+  const assignments = await readAssignments();
+  for (const patternId of patternIds) {
+    if (assignments[patternId]?.projectId === match.project.id) {
+      delete assignments[patternId];
+    }
+  }
+
+  const nextProject = await recalculateProject({
+    ...match.project,
+    patterns: match.project.patterns.filter((pattern) => !patternIds.has(pattern.id)),
+    updatedAt: new Date().toISOString(),
+  }, match.directoryName);
+  await Promise.all([
+    writeJsonAtomic(match.projectPath, nextProject),
+    writeAssignments(assignments),
+  ]);
+  return enrichProjectDetail(nextProject, match.directoryName);
+}
+
+export async function deleteProject(input: DeleteProjectInput): Promise<void> {
+  const match = await readProjectRefById(input.projectId);
+  if (!match) {
+    throw new Error('找不到项目');
+  }
+  if (input.confirmName !== match.project.name) {
+    throw new Error('项目名称不匹配，未删除');
+  }
+
+  const assignments = await readAssignments();
+  for (const [patternId, assignment] of Object.entries(assignments)) {
+    if (assignment.projectId === match.project.id) {
+      delete assignments[patternId];
+    }
+  }
+
+  const targetDir = path.resolve(PROJECTS_DIR, match.directoryName);
+  const projectsRoot = path.resolve(PROJECTS_DIR);
+  if (!targetDir.toLowerCase().startsWith(projectsRoot.toLowerCase() + path.sep)) {
+    throw new Error('项目路径不安全，未删除');
+  }
+
+  await rm(targetDir, { recursive: true, force: true });
+  await writeAssignments(assignments);
+}
+
+export function resolveSafeProjectAssetPath(relativePath: string): string {
+  const resolved = path.resolve(normalizeInputPath(relativePath));
+  const root = path.resolve(ROOT_DIR);
+  return resolved.toLowerCase().startsWith(root.toLowerCase() + path.sep) ? resolved : '';
+}
+
 export function compareColorKeys(a: string, b: string): number {
   const parsedA = parseColorKey(a);
   const parsedB = parseColorKey(b);
@@ -319,7 +532,7 @@ async function readProjectRefs(): Promise<Array<{ directoryName: string; project
       entries
         .filter((entry) => entry.isDirectory())
         .map(async (entry) => {
-          const projectPath = path.join(PROJECTS_DIR, entry.name, 'project.json');
+          const projectPath = await resolveProjectDataPath(entry.name);
           try {
             const project = await readJsonFile<ProjectFile | null>(projectPath, null);
             if (!project) return null;
@@ -336,6 +549,16 @@ async function readProjectRefs(): Promise<Array<{ directoryName: string; project
     return projects.filter((project): project is NonNullable<typeof project> => project !== null);
   } catch {
     return [];
+  }
+}
+
+async function resolveProjectDataPath(directoryName: string): Promise<string> {
+  const projectDataPath = path.join(PROJECTS_DIR, directoryName, PROJECT_DATA_FILE);
+  try {
+    await readFile(projectDataPath, 'utf8');
+    return projectDataPath;
+  } catch {
+    return path.join(PROJECTS_DIR, directoryName, LEGACY_PROJECT_FILE);
   }
 }
 
@@ -363,6 +586,9 @@ async function enrichProjectDetail(project: ProjectFile, directoryName: string):
   return {
     ...project,
     patternDetails: Object.fromEntries(details.map((detail) => [detail.patternId, detail])),
+    availablePatterns: (await readAvailablePatterns(project.id)).filter((pattern) => (
+      !project.patterns.some((projectPattern) => projectPattern.id === pattern.id)
+    )),
   };
 }
 
@@ -381,13 +607,22 @@ async function recalculateProject(project: ProjectFile, directoryName: string): 
   const inventory = await readJsonFile<InventoryStockFile>(INVENTORY_PATH, { warehouses: [] });
   const warehouse = (inventory.warehouses ?? []).find((candidate) => candidate.id === project.warehouseId);
   const stock = new Map<string, { colorKey: string; ownedCount: number }>();
+  const stockByKey = new Map<string, { hex: string; colorKey: string; ownedCount: number }>();
   for (const item of warehouse?.items ?? []) {
     const hex = String(item.hex || '').toUpperCase();
     if (!hex) continue;
+    const colorKey = String(item.colorKey || '');
     stock.set(hex, {
-      colorKey: String(item.colorKey || ''),
+      colorKey,
       ownedCount: Number(item.ownedCount || 0),
     });
+    if (colorKey) {
+      stockByKey.set(colorKey.toUpperCase(), {
+        hex,
+        colorKey,
+        ownedCount: Number(item.ownedCount || 0),
+      });
+    }
   }
 
   const demand = new Map<string, { hex: string; colorKey: string; needed: number }>();
@@ -398,15 +633,19 @@ async function recalculateProject(project: ProjectFile, directoryName: string): 
   for (const pattern of activePatterns) {
     const sourcePath = resolvePatternFilePath(directoryName, pattern);
     const grid = sourcePath ? await readJsonFile<PatternGridFile | null>(sourcePath, null) : null;
-    for (const color of buildPatternColors(grid)) {
-      const existing = demand.get(color.hex) || {
+    const colors = Object.keys(pattern.colorCounts ?? {}).length > 0
+      ? buildPatternColorsFromCounts(pattern, stockByKey)
+      : buildPatternColors(grid);
+    for (const color of colors) {
+      const demandKey = `${color.hex}:${color.colorKey}`;
+      const existing = demand.get(demandKey) || {
         hex: color.hex,
         colorKey: color.colorKey,
         needed: 0,
       };
       existing.needed += color.count;
       if (!existing.colorKey && color.colorKey) existing.colorKey = color.colorKey;
-      demand.set(color.hex, existing);
+      demand.set(demandKey, existing);
     }
   }
 
@@ -446,6 +685,31 @@ function buildPatternColors(grid: PatternGridFile | null): ProjectPatternColor[]
     .sort((a, b) => compareColorKeys(a.colorKey, b.colorKey));
 }
 
+function buildPatternColorsFromCounts(
+  pattern: ProjectPattern,
+  stockByKey: Map<string, { hex: string; colorKey: string; ownedCount: number }>
+): ProjectPatternColor[] {
+  return Object.entries(pattern.colorCounts ?? {})
+    .map(([colorKey, count]) => {
+      const stockItem = stockByKey.get(colorKey.toUpperCase());
+      return {
+        hex: stockItem?.hex || fallbackHexForColorKey(colorKey),
+        colorKey,
+        count: Number(count || 0),
+      };
+    })
+    .filter((entry) => entry.count > 0)
+    .sort((a, b) => compareColorKeys(a.colorKey, b.colorKey));
+}
+
+function fallbackHexForColorKey(colorKey: string): string {
+  let hash = 0;
+  for (const char of colorKey) {
+    hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  }
+  return `#${(hash & 0xFFFFFF).toString(16).padStart(6, '0').toUpperCase()}`;
+}
+
 function buildPreviewRows(grid: PatternGridFile | null): ProjectPatternPreviewCell[][] {
   const rows = grid?.mappedPixelData ?? [];
   if (rows.length === 0) return [];
@@ -471,6 +735,64 @@ function buildPreviewRows(grid: PatternGridFile | null): ProjectPatternPreviewCe
   }
 
   return previewRows;
+}
+
+function normalizeAvailablePattern(input: BatchAnalyzeImage): AvailablePattern | null {
+  const id = String(input.id || '').trim();
+  if (!id) return null;
+
+  const colorCounts = normalizePlainColorCounts(input.colorCounts);
+  const sourceImages = Array.isArray(input.sourceImages) ? input.sourceImages.map(String) : [];
+  const thumbnailPath = findBatchThumbnailPath(id, sourceImages);
+
+  return {
+    id,
+    name: id,
+    totalBeadCount: Number(input.totalBeads || Object.values(colorCounts).reduce((sum, count) => sum + count, 0)),
+    colorCount: Number(input.totalColorKeys || Object.keys(colorCounts).length),
+    colorCounts,
+    expected: input.expected,
+    matchesExpected: input.matchesExpected,
+    sourcePageType: input.sourcePageType,
+    analysisStatus: input.analysisStatus,
+    thumbnailPath,
+    sourceImages,
+    isGrouped: sourceImages.length > 1 || Boolean(thumbnailPath && /[\\/]/.test(thumbnailPath.replace(/^results\/batch_pic\//, ''))),
+  };
+}
+
+function normalizePlainColorCounts(input: unknown): Record<string, number> {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return {};
+  return Object.fromEntries(
+    Object.entries(input as Record<string, unknown>)
+      .map(([key, value]) => [key, Number(value || 0)] as const)
+      .filter(([, value]) => value > 0)
+  );
+}
+
+function findBatchThumbnailPath(id: string, sourceImages: string[]): string | undefined {
+  const candidates = [
+    ...sourceImages,
+    `results/batch_pic/${id}.PNG`,
+    `results/batch_pic/${id}.png`,
+    `results/batch_pic/${id}/${id}_1.PNG`,
+    `results/batch_pic/${id}/${id}_1.png`,
+  ];
+  for (const candidate of candidates) {
+    const normalized = mapBatchImagePath(candidate);
+    if (normalized) return normalized;
+  }
+  return undefined;
+}
+
+function mapBatchImagePath(input: string): string {
+  const normalized = String(input || '').replace(/\\/g, '/');
+  const batchIndex = normalized.toLowerCase().lastIndexOf('/batch_pic/');
+  if (batchIndex >= 0) {
+    return `results/batch_pic/${normalized.slice(batchIndex + '/batch_pic/'.length)}`;
+  }
+  if (normalized.startsWith('results/batch_pic/')) return normalized;
+  return '';
 }
 
 function resolvePatternFilePath(directoryName: string, pattern: ProjectPattern): string {
@@ -566,6 +888,11 @@ function normalizePattern(input: Partial<ProjectPattern>): ProjectPattern {
     gridDimensions: input.gridDimensions,
     totalBeadCount: Number(input.totalBeadCount || 0),
     colorCount: Number(input.colorCount || 0),
+    colorCounts: normalizePlainColorCounts(input.colorCounts),
+    expected: input.expected,
+    matchesExpected: input.matchesExpected,
+    sourcePageType: input.sourcePageType,
+    analysisStatus: input.analysisStatus,
     status: normalizeStatus(input.status),
     addedToPlanAt: input.addedToPlanAt,
     completedAt: input.completedAt,
@@ -638,6 +965,14 @@ function sanitizeFileName(input: string): string {
     .replace(/^\.+/, '')
     .slice(0, 80);
   return cleaned || 'project';
+}
+
+async function readAssignments(): Promise<PatternAssignmentsFile> {
+  return readJsonFile<PatternAssignmentsFile>(ASSIGNMENTS_PATH, {});
+}
+
+async function writeAssignments(assignments: PatternAssignmentsFile): Promise<void> {
+  await writeJsonAtomic(ASSIGNMENTS_PATH, assignments);
 }
 
 function parseColorKey(colorKey: string): { prefix: string; number: number } {
