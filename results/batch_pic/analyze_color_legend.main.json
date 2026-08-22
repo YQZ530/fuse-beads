@@ -2,7 +2,7 @@
   "input": "test_scr\\groups.manifest.json",
   "mode": "grouped_manifest_color_legend_final",
   "imageCount": 32,
-  "conflictCount": 2,
+  "conflictCount": 0,
   "images": [
     {
       "id": "Image1",
@@ -74,7 +74,15 @@
         "G21": 2,
         "H23": 2,
         "G8": 1
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image1\\Image1_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image1\\Image1_2.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image1\\Image1_3.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image1\\Image1_4.PNG"
+      ]
     },
     {
       "id": "Image2",
@@ -95,7 +103,12 @@
         "H3": 27,
         "M12": 5,
         "H6": 1
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image2.PNG"
+      ]
     },
     {
       "id": "Image3",
@@ -112,6 +125,8 @@
         "A8": 43,
         "F8": 16
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 2474,
       "countsWithTransparent": {
         "F15": 64,
@@ -120,40 +135,55 @@
         "A8": 43,
         "F8": 16,
         "transparent": 2474
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image3.PNG"
+      ]
     },
     {
       "id": "Image4",
       "sourcePageType": "color_modal",
       "analysisStatus": "analyzed_from_color_modal",
-      "totalColorKeys": 36,
-      "totalBeads": 1862,
+      "totalColorKeys": 52,
+      "totalBeads": 2955,
       "expected": "52_2955",
-      "matchesExpected": false,
+      "matchesExpected": true,
       "colorCounts": {
+        "H18": 209,
+        "H3": 206,
+        "H2": 191,
         "G19": 168,
         "F11": 161,
+        "H5": 161,
         "A4": 154,
         "A20": 139,
         "A16": 133,
         "E2": 131,
         "G18": 120,
+        "H17": 116,
         "G21": 109,
-        "B16": 88,
+        "E16": 88,
         "A7": 69,
         "E12": 61,
         "A8": 58,
         "G9": 55,
         "F6": 46,
         "A23": 39,
+        "H14": 39,
         "G1": 37,
+        "M15": 34,
         "A6": 33,
         "F7": 31,
+        "M14": 28,
         "E4": 25,
+        "H1": 23,
         "F8": 22,
+        "H11": 22,
+        "H4": 21,
         "G16": 20,
-        "A18": 17,
-        "C5": 17,
+        "M6": 18,
+        "A13": 17,
+        "E5": 17,
         "A10": 16,
         "B25": 14,
         "G17": 14,
@@ -161,22 +191,31 @@
         "E10": 13,
         "B26": 11,
         "C2": 11,
+        "M2": 11,
         "C7": 10,
         "G6": 8,
+        "H10": 6,
+        "M9": 6,
         "E13": 5,
         "F9": 5,
         "G14": 5,
-        "A9": 4
-      }
+        "A9": 4,
+        "H8": 2
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image4\\Image4_2.PNG"
+      ]
     },
     {
       "id": "Image5",
       "sourcePageType": "color_modal",
       "analysisStatus": "analyzed_from_color_modal",
       "totalColorKeys": 31,
-      "totalBeads": 2655,
+      "totalBeads": 2652,
       "expected": "31_2652",
-      "matchesExpected": false,
+      "matchesExpected": true,
       "colorCounts": {
         "G7": 954,
         "A20": 532,
@@ -204,12 +243,17 @@
         "C7": 8,
         "D22": 6,
         "G1": 6,
-        "G6": 4,
         "H5": 4,
         "G12": 2,
         "E16": 1,
+        "G6": 1,
         "H1": 1
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image5\\Image5_2.PNG"
+      ]
     },
     {
       "id": "Image6",
@@ -225,6 +269,8 @@
         "H2": 136,
         "F5": 85
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1901,
       "countsWithTransparent": {
         "B8": 297,
@@ -232,7 +278,10 @@
         "H2": 136,
         "F5": 85,
         "transparent": 1901
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image6.PNG"
+      ]
     },
     {
       "id": "Image7",
@@ -245,7 +294,12 @@
       "colorCounts": {
         "F15": 2134,
         "H7": 170
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image7.PNG"
+      ]
     },
     {
       "id": "Image8",
@@ -266,6 +320,8 @@
         "F18": 12,
         "F7": 6
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1999,
       "countsWithTransparent": {
         "G5": 245,
@@ -278,7 +334,10 @@
         "F18": 12,
         "F7": 6,
         "transparent": 1999
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image8.PNG"
+      ]
     },
     {
       "id": "Image9",
@@ -295,6 +354,8 @@
         "M1": 31,
         "G10": 15
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 2516,
       "countsWithTransparent": {
         "H7": 54,
@@ -303,7 +364,10 @@
         "M1": 31,
         "G10": 15,
         "transparent": 2516
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image9.PNG"
+      ]
     },
     {
       "id": "Image10",
@@ -332,6 +396,8 @@
         "M2": 11,
         "G10": 2
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1401,
       "countsWithTransparent": {
         "G18": 293,
@@ -352,7 +418,11 @@
         "M2": 11,
         "G10": 2,
         "transparent": 1401
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image10\\Image10_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image10\\Image10_2.PNG"
+      ]
     },
     {
       "id": "Image11",
@@ -377,7 +447,13 @@
         "H9": 10,
         "A4": 4,
         "C7": 2
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image11\\Image11_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image11\\Image11_2.PNG"
+      ]
     },
     {
       "id": "Image12",
@@ -390,7 +466,12 @@
       "colorCounts": {
         "H7": 1591,
         "G18": 1113
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image12.PNG"
+      ]
     },
     {
       "id": "Image14",
@@ -416,6 +497,8 @@
         "H9": 2,
         "H16": 2
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1405,
       "countsWithTransparent": {
         "H11": 328,
@@ -433,7 +516,11 @@
         "H9": 2,
         "H16": 2,
         "transparent": 1405
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image14\\Image14_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image14\\Image14_2.PNG"
+      ]
     },
     {
       "id": "Image15",
@@ -456,6 +543,8 @@
         "A7": 10,
         "H2": 8
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1504,
       "countsWithTransparent": {
         "G18": 468,
@@ -470,7 +559,10 @@
         "A7": 10,
         "H2": 8,
         "transparent": 1504
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image15.PNG"
+      ]
     },
     {
       "id": "Image16",
@@ -502,6 +594,8 @@
         "G8": 6,
         "M6": 3
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1066,
       "countsWithTransparent": {
         "H9": 1066,
@@ -525,7 +619,11 @@
         "G8": 6,
         "M6": 3,
         "transparent": 1066
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image16\\Image16_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image16\\Image16_2.PNG"
+      ]
     },
     {
       "id": "Image17",
@@ -557,6 +655,8 @@
         "C5": 2,
         "B21": 1
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 2201,
       "countsWithTransparent": {
         "B19": 98,
@@ -580,7 +680,11 @@
         "C5": 2,
         "B21": 1,
         "transparent": 2201
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image17\\Image17_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image17\\Image17_2.PNG"
+      ]
     },
     {
       "id": "Image18",
@@ -598,6 +702,8 @@
         "F24": 14,
         "R22": 2
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1989,
       "countsWithTransparent": {
         "G4": 324,
@@ -607,7 +713,10 @@
         "F24": 14,
         "R22": 2,
         "transparent": 1989
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image18.PNG"
+      ]
     },
     {
       "id": "Image19",
@@ -626,6 +735,8 @@
         "A19": 8,
         "B8": 4
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1990,
       "countsWithTransparent": {
         "A11": 218,
@@ -636,7 +747,10 @@
         "A19": 8,
         "B8": 4,
         "transparent": 1990
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image19.PNG"
+      ]
     },
     {
       "id": "Image20",
@@ -651,7 +765,12 @@
         "D3": 518,
         "D4": 471,
         "C29": 90
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image20.PNG"
+      ]
     },
     {
       "id": "Image22",
@@ -676,6 +795,8 @@
         "G4": 2,
         "F14": 1
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1810,
       "countsWithTransparent": {
         "H2": 306,
@@ -692,7 +813,11 @@
         "G4": 2,
         "F14": 1,
         "transparent": 1810
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image22\\Image22_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image22\\Image22_2.PNG"
+      ]
     },
     {
       "id": "Image23",
@@ -709,7 +834,12 @@
         "B1": 191,
         "A22": 103,
         "B18": 101
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image23.PNG"
+      ]
     },
     {
       "id": "Image24",
@@ -729,9 +859,9 @@
         "G16": 66,
         "F21": 53,
         "A9": 51,
-        "A8": 45,
+        "A18": 45,
         "E7": 45,
-        "A3": 38,
+        "A13": 38,
         "G13": 30,
         "E10": 26,
         "G6": 25,
@@ -747,7 +877,12 @@
         "M9": 4,
         "M10": 4,
         "H3": 2
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image24\\Image24_2.PNG"
+      ]
     },
     {
       "id": "Image25",
@@ -769,7 +904,12 @@
         "M15": 40,
         "H23": 23,
         "F6": 10
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image25.png"
+      ]
     },
     {
       "id": "Image26",
@@ -810,7 +950,12 @@
         "G7": 3,
         "M4": 2,
         "G20": 1
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image26\\Image26_2.PNG"
+      ]
     },
     {
       "id": "Image27",
@@ -832,6 +977,8 @@
         "B26": 8,
         "H2": 6
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 2377,
       "countsWithTransparent": {
         "A10": 68,
@@ -845,7 +992,10 @@
         "B26": 8,
         "H2": 6,
         "transparent": 2377
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image27.PNG"
+      ]
     },
     {
       "id": "Image28",
@@ -861,7 +1011,12 @@
         "F22": 123,
         "F14": 16,
         "E8": 15
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image28\\Image28_2.PNG"
+      ]
     },
     {
       "id": "Image29",
@@ -876,7 +1031,12 @@
         "M2": 334,
         "H2": 194,
         "B11": 152
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image29.PNG"
+      ]
     },
     {
       "id": "Image30",
@@ -907,6 +1067,8 @@
         "M15": 4,
         "C26": 2
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1857,
       "countsWithTransparent": {
         "F22": 316,
@@ -929,7 +1091,12 @@
         "M15": 4,
         "C26": 2,
         "transparent": 1857
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image30\\Image30_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image30\\Image30_2.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image30\\Image30_3.PNG"
+      ]
     },
     {
       "id": "Image31",
@@ -962,6 +1129,8 @@
         "F14": 1,
         "H16": 1
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 2169,
       "countsWithTransparent": {
         "E12": 109,
@@ -986,7 +1155,13 @@
         "F14": 1,
         "H16": 1,
         "transparent": 2169
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image31\\Image31_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image31\\Image31_2.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image31\\Image31_3.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image31\\Image31_4.PNG"
+      ]
     },
     {
       "id": "Image32",
@@ -1009,6 +1184,8 @@
         "H4": 2,
         "F24": 1
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 1999,
       "countsWithTransparent": {
         "G13": 280,
@@ -1023,7 +1200,10 @@
         "H4": 2,
         "F24": 1,
         "transparent": 1999
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image32.PNG"
+      ]
     },
     {
       "id": "Image33",
@@ -1046,6 +1226,8 @@
         "C7": 2,
         "F21": 2
       },
+      "needsReviewCount": 0,
+      "needsReview": [],
       "transparentCount": 2205,
       "countsWithTransparent": {
         "E18": 120,
@@ -1060,7 +1242,10 @@
         "C7": 2,
         "F21": 2,
         "transparent": 2205
-      }
+      },
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image33.PNG"
+      ]
     },
     {
       "id": "Image34",
@@ -1092,21 +1277,14 @@
         "M3": 10,
         "M4": 10,
         "F7": 3
-      }
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": [
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image34\\Image34_1.PNG",
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image34\\Image34_2.PNG"
+      ]
     }
   ],
-  "conflictImages": [
-    {
-      "id": "Image4",
-      "current": "36_1862",
-      "expected": "52_2955",
-      "sourcePageType": "color_modal"
-    },
-    {
-      "id": "Image5",
-      "current": "31_2655",
-      "expected": "31_2652",
-      "sourcePageType": "color_modal"
-    }
-  ]
+  "conflictImages": []
 }

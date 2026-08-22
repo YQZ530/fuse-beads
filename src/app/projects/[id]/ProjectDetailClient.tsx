@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FormEvent, useMemo, useState } from 'react';
 import type {
+  AvailablePattern,
   ProjectDetailFile,
   ProjectPattern,
   ProjectPatternDetail,
@@ -23,14 +25,18 @@ interface StatusResponse {
 type DraftViewMode = 'list' | 'thumbnail';
 
 export default function ProjectDetailClient({ initialProject }: ProjectDetailClientProps) {
+  const router = useRouter();
   const [project, setProject] = useState(initialProject);
+  const [availableViewMode, setAvailableViewMode] = useState<DraftViewMode>('list');
   const [draftViewMode, setDraftViewMode] = useState<DraftViewMode>('list');
+  const [selectedAvailableIds, setSelectedAvailableIds] = useState<Set<string>>(new Set());
   const [selectedDraftIds, setSelectedDraftIds] = useState<Set<string>>(new Set());
   const [selectedInProgressIds, setSelectedInProgressIds] = useState<Set<string>>(new Set());
   const [activePreviewId, setActivePreviewId] = useState('');
   const [isRenamingProject, setIsRenamingProject] = useState(false);
   const [renameDraft, setRenameDraft] = useState('');
   const [busyAction, setBusyAction] = useState('');
+  const [deleteConfirmName, setDeleteConfirmName] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -127,8 +133,98 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
     }
   }
 
+  async function addAvailableSelection() {
+    if (selectedAvailableIds.size === 0) return;
+    setBusyAction('add-available-patterns');
+    setMessage('');
+    setError('');
+
+    try {
+      const response = await fetch(`/api/projects/${encodeURIComponent(project.id)}/patterns/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ patternIds: Array.from(selectedAvailableIds) }),
+      });
+      const payload = (await response.json()) as StatusResponse;
+      if (!response.ok || !payload.ok || !payload.project) {
+        throw new Error(payload.error || '添加图纸失败');
+      }
+
+      setProject(payload.project);
+      setSelectedAvailableIds(new Set());
+      setMessage(`已添加 ${selectedAvailableIds.size} 张图纸到草稿`);
+    } catch (addError) {
+      setError(addError instanceof Error ? addError.message : '添加图纸失败');
+    } finally {
+      setBusyAction('');
+    }
+  }
+
+  async function removeDraftSelection() {
+    if (selectedDraftIds.size === 0) return;
+    setBusyAction('remove-draft-patterns');
+    setMessage('');
+    setError('');
+
+    try {
+      const response = await fetch(`/api/projects/${encodeURIComponent(project.id)}/patterns/remove`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ patternIds: Array.from(selectedDraftIds) }),
+      });
+      const payload = (await response.json()) as StatusResponse;
+      if (!response.ok || !payload.ok || !payload.project) {
+        throw new Error(payload.error || '移除图纸失败');
+      }
+
+      setProject(payload.project);
+      setSelectedDraftIds(new Set());
+      setActivePreviewId('');
+      setMessage(`已从项目移除 ${selectedDraftIds.size} 张草稿图纸`);
+    } catch (removeError) {
+      setError(removeError instanceof Error ? removeError.message : '移除图纸失败');
+    } finally {
+      setBusyAction('');
+    }
+  }
+
+  async function deleteCurrentProject() {
+    setBusyAction('delete-project');
+    setMessage('');
+    setError('');
+
+    try {
+      const response = await fetch(`/api/projects/${encodeURIComponent(project.id)}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmName: deleteConfirmName }),
+      });
+      const payload = (await response.json()) as { ok: boolean; error?: string };
+      if (!response.ok || !payload.ok) {
+        throw new Error(payload.error || '删除项目失败');
+      }
+      router.push('/projects');
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : '删除项目失败');
+    } finally {
+      setBusyAction('');
+    }
+  }
+
   function toggleDraftSelection(patternId: string) {
     setSelectedDraftIds((current) => {
+      const next = new Set(current);
+      if (next.has(patternId)) {
+        next.delete(patternId);
+      } else {
+        next.add(patternId);
+      }
+      return next;
+    });
+  }
+
+  function toggleAvailableSelection(patternId: string) {
+    setSelectedAvailableIds((current) => {
       const next = new Set(current);
       if (next.has(patternId)) {
         next.delete(patternId);
@@ -248,6 +344,15 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
 
         <section className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
           <section className="flex flex-col gap-4">
+            <AvailablePatternSection
+              patterns={project.availablePatterns}
+              viewMode={availableViewMode}
+              onViewModeChange={setAvailableViewMode}
+              selectedIds={selectedAvailableIds}
+              busyAction={busyAction}
+              onToggleSelect={toggleAvailableSelection}
+              onAdd={addAvailableSelection}
+            />
             <DraftPatternSection
               patterns={groupedPatterns.draft}
               details={project.patternDetails}
@@ -264,6 +369,7 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
                 actionKey: `move-draft-${status}`,
                 clearSelection: () => setSelectedDraftIds(new Set()),
               })}
+              onRemove={removeDraftSelection}
               projectId={project.id}
             />
             <InProgressPatternSection
@@ -300,8 +406,149 @@ export default function ProjectDetailClient({ initialProject }: ProjectDetailCli
             />
           </section>
         </section>
+
+        <DangerZone
+          projectName={project.name}
+          confirmName={deleteConfirmName}
+          busyAction={busyAction}
+          onConfirmNameChange={setDeleteConfirmName}
+          onDelete={deleteCurrentProject}
+        />
       </div>
     </main>
+  );
+}
+
+function AvailablePatternSection({
+  patterns,
+  viewMode,
+  onViewModeChange,
+  selectedIds,
+  busyAction,
+  onToggleSelect,
+  onAdd,
+}: {
+  patterns: AvailablePattern[];
+  viewMode: DraftViewMode;
+  onViewModeChange: (mode: DraftViewMode) => void;
+  selectedIds: Set<string>;
+  busyAction: string;
+  onToggleSelect: (patternId: string) => void;
+  onAdd: () => void;
+}) {
+  const allSelected = patterns.length > 0 && patterns.every((pattern) => selectedIds.has(pattern.id));
+
+  return (
+    <section className="rounded border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="text-base font-semibold">可用图纸</h2>
+          <p className="mt-1 text-sm text-slate-500">来自 batch 分析 JSON，未被其他项目占用。添加后会进入当前项目草稿。</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <div className="inline-flex rounded border border-slate-300 bg-white p-1 text-sm">
+            <button
+              type="button"
+              onClick={() => onViewModeChange('list')}
+              className={`h-8 rounded px-3 ${viewMode === 'list' ? 'bg-slate-950 text-white' : 'text-slate-600 hover:bg-slate-50'}`}
+            >
+              list
+            </button>
+            <button
+              type="button"
+              onClick={() => onViewModeChange('thumbnail')}
+              className={`h-8 rounded px-3 ${viewMode === 'thumbnail' ? 'bg-slate-950 text-white' : 'text-slate-600 hover:bg-slate-50'}`}
+            >
+              缩略图
+            </button>
+          </div>
+          <button
+            type="button"
+            disabled={selectedIds.size === 0 || Boolean(busyAction)}
+            onClick={onAdd}
+            className="inline-flex h-10 items-center justify-center rounded bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {busyAction === 'add-available-patterns' ? '添加中...' : `添加 ${selectedIds.size} 张`}
+          </button>
+        </div>
+      </div>
+
+      {patterns.length === 0 ? (
+        <div className="mt-3 rounded border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
+          暂无可用图纸
+        </div>
+      ) : viewMode === 'list' ? (
+        <div className="mt-3 overflow-auto rounded border border-slate-100">
+          <table className="w-full min-w-[760px] border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 bg-slate-50 text-left text-slate-500">
+                <th className="px-3 py-2">
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={() => {
+                      if (allSelected) {
+                        patterns.forEach((pattern) => selectedIds.has(pattern.id) && onToggleSelect(pattern.id));
+                      } else {
+                        patterns.forEach((pattern) => !selectedIds.has(pattern.id) && onToggleSelect(pattern.id));
+                      }
+                    }}
+                    className="h-4 w-4"
+                    aria-label="选择全部可用图纸"
+                  />
+                </th>
+                <th className="px-3 py-2">缩略图</th>
+                <th className="px-3 py-2">名称</th>
+                <th className="px-3 py-2">类型</th>
+                <th className="px-3 py-2 text-right">豆数</th>
+                <th className="px-3 py-2 text-right">颜色</th>
+                <th className="px-3 py-2">状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              {patterns.map((pattern) => (
+                <tr key={pattern.id} className="border-b border-slate-100 last:border-b-0">
+                  <td className="px-3 py-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(pattern.id)}
+                      onChange={() => onToggleSelect(pattern.id)}
+                      className="h-4 w-4"
+                      aria-label={`选择 ${pattern.name}`}
+                    />
+                  </td>
+                  <td className="px-3 py-2"><PatternThumbnail path={pattern.thumbnailPath} size="sm" /></td>
+                  <td className="px-3 py-2 font-medium">{pattern.name}</td>
+                  <td className="px-3 py-2 text-slate-600">{pattern.isGrouped ? '组图' : '单图'}</td>
+                  <td className="px-3 py-2 text-right">{pattern.totalBeadCount}</td>
+                  <td className="px-3 py-2 text-right">{pattern.colorCount}</td>
+                  <td className="px-3 py-2 text-xs text-slate-500">
+                    {pattern.matchesExpected === false ? '需核对' : pattern.analysisStatus || '-'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+          {patterns.map((pattern) => (
+            <button
+              key={pattern.id}
+              type="button"
+              onClick={() => onToggleSelect(pattern.id)}
+              className={`flex aspect-square min-w-0 flex-col rounded border bg-white p-2 transition hover:bg-slate-50 ${selectedIds.has(pattern.id) ? 'border-slate-950 ring-1 ring-slate-950' : 'border-slate-200'}`}
+            >
+              <div className="min-h-0 w-full flex-1">
+                <PatternThumbnail path={pattern.thumbnailPath} size="tile" />
+              </div>
+              <div className="mt-2 h-5 w-full truncate text-center text-xs font-semibold">{pattern.name}</div>
+              <div className="text-center text-[11px] text-slate-500">{pattern.totalBeadCount} 颗 · {pattern.colorCount} 色</div>
+            </button>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -316,6 +563,7 @@ function DraftPatternSection({
   onToggleSelect,
   onPreviewSelect,
   onMove,
+  onRemove,
   projectId,
 }: {
   patterns: ProjectPattern[];
@@ -328,6 +576,7 @@ function DraftPatternSection({
   onToggleSelect: (patternId: string) => void;
   onPreviewSelect: (patternId: string) => void;
   onMove: (status: Extract<ProjectStatus, 'in_progress' | 'completed'>) => void;
+  onRemove: () => void;
   projectId: string;
 }) {
   const activePattern = patterns.find((pattern) => pattern.id === activePreviewId) ?? null;
@@ -398,6 +647,14 @@ function DraftPatternSection({
               >
                 {busyAction === 'move-draft-completed' ? '移动中...' : '移动到已完成'}
               </button>
+              <button
+                type="button"
+                disabled={selectedIds.size === 0 || Boolean(busyAction)}
+                onClick={onRemove}
+                className="inline-flex h-9 items-center justify-center rounded border border-red-200 bg-white px-3 text-sm font-medium text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {busyAction === 'remove-draft-patterns' ? '移除中...' : '从项目移除'}
+              </button>
             </div>
           </div>
           <div className="overflow-auto rounded border border-slate-100">
@@ -426,7 +683,7 @@ function DraftPatternSection({
                       />
                     </td>
                     <td className="px-3 py-2">
-                      <PatternMosaic detail={details[pattern.id]} size="sm" />
+                      <PatternVisual pattern={pattern} detail={details[pattern.id]} size="sm" />
                     </td>
                     <td className="px-3 py-2 font-medium">{pattern.name}</td>
                     <td className="px-3 py-2 text-slate-600">{formatDimensions(pattern)}</td>
@@ -454,7 +711,7 @@ function DraftPatternSection({
                 className={`flex aspect-square min-w-0 flex-col rounded border bg-white p-2 transition hover:bg-slate-50 ${activePattern?.id === pattern.id ? 'border-slate-950 ring-1 ring-slate-950' : 'border-slate-200'}`}
               >
                 <div className="min-h-0 w-full flex-1">
-                  <PatternMosaic detail={details[pattern.id]} size="tile" />
+                  <PatternVisual pattern={pattern} detail={details[pattern.id]} size="tile" />
                 </div>
                 <div className="mt-2 h-5 w-full truncate text-center text-xs font-semibold">{pattern.name}</div>
               </button>
@@ -467,7 +724,7 @@ function DraftPatternSection({
                   <div className="text-sm font-semibold">{activePattern.name}</div>
                   <div className="mt-1 text-xs text-slate-500">{activeDetail.sourcePath || activePattern.fileName || activePattern.path}</div>
                 </div>
-                <PatternMosaic detail={activeDetail} size="lg" />
+                <PatternVisual pattern={activePattern} detail={activeDetail} size="lg" />
                 <div>
                   <div className="text-sm font-semibold">需要颜色</div>
                   <div className="mt-2 grid max-h-52 grid-cols-2 gap-2 overflow-auto text-sm">
@@ -581,7 +838,7 @@ function InProgressPatternSection({
                         aria-label={`选择 ${pattern.name}`}
                       />
                     </td>
-                    <td className="px-3 py-2"><PatternMosaic detail={details[pattern.id]} size="sm" /></td>
+                    <td className="px-3 py-2"><PatternVisual pattern={pattern} detail={details[pattern.id]} size="sm" /></td>
                     <td className="px-3 py-2 font-medium">{pattern.name}</td>
                     <td className="px-3 py-2 text-slate-600">{formatDimensions(pattern)}</td>
                     <td className="px-3 py-2 text-right">{pattern.totalBeadCount}</td>
@@ -641,7 +898,7 @@ function PatternSection({
             ) : (
               patterns.map((pattern) => (
                 <tr key={pattern.id} className="border-b border-slate-100 last:border-b-0">
-                  <td className="px-3 py-2"><PatternMosaic detail={details[pattern.id]} size="sm" /></td>
+                  <td className="px-3 py-2"><PatternVisual pattern={pattern} detail={details[pattern.id]} size="sm" /></td>
                   <td className="px-3 py-2 font-medium">{pattern.name}</td>
                   <td className="px-3 py-2 text-slate-600">{formatDimensions(pattern)}</td>
                   <td className="px-3 py-2 text-right">{pattern.totalBeadCount}</td>
@@ -658,6 +915,90 @@ function PatternSection({
         </table>
       </div>
     </section>
+  );
+}
+
+function DangerZone({
+  projectName,
+  confirmName,
+  busyAction,
+  onConfirmNameChange,
+  onDelete,
+}: {
+  projectName: string;
+  confirmName: string;
+  busyAction: string;
+  onConfirmNameChange: (value: string) => void;
+  onDelete: () => void;
+}) {
+  return (
+    <section className="rounded border border-red-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h2 className="text-base font-semibold text-red-700">删除项目</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            删除后会移除项目目录，并释放这个项目占用的图纸。请输入项目名确认。
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+          <label className="text-sm">
+            <span className="font-medium text-slate-700">项目名</span>
+            <input
+              value={confirmName}
+              onChange={(event) => onConfirmNameChange(event.target.value)}
+              className="mt-1 h-10 w-full rounded border border-slate-300 px-3 text-sm outline-none focus:border-red-500 sm:w-72"
+              placeholder={projectName}
+            />
+          </label>
+          <button
+            type="button"
+            disabled={busyAction === 'delete-project' || confirmName !== projectName}
+            onClick={onDelete}
+            className="inline-flex h-10 items-center justify-center rounded bg-red-600 px-4 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {busyAction === 'delete-project' ? '删除中...' : '删除项目'}
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PatternVisual({
+  pattern,
+  detail,
+  size,
+}: {
+  pattern: ProjectPattern;
+  detail?: ProjectPatternDetail;
+  size: 'sm' | 'tile' | 'md' | 'lg';
+}) {
+  if (pattern.thumbnailPath) {
+    return <PatternThumbnail path={pattern.thumbnailPath} size={size} />;
+  }
+  return <PatternMosaic detail={detail} size={size} />;
+}
+
+function PatternThumbnail({ path, size }: { path?: string; size: 'sm' | 'tile' | 'md' | 'lg' }) {
+  const className = size === 'sm'
+    ? 'h-14 w-14'
+    : size === 'tile'
+      ? 'h-full w-full'
+      : size === 'md'
+        ? 'aspect-square w-full'
+        : 'aspect-square w-full max-w-[260px]';
+
+  if (!path) {
+    return <div className={`${className} rounded border border-dashed border-slate-300 bg-slate-100`} />;
+  }
+
+  return (
+    <img
+      src={`/api/projects/pattern-image?path=${encodeURIComponent(path)}`}
+      alt=""
+      className={`${className} rounded border border-slate-300 bg-white object-contain`}
+      loading="lazy"
+    />
   );
 }
 

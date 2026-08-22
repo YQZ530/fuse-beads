@@ -366,6 +366,7 @@ def build_final_payload(debug_payload: dict[str, Any]) -> dict[str, Any]:
         current = f"{int(row.get('totalColorKeys') or 0)}_{int(row.get('totalBeads') or 0)}"
         image = {
             "id": row.get("id"),
+            "sourceImages": row.get("sourceImages", []),
             "sourcePageType": row.get("sourcePageType"),
             "analysisStatus": row.get("analysisStatus"),
             "totalColorKeys": row.get("totalColorKeys"),
@@ -384,6 +385,7 @@ def build_final_payload(debug_payload: dict[str, Any]) -> dict[str, Any]:
         if expected and expected != current:
             conflict_images.append({
                 "id": row.get("id"),
+                "sourceImages": row.get("sourceImages", []),
                 "current": current,
                 "expected": expected,
                 "sourcePageType": row.get("sourcePageType"),
@@ -409,6 +411,7 @@ def analyze_manifest_group(
     max_distance: float,
 ) -> dict[str, Any]:
     group_name = str(group.get("groupName") or group.get("folderName") or group.get("id") or f"group_{index}")
+    expected_pair_key = pair_key_from_group(group)
     items = [item for item in group.get("items", []) if isinstance(item, dict)]
     available_types = sorted({str(item.get("pageType") or "") for item in items if item.get("pageType")})
     detail_items = [item for item in items if item.get("pageType") == DETAIL_PAGE]
@@ -452,6 +455,8 @@ def analyze_manifest_group(
             result["id"] = image_id
             result["source"] = str(source)
             result["analysisMethod"] = "color_modal_grid_6_per_row_palette_match_plus_count_ocr"
+            result["expectedPairKey"] = expected_pair_key
+            result["matchesPairKey"] = expected_pair_key == f"{int(result.get('totalColorKeys') or 0)}_{int(result.get('totalBeads') or 0)}" if expected_pair_key else None
             result["legendTop"] = int(result.get("modalBox", {}).get("y", 0))
             result["expectedTotalBeads"] = None
             result["transparentCount"] = None
