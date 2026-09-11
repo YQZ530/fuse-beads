@@ -15,6 +15,6 @@
   },
   "include": [
     "src/lib/warehouseStore.ts",
-    "tests/warehouseStore.delete.test.ts"
+    "scripts/tests/warehouseStore.delete.test.ts"
   ]
 }

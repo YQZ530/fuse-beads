@@ -91,8 +91,8 @@ export interface DeleteWarehouseTransactionInput {
 }
 
 const ROOT_DIR = process.cwd();
-const INVENTORY_PATH = path.join(ROOT_DIR, 'results', 'warehouse', 'inventory.json');
-const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'projects');
+const INVENTORY_PATH = path.join(ROOT_DIR, 'results', 'app', 'warehouse', 'inventory.json');
+const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'app', 'projects');
 const PALETTE_SETS_PATH = path.join(ROOT_DIR, 'src', 'data', 'mardPaletteSets.csv');
 const COLOR_MAPPING_PATH = path.join(ROOT_DIR, 'src', 'app', 'colorSystemMapping.json');
 const FIRST_VERSION_PALETTES = new Set(['96', '144', '291']);

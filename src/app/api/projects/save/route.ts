@@ -19,8 +19,8 @@ interface SavePatternRequest {
 }
 
 const ROOT_DIR = process.cwd();
-const RESULTS_DIR = path.join(ROOT_DIR, 'results', 'patterns');
-const PIC_DIR = path.join(ROOT_DIR, 'results', 'pic');
+const RESULTS_DIR = path.join(ROOT_DIR, 'results', 'app', '3.parsed-grid');
+const PIC_DIR = path.join(ROOT_DIR, 'results', 'app', '1.source-images');
 const HEX_COLOR_PATTERN = /^#[0-9A-F]{6}$/i;
 const TRANSPARENT_KEY = 'ERASE';
 

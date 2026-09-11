@@ -17,7 +17,7 @@ interface ProjectRequirementItem {
 }
 
 const ROOT_DIR = process.cwd();
-const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'projects');
+const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'app', 'projects');
 
 export default async function WarehousePage() {
   const [inventory, paletteOptions, allMardColors, projectDemands] = await Promise.all([

@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 
 const PROTOTYPE_GRID_SCRIPT =
-  process.env.GRID_GEOMETRY_SCRIPT ?? path.join(process.cwd(), 'scripts', 'prototype_grid_geometry_v2.py');
+  process.env.GRID_GEOMETRY_SCRIPT ?? path.join(process.cwd(), 'scripts', 'python', 'prototype_grid_geometry_v2.py');
 const PYTHON_COMMAND = process.env.PYTHON ?? 'python';
 const TEMP_ROOT_NAME = '.grid-python';
 const DEFAULT_BOARD_SIZE = 52;

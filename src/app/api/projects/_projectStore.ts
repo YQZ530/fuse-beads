@@ -207,9 +207,9 @@ interface BatchAnalyzeImage {
 }
 
 const ROOT_DIR = process.cwd();
-const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'projects');
-const INVENTORY_PATH = path.join(ROOT_DIR, 'results', 'warehouse', 'inventory.json');
-const BATCH_ANALYSIS_PATH = path.join(ROOT_DIR, 'analyze_color_legend.main.json');
+const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'app', 'projects');
+const INVENTORY_PATH = path.join(ROOT_DIR, 'results', 'app', 'warehouse', 'inventory.json');
+const BATCH_ANALYSIS_PATH = path.join(ROOT_DIR, 'results', 'processing', '2.groupped-bead-count', 'analyze_color_legend.main.json');
 const ASSIGNMENTS_PATH = path.join(PROJECTS_DIR, 'pattern-assignments.json');
 const PROJECT_DATA_FILE = 'project_data.json';
 const LEGACY_PROJECT_FILE = 'project.json';
@@ -757,7 +757,7 @@ function normalizeAvailablePattern(input: BatchAnalyzeImage): AvailablePattern |
     analysisStatus: input.analysisStatus,
     thumbnailPath,
     sourceImages,
-    isGrouped: sourceImages.length > 1 || Boolean(thumbnailPath && /[\\/]/.test(thumbnailPath.replace(/^results\/batch_pic\//, ''))),
+    isGrouped: sourceImages.length > 1 || Boolean(thumbnailPath && /[\\/]/.test(thumbnailPath.replace(/^results\/processing\/1\.grouped-images\//, ''))),
   };
 }
 
@@ -773,10 +773,10 @@ function normalizePlainColorCounts(input: unknown): Record<string, number> {
 function findBatchThumbnailPath(id: string, sourceImages: string[], analysisStatus?: string): string | undefined {
   const candidates = [
     ...sourceImages,
-    `results/batch_pic/${id}.PNG`,
-    `results/batch_pic/${id}.png`,
-    `results/batch_pic/${id}/${id}_1.PNG`,
-    `results/batch_pic/${id}/${id}_1.png`,
+    `results/processing/1.grouped-images/${id}.PNG`,
+    `results/processing/1.grouped-images/${id}.png`,
+    `results/processing/1.grouped-images/${id}/${id}_1.PNG`,
+    `results/processing/1.grouped-images/${id}/${id}_1.png`,
   ];
   for (const candidate of candidates) {
     const normalized = mapBatchImagePath(candidate);
@@ -787,11 +787,13 @@ function findBatchThumbnailPath(id: string, sourceImages: string[], analysisStat
 
 function mapBatchImagePath(input: string): string {
   const normalized = String(input || '').replace(/\\/g, '/');
+  const currentIndex = normalized.indexOf('results/processing/1.grouped-images/');
+  if (currentIndex >= 0) return normalized.slice(currentIndex);
   const batchIndex = normalized.toLowerCase().lastIndexOf('/batch_pic/');
   if (batchIndex >= 0) {
-    return `results/batch_pic/${normalized.slice(batchIndex + '/batch_pic/'.length)}`;
+    return `results/processing/1.grouped-images/${normalized.slice(batchIndex + '/batch_pic/'.length)}`;
   }
-  if (normalized.startsWith('results/batch_pic/')) return normalized;
+  if (normalized.startsWith('results/processing/1.grouped-images/')) return normalized;
   return '';
 }
 

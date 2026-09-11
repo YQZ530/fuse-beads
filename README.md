@@ -37,7 +37,70 @@ npm install
 npm run dev
 ```
 
-浏览器打开 `http://localhost:3002`。
+浏览器打开 `http://localhost:3000`，或按需指定端口：
+
+```bash
+npm run dev -- -p 3000
+```
+
+## 批量截图处理流程
+
+待处理原图统一放在仓库内：
+
+```text
+.cursor/tmp/img/
+```
+
+这个目录用于临时导入新截图，不提交到 git。旧的桌面临时目录如 `C:\Users\z5308\Desktop\more` / `C:\Users\z5308\Desktop\img` 只作为外部暂存，不作为项目标准路径。
+
+### 1. 分组截图
+
+把 `.cursor/tmp/img` 里的 iPad 截图分组成 `ImageN`：
+
+```bash
+python scripts/python/group_similar_pattern_images.py .cursor/tmp/img --out results/processing/1.grouped-images --action copy --manifest results/processing/1.grouped-images/groups.manifest.json
+```
+
+输出：
+
+- 分组图片：`results/processing/1.grouped-images/`
+- 分组清单：`results/processing/1.grouped-images/groups.manifest.json`
+
+### 2. 识别颜色图例
+
+基于分组清单读取每个图纸的底部色号/数量：
+
+```bash
+python scripts/python/analyze_color_legend.py --manifest results/processing/1.grouped-images/groups.manifest.json --out results/processing/2.groupped-bead-count/analyze_color_legend.debug.json
+```
+
+输出：
+
+- 调试结果：`results/processing/2.groupped-bead-count/analyze_color_legend.debug.json`
+- 识别结果：`results/processing/2.groupped-bead-count/analyze_color_legend.main.json`
+
+项目页面读取该目录的 `analyze_color_legend.main.json`。已确认的四张新增图纸已合入正式统计和 debug，正式统计共 37 张图纸。分组清单与截图统一放在 `results/processing/1.grouped-images/`。
+
+### 3. 网格几何实验脚本
+
+`scripts/python/prototype_grid_geometry_v3.py` 是单张图纸的网格几何/文字中心检测实验脚本，不属于上面的 batch 截图主流程。只有在调试裁剪、网格定位、文字中心检测时才单独使用。
+
+## 目录说明
+
+- `doc/feature-docs.md`：已实现功能和完成记录。
+- `doc/development-log.md`：开发日志、主要脚本目标、输入输出和应用代码分层。
+- `src/`：网站页面、API、组件、服务及图像算法代码。
+- `scripts/javascript/`：手动执行的 JavaScript 工具。
+- `scripts/tests/`：TypeScript 测试，通过 `npm run test:warehouse` 运行。
+- `scripts/python/`：全部 Python 脚本，实验/库存辅助脚本位于其中的 `test_scr/`。
+- `.cursor/tmp/img/`：待处理原图，Git 忽略此目录。
+- `results/app/3.parsed-grid/`：原 `patterns/`，保存分析页面导出的网格数据、色号和数量（`.grid.json`）。
+- `results/app/1.source-images/`：原 `pic/`，保存与网格 JSON 配套的上传原图。
+- `results/processing/1.grouped-images/`：批处理脚本按 `ImageN` 分组后的截图。
+- `results/processing/2.groupped-bead-count/`：颜色图例识别结果，直接保存文件。
+- `results/app/projects/`：项目数据和项目内部的图纸副本。
+
+以上脚本命令均从仓库根目录运行。
 
 ## 技术栈
 

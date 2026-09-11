@@ -16,7 +16,7 @@ const certPath = path.join(__dirname, 'certificates', 'localhost.pem');
 const keyPath = path.join(__dirname, 'certificates', 'localhost-key.pem');
 
 if (!fs.existsSync(certPath) || !fs.existsSync(keyPath)) {
-  console.error('HTTPS 证书不存在！请先运行: node scripts/generate-cert.js');
+  console.error('HTTPS 证书不存在！请先运行: node scripts/javascript/generate-cert.js');
   process.exit(1);
 }
 
