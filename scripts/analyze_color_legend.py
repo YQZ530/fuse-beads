@@ -2,7 +2,7 @@
 """Read color keys/counts from the bottom legend of Perler bead screenshots.
 
 Batch run:
-    python scripts/analyze_color_legend.py --manifest results/grouping/groups.manifest.json --out results/batch_pic/analyze_color_legend.debug.json
+    python scripts/analyze_color_legend.py --manifest results/grouping/groups.manifest.json
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ import analyze_color_modal_legend
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}
 DEFAULT_OUTPUT_DIR = Path("results") / "color-legend"
-DEFAULT_BATCH_OUTPUT_DIR = Path("results") / "batch_pic"
+DEFAULT_BATCH_OUTPUT_DIR = Path(".")
 DEFAULT_BATCH_DEBUG_NAME = "analyze_color_legend.debug.json"
 DEFAULT_BATCH_FINAL_NAME = "analyze_color_legend.main.json"
 DEFAULT_MAPPING_PATH = Path("src") / "app" / "colorSystemMapping.json"

@@ -210682,8 +210682,536 @@
       "availablePageTypes": [
         "detail_page"
       ]
+    },
+    {
+      "id": "Image35",
+      "source": "Image35",
+      "analysisMethod": "manual_color_legend_entry",
+      "pageCount": 0,
+      "sourceImages": [],
+      "totalColorKeys": 7,
+      "totalBeads": 705,
+      "expectedTotalBeads": 705,
+      "transparentCount": null,
+      "totalCellsWithTransparent": null,
+      "validation": {
+        "colorCountsEqualFullTotal": true,
+        "colorTotal": 705,
+        "fullTotalFromLegend": 705,
+        "transparentCount": null,
+        "colorPlusTransparent": null,
+        "dedupeRule": "manual entry supplied by user"
+      },
+      "groupReconcile": {
+        "expectedPairKey": "7_705",
+        "expectedTotal": 705,
+        "uncertainColorKeys": [],
+        "reconcileStatus": "manual_entry"
+      },
+      "colorCounts": {
+        "E16": 74,
+        "F24": 4,
+        "G4": 254,
+        "G8": 221,
+        "G13": 59,
+        "G14": 2,
+        "H2": 91
+      },
+      "countsWithTransparent": {
+        "E16": 74,
+        "F24": 4,
+        "G4": 254,
+        "G8": 221,
+        "G13": 59,
+        "G14": 2,
+        "H2": 91
+      },
+      "colors": [
+        {
+          "colorKey": "E16",
+          "count": 74,
+          "countText": "74",
+          "hex": "#FFF3EB",
+          "sampledRgb": [
+            255,
+            243,
+            235
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "74",
+          "preprocessingVoteText": "74",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "74",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "74"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "F24",
+          "count": 4,
+          "countText": "4",
+          "hex": "#E698AA",
+          "sampledRgb": [
+            230,
+            152,
+            170
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "4",
+          "preprocessingVoteText": "4",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "4",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "4"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "G4",
+          "count": 254,
+          "countText": "254",
+          "hex": "#E1B383",
+          "sampledRgb": [
+            225,
+            179,
+            131
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "254",
+          "preprocessingVoteText": "254",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "254",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "254"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "G8",
+          "count": 221,
+          "countText": "221",
+          "hex": "#753832",
+          "sampledRgb": [
+            117,
+            56,
+            50
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "221",
+          "preprocessingVoteText": "221",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "221",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "221"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "G13",
+          "count": 59,
+          "countText": "59",
+          "hex": "#B7714A",
+          "sampledRgb": [
+            183,
+            113,
+            74
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "59",
+          "preprocessingVoteText": "59",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "59",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "59"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "G14",
+          "count": 2,
+          "countText": "2",
+          "hex": "#8D614C",
+          "sampledRgb": [
+            141,
+            97,
+            76
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "2",
+          "preprocessingVoteText": "2",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "2",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "2"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "H2",
+          "count": 91,
+          "countText": "91",
+          "hex": "#FEFFFF",
+          "sampledRgb": [
+            254,
+            255,
+            255
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "91",
+          "preprocessingVoteText": "91",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "91",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "91"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        }
+      ],
+      "entriesWithTransparent": [
+        {
+          "colorKey": "E16",
+          "count": 74,
+          "countText": "74",
+          "hex": "#FFF3EB",
+          "sampledRgb": [
+            255,
+            243,
+            235
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "74",
+          "preprocessingVoteText": "74",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "74",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "74"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "F24",
+          "count": 4,
+          "countText": "4",
+          "hex": "#E698AA",
+          "sampledRgb": [
+            230,
+            152,
+            170
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "4",
+          "preprocessingVoteText": "4",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "4",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "4"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "G4",
+          "count": 254,
+          "countText": "254",
+          "hex": "#E1B383",
+          "sampledRgb": [
+            225,
+            179,
+            131
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "254",
+          "preprocessingVoteText": "254",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "254",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "254"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "G8",
+          "count": 221,
+          "countText": "221",
+          "hex": "#753832",
+          "sampledRgb": [
+            117,
+            56,
+            50
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "221",
+          "preprocessingVoteText": "221",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "221",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "221"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "G13",
+          "count": 59,
+          "countText": "59",
+          "hex": "#B7714A",
+          "sampledRgb": [
+            183,
+            113,
+            74
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "59",
+          "preprocessingVoteText": "59",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "59",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "59"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "G14",
+          "count": 2,
+          "countText": "2",
+          "hex": "#8D614C",
+          "sampledRgb": [
+            141,
+            97,
+            76
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "2",
+          "preprocessingVoteText": "2",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "2",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "2"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        },
+        {
+          "colorKey": "H2",
+          "count": 91,
+          "countText": "91",
+          "hex": "#FEFFFF",
+          "sampledRgb": [
+            254,
+            255,
+            255
+          ],
+          "distance": 0,
+          "uncertain": false,
+          "countSource": "manual",
+          "tesseractCountText": "91",
+          "preprocessingVoteText": "91",
+          "preprocessingVoteObservations": [],
+          "opencvCountText": "91",
+          "countCandidates": [
+            {
+              "source": "manual",
+              "text": "91"
+            }
+          ],
+          "countVoteSources": [
+            "manual"
+          ],
+          "countConflict": false,
+          "opencvScores": [],
+          "sources": [],
+          "duplicateDetections": []
+        }
+      ],
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "pages": [],
+      "groupName": "Image35",
+      "groupCount": 0,
+      "expectedPairKey": "7_705",
+      "matchesPairKey": true,
+      "analysisStatus": "manual_entry",
+      "sourcePageType": "manual",
+      "availablePageTypes": [
+        "manual"
+      ]
+    },
+    {
+      "id": "Image36",
+      "sourcePageType": "manual_entry",
+      "analysisStatus": "manual_from_user",
+      "totalColorKeys": 19,
+      "totalBeads": 978,
+      "expected": "19_978",
+      "matchesExpected": true,
+      "colorCounts": {
+        "A20": 10,
+        "E16": 64,
+        "F8": 12,
+        "F20": 18,
+        "G8": 38,
+        "G14": 2,
+        "H2": 207,
+        "H5": 6,
+        "H6": 93,
+        "H7": 50,
+        "H13": 75,
+        "H16": 217,
+        "H20": 75,
+        "H21": 55,
+        "M7": 2,
+        "M9": 5,
+        "M10": 1,
+        "M14": 46,
+        "R22": 2
+      },
+      "needsReviewCount": 0,
+      "needsReview": [],
+      "sourceImages": []
     }
   ],
   "conflictImages": [],
-  "conflictCount": 0
+  "conflictCount": 0,
+  "imageCount": 34
 }
