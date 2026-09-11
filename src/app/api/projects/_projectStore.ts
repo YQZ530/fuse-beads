@@ -209,7 +209,7 @@ interface BatchAnalyzeImage {
 const ROOT_DIR = process.cwd();
 const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'projects');
 const INVENTORY_PATH = path.join(ROOT_DIR, 'results', 'warehouse', 'inventory.json');
-const BATCH_ANALYSIS_PATH = path.join(ROOT_DIR, 'results', 'batch_pic', 'analyze_color_legend.main.json');
+const BATCH_ANALYSIS_PATH = path.join(ROOT_DIR, 'analyze_color_legend.main.json');
 const ASSIGNMENTS_PATH = path.join(PROJECTS_DIR, 'pattern-assignments.json');
 const PROJECT_DATA_FILE = 'project_data.json';
 const LEGACY_PROJECT_FILE = 'project.json';

@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_ANALYSIS = Path("results") / "batch_pic" / "analyze_color_legend.main.json"
+DEFAULT_ANALYSIS = Path("analyze_color_legend.main.json")
 DEFAULT_INVENTORY = Path("亚麻色系库存.txt")
 
 

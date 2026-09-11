@@ -114,15 +114,4 @@ M12,149,1000,Image2:5;Image34:120;Image1:14;Image16:10
 M14,3,1000,Image32 need3
 M15,374,1000,Image2:231;Image25:40;Image34:85;Image1:18
 
-imageId,totalBeads,totalColorKeys
-Image2,2704,10
-Image7,2304,2
-Image12,2704,2
-Image20,2499,4
-Image23,2704,6
-Image25,2704,11
-Image34,2704,21
-Image1,2704,61
-Image16,2704,20
-Image5,2652,27
-TOTAL,26383,114
+

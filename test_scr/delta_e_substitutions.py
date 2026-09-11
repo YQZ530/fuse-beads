@@ -20,7 +20,7 @@ import numpy as np
 from skimage.color import deltaE_ciede2000, rgb2lab
 
 
-DEFAULT_ANALYSIS = Path("results") / "batch_pic" / "analyze_color_legend.main.json"
+DEFAULT_ANALYSIS = Path("analyze_color_legend.main.json")
 DEFAULT_INVENTORY = Path("亚麻色系库存.txt")
 DEFAULT_MAPPING = Path("src") / "app" / "colorSystemMapping.json"
 
