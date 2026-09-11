@@ -6,7 +6,7 @@
 
 - 主要页面：`src/app/warehouse`
 - 主要 API：`src/app/api/warehouse`
-- 主要数据文件：`results/app/warehouse/inventory.json`
+- 主要数据文件：`results/app/warehouse/inventory.csv`、`transactions.csv`
 - 主要服务逻辑：`src/lib/warehouseStore.ts`
 
 ## 图纸分析
@@ -43,7 +43,7 @@
 - 列表默认每页显示 20 条。
 - 分页选择支持 `10 / 20 / 50`。
 - 每个库存行显示色号、颜色方块、Hex、来源、库存数量和保存按钮。
-- 库存数量可手动修改，保存后写入 JSON 并生成库存记录。
+- 库存数量可手动修改，保存后写入库存 CSV 并生成流水记录。
 
 ### 补货导入
 
@@ -79,10 +79,10 @@
 ### 删除豆仓
 
 - 最近库存记录下方有单独“删除豆仓”危险区域。
-- 区域说明：删除后会从 `results/app/warehouse/inventory.json` 移除这个豆仓和它的库存记录。
+- 删除后从库存 CSV 和流水 CSV 移除该豆仓及其记录。
 - 按钮文案为 `删除`，执行中为 `删除中`。
 - 删除前会确认豆仓名和不可撤销风险。
-- 删除豆仓会从 `results/app/warehouse/inventory.json.warehouses` 移除对应豆仓。
+- 删除豆仓会从 `inventory.csv` 移除对应豆仓的全部行。
 - 删除豆仓会同步移除该豆仓相关 `transactions`。
 - 如果有 project 绑定该豆仓，后端会拒绝删除。
 
@@ -95,17 +95,18 @@
 
 ### 数据存储
 
-- 当前豆仓库存使用 JSON 存储。
-- 主文件为 `results/app/warehouse/inventory.json`。
-- 库存记录存放在 `inventory.transactions`。
-- 补货导入使用文本解析输入，后端保存 JSON 库存记录。
+- 当前豆仓库存使用 `results/app/warehouse/inventory.csv`，流水使用同目录 `transactions.csv`。
+- 元数据包含豆仓 ID、显示名称、色板、创建和更新时间、Hex、数量、来源色板及额外色标记。
+- 流水保存交易元数据、每色增减和前后数量，可记录项目、图纸 ID 及图片路径。
+- 补货导入解析文本并同时更新库存和流水 CSV。
+- 支持 MARD 96、144、221、291 色板。
 
 ### API Routes
 
 - `GET /api/warehouse/list`
   - 读取库存、MARD 色板选项、MARD 291 全色、项目需求。
 - `POST /api/warehouse/create`
-  - 新建豆仓并写入 `inventory.json`。
+  - 新建豆仓并写入库存和流水 CSV。
 - `POST /api/warehouse/update-item`
   - 修改单个色号库存并生成 `修改库存` transaction。
 - `POST /api/warehouse/replenish`
@@ -135,6 +136,8 @@
 - `/warehouse` 本地返回 `200`
 
 ## 完成记录
+
+- 2026-09-11：网页、项目需求和 Python/JS 库存工具统一使用英文命名的 `inventory.csv`、`transactions.csv`。保留原有元数据及交易，按确认数量导入亚麻和221色库存。
 
 - 2026-09-11：应用结果按原图、网格检测和已解析网格三个阶段归入 `results/app/`；分组截图及 manifest、用豆统计归入 `results/processing/`，项目和豆仓读取路径同步迁移。
 - 2026-09-11：修复网页网格检测接口对迁移后 Python v2 脚本的调用路径。

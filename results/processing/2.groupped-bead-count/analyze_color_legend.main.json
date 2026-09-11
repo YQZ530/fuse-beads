@@ -119,19 +119,19 @@
       "expected": "4_230",
       "matchesExpected": true,
       "colorCounts": {
+        "F5": 64,
         "H7": 54,
-        "A3": 53,
-        "A4": 43,
-        "F8": 80
+        "A13": 53,
+        "F8": 59
       },
       "needsReviewCount": 0,
       "needsReview": [],
       "transparentCount": 2474,
       "countsWithTransparent": {
+        "F5": 64,
         "H7": 54,
-        "A3": 53,
-        "A4": 43,
-        "F8": 80,
+        "A13": 53,
+        "F8": 59,
         "transparent": 2474
       },
       "sourceImages": [
@@ -303,11 +303,11 @@
         "G5": 245,
         "A4": 176,
         "F5": 117,
-        "A6": 55,
         "F10": 74,
+        "A6": 55,
         "F8": 20,
-        "F7": 6,
-        "G19": 12
+        "G13": 12,
+        "F7": 6
       },
       "needsReviewCount": 0,
       "needsReview": [],
@@ -316,12 +316,12 @@
         "G5": 245,
         "A4": 176,
         "F5": 117,
-        "A6": 55,
         "F10": 74,
+        "A6": 55,
         "F8": 20,
+        "G13": 12,
         "F7": 6,
-        "transparent": 1999,
-        "G19": 12
+        "transparent": 1999
       },
       "sourceImages": [
         "C:\\Users\\z5308\\Desktop\\batch_pic\\Image8.PNG"
@@ -1202,11 +1202,12 @@
       "id": "Image33",
       "sourcePageType": "detail_page",
       "analysisStatus": "analyzed_from_detail_page",
-      "totalColorKeys": 11,
+      "totalColorKeys": 10,
       "totalBeads": 499,
-      "expected": "11_499",
+      "expected": "10_499",
       "matchesExpected": true,
       "colorCounts": {
+        "E2": 122,
         "D20": 87,
         "D12": 82,
         "H2": 81,
@@ -1215,14 +1216,13 @@
         "E8": 23,
         "F11": 11,
         "E4": 6,
-        "C7": 2,
-        "F22": 120,
-        "F21": 2
+        "C7": 2
       },
       "needsReviewCount": 0,
       "needsReview": [],
       "transparentCount": 2205,
       "countsWithTransparent": {
+        "E2": 122,
         "D20": 87,
         "D12": 82,
         "H2": 81,
@@ -1232,8 +1232,6 @@
         "F11": 11,
         "E4": 6,
         "C7": 2,
-        "F22": 120,
-        "F21": 2,
         "transparent": 2205
       },
       "sourceImages": [

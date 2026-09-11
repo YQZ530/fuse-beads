@@ -21,7 +21,7 @@ from skimage.color import deltaE_ciede2000, rgb2lab
 
 
 DEFAULT_ANALYSIS = Path("results/processing/2.groupped-bead-count/analyze_color_legend.main.json")
-DEFAULT_INVENTORY = Path("亚麻色系库存.txt")
+DEFAULT_INVENTORY = Path("results/app/warehouse/inventory.csv")
 DEFAULT_MAPPING = Path("src") / "app" / "colorSystemMapping.json"
 
 
@@ -42,9 +42,14 @@ def delta_e(lab_by_key: dict[str, np.ndarray], a: str, b: str) -> float:
     return float(deltaE_ciede2000(lab_by_key[a], lab_by_key[b])[0, 0])
 
 
-def load_inventory(path: Path) -> tuple[dict[str, int], list[str]]:
-    with path.open(encoding="utf-8", newline="") as file:
+def load_inventory(path: Path, warehouse_id: str = 'warehouse-1') -> tuple[dict[str, int], list[str]]:
+    if (path.parent / '.csv.lock').exists() or (path.parent / '.csv-pending').exists():
+        raise ValueError('Inventory is being updated; retry after the writer completes')
+    with path.open(encoding="utf-8-sig", newline="") as file:
         rows = list(csv.DictReader(file))
+
+    if rows and 'warehouseId' in rows[0]:
+        rows = [row for row in rows if row['warehouseId'] == warehouse_id]
 
     if not rows:
         raise ValueError(f"Inventory is empty: {path}")
@@ -55,6 +60,8 @@ def load_inventory(path: Path) -> tuple[dict[str, int], list[str]]:
     seen_palette: set[str] = set()
     for row in rows:
         key = row["colorKey"]
+        if not key:
+            continue
         stock[key] = stock.get(key, 0) + int(row[count_column])
         if key != "T1" and key not in seen_palette:
             palette.append(key)
@@ -162,6 +169,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--analysis", type=Path, default=DEFAULT_ANALYSIS)
     parser.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
+    parser.add_argument("--warehouse", default="warehouse-1")
     parser.add_argument("--mapping", type=Path, default=DEFAULT_MAPPING)
     parser.add_argument("--images", nargs="*", default=[])
     parser.add_argument("--exclude", nargs="*", default=[])
@@ -177,7 +185,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     data = load_json(args.analysis)
-    stock, palette = load_inventory(args.inventory)
+    stock, palette = load_inventory(args.inventory, args.warehouse)
     _, lab_by_key = load_labs(args.mapping)
 
     changed: list[str] = []

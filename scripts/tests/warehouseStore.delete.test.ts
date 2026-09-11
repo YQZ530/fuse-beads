@@ -5,9 +5,11 @@ import os from 'node:os';
 import path from 'node:path';
 
 import type { WarehouseInventory } from '../../src/lib/warehouseStore';
+import { readInventoryFiles, writeInventoryFiles, encodeInventory, decodeInventory } from '../../src/lib/warehouseCsv';
 
 let tempRoot = '';
 let store: typeof import('../../src/lib/warehouseStore');
+const repoRoot = process.cwd();
 
 before(async () => {
   tempRoot = await mkdtemp(path.join(os.tmpdir(), 'warehouse-store-delete-'));
@@ -101,17 +103,80 @@ test('deleteWarehouseTransaction rejects records from another warehouse', async 
 });
 
 async function writeInventory(inventory: WarehouseInventory) {
-  await writeFile(
-    path.join(tempRoot, 'results', 'app', 'warehouse', 'inventory.json'),
-    `${JSON.stringify(inventory, null, 2)}\n`,
-    'utf8'
-  );
+  writeInventoryFiles(path.join(tempRoot, 'results', 'app', 'warehouse'), inventory);
 }
 
 async function readInventory(): Promise<WarehouseInventory> {
-  const text = await readFile(path.join(tempRoot, 'results', 'app', 'warehouse', 'inventory.json'), 'utf8');
-  return JSON.parse(text) as WarehouseInventory;
+  return readInventoryFiles(path.join(tempRoot, 'results', 'app', 'warehouse'));
 }
+
+test('CSV round trip preserves metadata, multiline notes, links and empty transactions', () => {
+  const inventory = baseInventory();
+  inventory.warehouses[0].name = 'Warehouse, "A"\nsecond line';
+  inventory.warehouses[0].items[0].note = 'Purchased, checked\nconfirmed';
+  inventory.warehouses[0].items[0].sourcePaletteName = '96';
+  inventory.transactions![0].projectId = 'project-1';
+  inventory.transactions![0].patternId = 'Image13';
+  inventory.transactions![0].imagePath = 'results/example.png';
+  inventory.transactions!.push({ id: 'empty', warehouseId: 'warehouse-main', type: 'create_warehouse', createdAt: '2026-09-11', note: 'Empty, "entry"\nline', items: [] });
+  const encoded = encodeInventory(inventory);
+  assert.deepEqual(decodeInventory(encoded.inventoryText, encoded.transactionsText), inventory);
+});
+
+test('CSV invalid quantities fail rather than returning an empty warehouse', async () => {
+  const dir = path.join(tempRoot, 'results', 'app', 'warehouse');
+  const encoded = encodeInventory(baseInventory());
+  await writeFile(path.join(dir, 'inventory.csv'), encoded.inventoryText.replace(',10,', ',-10,'));
+  await writeFile(path.join(dir, 'transactions.csv'), encoded.transactionsText);
+  await assert.rejects(store.readInventory, /ownedCount/);
+});
+
+test('concurrent updates preserve changes to different colors', async () => {
+  await writeInventory(baseInventory());
+  await Promise.all([
+    store.updateWarehouseItem({ warehouseId: 'warehouse-main', colorKey: 'T1', ownedCount: 30 }),
+    store.updateWarehouseItem({ warehouseId: 'warehouse-main', colorKey: 'A3', ownedCount: 40 }),
+  ]);
+  const result = await store.readInventory();
+  assert.deepEqual(result.warehouses[0].items.map(item => item.ownedCount), [30, 40]);
+  assert.equal(result.transactions!.length, 5);
+});
+
+test('rename persists warehouse metadata across all CSV rows', async () => {
+  await writeInventory(baseInventory());
+  await store.renameWarehouse({ warehouseId: 'warehouse-main', name: 'Renamed, warehouse' });
+  assert.equal((await store.readInventory()).warehouses[0].name, 'Renamed, warehouse');
+});
+
+async function copyPaletteFixtures() {
+  await mkdir(path.join(tempRoot, 'src', 'data'), { recursive: true });
+  await mkdir(path.join(tempRoot, 'src', 'app'), { recursive: true });
+  for (const file of ['src/data/mardPaletteSets.csv', 'src/app/colorSystemMapping.json']) {
+    await writeFile(path.join(tempRoot, file), await readFile(path.join(repoRoot, file)));
+  }
+}
+
+test('create 221-color warehouse and replenish persist through CSV', async () => {
+  await copyPaletteFixtures();
+  const { warehouse } = await store.createWarehouse({ name: 'CSV 221', paletteName: '221', ownedCount: 1000 });
+  assert.equal(warehouse.items.length, 221);
+  await store.replenishWarehouse({ warehouseId: warehouse.id, entries: [{ colorKey: 'H2', count: 5000 }], note: 'Purchase, "verified"\nreceipt' });
+  const persisted = await store.readInventory();
+  assert.equal(persisted.warehouses[0].items.find(item => item.colorKey === 'H2')!.ownedCount, 6000);
+  assert.equal(persisted.transactions![1].note, 'Purchase, "verified"\nreceipt');
+});
+
+test('a pending CSV pair is recovered before reading', async () => {
+  const dir = path.join(tempRoot, 'results', 'app', 'warehouse');
+  await writeInventory(baseInventory());
+  const next = baseInventory();
+  next.warehouses[0].name = 'Recovered';
+  const encoded = encodeInventory(next);
+  await mkdir(path.join(dir, '.csv-pending'));
+  await writeFile(path.join(dir, 'inventory.csv'), encoded.inventoryText);
+  await writeFile(path.join(dir, '.csv-pending', 'transactions.csv'), encoded.transactionsText);
+  assert.equal((await store.readInventory()).warehouses[0].name, 'Recovered');
+});
 
 function baseInventory(): WarehouseInventory {
   return {

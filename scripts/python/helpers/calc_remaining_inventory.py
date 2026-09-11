@@ -4,8 +4,8 @@
 This script does not modify any files.
 
 Examples:
-    python scripts/python/test_scr/calc_remaining_inventory.py --selected Image3 Image6
-    python scripts/python/test_scr/calc_remaining_inventory.py --selected Image3 Image6 Image22 --extra H11=300
+    python scripts/python/helpers/calc_remaining_inventory.py --selected Image3 Image6
+    python scripts/python/helpers/calc_remaining_inventory.py --selected Image3 Image6 Image22 --extra H11=300
 """
 
 from __future__ import annotations
@@ -19,20 +19,29 @@ from typing import Any
 
 
 DEFAULT_ANALYSIS = Path("results/processing/2.groupped-bead-count/analyze_color_legend.main.json")
-DEFAULT_INVENTORY = Path("亚麻色系库存.txt")
+DEFAULT_INVENTORY = Path("results/app/warehouse/inventory.csv")
 
 
 def load_analysis(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def load_inventory(path: Path) -> dict[str, int]:
-    with path.open(encoding="utf-8", newline="") as file:
+def load_inventory(path: Path, warehouse_id: str = 'warehouse-1') -> dict[str, int]:
+    if (path.parent / '.csv.lock').exists() or (path.parent / '.csv-pending').exists():
+        raise ValueError('Inventory is being updated; retry after the writer completes')
+    with path.open(encoding="utf-8-sig", newline="") as file:
         rows = list(csv.DictReader(file))
+
+    if rows and 'warehouseId' in rows[0]:
+        rows = [row for row in rows if row['warehouseId'] == warehouse_id]
+        if not rows:
+            raise ValueError(f'Warehouse not found: {warehouse_id}')
 
     inventory: dict[str, int] = {}
     for row in rows:
         key = row["colorKey"]
+        if not key:
+            continue
         count = int(row.get("ownedCount") or row.get("remaining") or 0)
         inventory[key] = inventory.get(key, 0) + count
     return inventory
@@ -75,6 +84,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--analysis", type=Path, default=DEFAULT_ANALYSIS)
     parser.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
+    parser.add_argument("--warehouse", default="warehouse-1", help="Warehouse ID in inventory.csv")
     parser.add_argument("--selected", nargs="+", required=True)
     parser.add_argument(
         "--extra",
@@ -92,7 +102,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    inventory = load_inventory(args.inventory)
+    inventory = load_inventory(args.inventory, args.warehouse)
     for key, count in parse_extra(args.extra).items():
         inventory[key] = inventory.get(key, 0) + count
 

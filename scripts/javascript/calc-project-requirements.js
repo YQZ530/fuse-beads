@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { readInventoryFiles, withInventoryLock } = require('../../src/lib/warehouseCsv');
 
 const rootDir = path.resolve(__dirname, '..', '..');
-const defaultInventoryPath = path.join(rootDir, 'results', 'app', 'warehouse', 'inventory.json');
+const defaultInventoryPath = path.join(rootDir, 'results', 'app', 'warehouse', 'inventory.csv');
 const args = process.argv.slice(2);
 
 function readArg(name) {
@@ -87,7 +88,7 @@ function loadInput() {
     projectName: readArg('--project-name') || readArg('--name') || 'project',
     projectStatus: readArg('--status'),
     warehouseId: readArg('--warehouse') || 'warehouse-1',
-    inventoryPath: readArg('--inventory') || 'results/app/warehouse/inventory.json',
+    inventoryPath: readArg('--inventory') || 'results/app/warehouse/inventory.csv',
     outputPath: readArg('--out'),
     copyPatterns: !hasFlag('--no-copy-patterns'),
     patterns,
@@ -100,7 +101,8 @@ function defaultProjectPath(projectName) {
 
 function loadWarehouse(input) {
   const inventoryPath = normalizePath(input.inventoryPath) || defaultInventoryPath;
-  const inventory = readJson(inventoryPath);
+  if (path.basename(inventoryPath) !== 'inventory.csv') throw new Error('--inventory must point to inventory.csv');
+  const inventory = readInventoryFiles(path.dirname(inventoryPath));
   if (!Array.isArray(inventory.warehouses)) {
     throw new Error(`Invalid inventory file: ${inventoryPath}`);
   }
@@ -317,12 +319,13 @@ function readJsonSafe(filePath) {
   }
 }
 
-function main() {
+async function main() {
   const input = loadInput();
   const outputPath = normalizePath(input.outputPath) || defaultProjectPath(input.projectName || input.name);
   const projectDir = path.dirname(outputPath);
   const existingProject = readExistingProject(outputPath);
-  const warehouse = loadWarehouse(input);
+  const inventoryDir = path.dirname(normalizePath(input.inventoryPath) || defaultInventoryPath);
+  const warehouse = await withInventoryLock(inventoryDir, () => loadWarehouse(input));
   const patterns = loadPatterns(input, projectDir);
   const project = buildProject(input, warehouse, patterns, existingProject);
 
@@ -337,4 +340,4 @@ function main() {
   console.log(`Needed ${project.summary.totalNeeded}, missing ${project.summary.totalMissing} across ${project.summary.missingColorCount} colors`);
 }
 
-main();
+main().catch(error => { console.error(error.message); process.exitCode = 1; });

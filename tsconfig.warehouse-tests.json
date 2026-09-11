@@ -7,6 +7,7 @@
     "rootDir": ".",
     "outDir": ".next/warehouse-tests",
     "strict": true,
+    "allowJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "types": ["node"],
@@ -15,6 +16,7 @@
   },
   "include": [
     "src/lib/warehouseStore.ts",
+    "src/lib/warehouseCsv.js",
     "scripts/tests/warehouseStore.delete.test.ts"
   ]
 }

@@ -1,5 +1,51 @@
 # 开发日志
 
+## 2026-09-11：同步已确认 legend 与 debug
+
+Image3（4 色、230 颗）、Image8（8 色、705 颗）的已确认配色同步至 debug 的汇总、页面明细和校验字段。Image33 正式统计及 debug 更新为 E2=122、D20=87、D12=82、H2=81、F9=45、F14=40、E8=23、F11=11、E4=6、C7=2，共 10 色、499 颗；改色方案清空该图旧替换和额外购买项，保留 selected。
+
+这三张图的 debug 有效统计标记为 user_confirmed，原始 OCR 证据保存在各图 originalOcr 字段中。透明格数保持不变。项目图纸副本与已确认统计一致，库存和流水保持不变。
+
+## 2026-09-11：确认 Image3 与 Image8 配色
+
+Image3 按用户指定替换 F15→F5、A26→A13、A8→F8，F8 合并为 59。正式结果为 F5=64、H7=54、A13=53、F8=59，共 4 色、230 颗。
+
+Image8 采用用户逐色确认值：G5=245、A4=176、F5=117、F10=74、A6=55、F8=20、G13=12、F7=6，共 8 色、705 颗，替代旧改色方案。同步正式统计和项目图纸副本；debug 保留原始 OCR 证据，库存和流水保持不变。
+
+## 2026-09-11：恢复 Image3 原始配色
+
+对照原图及 debug，撤销 F15→F8、A8→A4、A26→A3。正式统计恢复 F15=64、H7=54、A26=53、A8=43、F8=16，合计 5 色、230 颗，expected=5_230。改色方案中的 Image3 替换项清空，保留 selected 状态。项目副本已是原配色；其他图纸、库存和流水保持不变。
+
+## 2026-09-11：确认标准96色
+
+用户确认亚麻仓仅包含标准 MARD 96 色。按色板清单核对并移除 A5、A8、B1、B4、B6，现为 96 色，每色 541 颗，总数 51,936。221 仓数据及空流水保持不变。
+
+## 2026-09-11：重置起始库存
+
+按用户确认清空全部 7 笔测试/迁移流水，transactions.csv 保留表头。亚麻仓全部 101 个现有色号（含 5 个额外色）统一为 541 颗，共 54,641 颗，备注更新为确认后的起始库存。221 仓逐项保持原值，共 243,000 颗。此次直接设定起始库存，不生成新流水。
+
+## 2026-09-11：统一库存和流水 CSV
+
+正式存储统一为 `results/app/warehouse/inventory.csv` 与 `transactions.csv`。文件名、列名及新建 ID 使用英文/ASCII，豆仓名称为显示字段。完整列定义见 `warehouse-csv.md`。
+
+新增共享读写层 `src/lib/warehouseCsv.js`，由网页存储服务及 JS 工具调用，使用 csv-parse / csv-stringify 处理引号、多行备注和 UTF-8。记录按 warehouseId、transactionId 分组，保留空流水事件；写入采用跨进程锁和可恢复的双 CSV 暂存，格式错误直接报错。
+
+亚麻仓使用用户确认的 CSV 数量 52,536，保留原仓 ID、时间及原始流水。原有 5 个额外色以零库存保留元数据，差额写入调整流水。MARD 221 导入 243,000 颗，ID 为 warehouse-221，新增期初流水。迁移逐项校验元数据、旧交易及总数后，旧文件存档至 `doc/archive/warehouse-before-csv/`，文件名为 legacy-inventory.json、linen96-source.csv、mard221-source.csv。正式读写仅使用新的两个 CSV。
+
+网页豆仓及项目需求服务改为读取统一 CSV，创建、补货、修改、改名、删除和流水回滚均通过同一存储层。Python 库存与配色辅助工具通过 `--warehouse` 选择仓库，默认 warehouse-1。JS 创建脚本追加豆仓并拒绝重复 ID；初始化脚本拒绝覆盖已有库存。
+
+验证：11 项存储测试和 TypeScript 检查通过；Python 实际读取两仓通过。/warehouse、/projects、/api/warehouse/list、/api/projects/list 返回 200；HTTP 创建、更新、补货、回滚和删除验证通过，临时测试仓已清理，真实库存与测试前完全一致。浏览器连接不可用，本次未做可视化点击验收。开发服务运行于 http://localhost:3000。
+
+## 2026-09-11：两份库存 CSV（迁移前记录）
+
+原 `亚麻色系库存.txt` 已采用 CSV 内容，统一命名并移至 `results/app/warehouse/亚麻96仓.csv`，数量保持不变：96 色、52,536 颗，H2/H7 各 841 颗，其余各 541 颗。库存及替代色辅助脚本的默认读取路径同步更新。
+
+按用户确认删除“大图”项目及其分配记录，删除 `warehouse-星芒144` 豆仓和对应交易。亚麻96仓保留现有网页数量，CSV 本次仅统一名称，尚未同步数量。
+
+`results/app/warehouse/MARD221库存.csv` 按仓库 MARD 221 色板生成，每色基础 1000 颗。已确认额外购入 H2/H7 各 5000；B17、F8、A20、D3、E2、G7、G18、H9 各 1000；F15/H16 各 2000。F8 的两次提及对应同一笔 1000 颗补购。共 221 色、243,000 颗。
+
+两份 CSV 使用 `colorKey,ownedCount,note` 字段，尚未接入网页库存同步。新增 `scripts/python/helpers/create_inventory_csv.py` 可根据色板、基础库存和补购参数生成 CSV；输出已存在时拒绝覆盖。
+
 ## 2026-09-11：修复预期值校验
 
 `build_final_payload` 原先在 expectedPairKey 缺失时回退到 groupCount。groupCount 是分组内截图张数，Image13、Image21 各一张，导致 expected="1" 并误报冲突。现改为只接受完整的“色数_豆数”；缺失或格式无效时 expected 为空、matchesExpected 为 null。
@@ -25,7 +71,8 @@ src/                         网站和 API 代码
 scripts/
   javascript/                手动运行的 JS 工具
   python/                    Python 工具
-    test_scr/                库存计算和配色实验工具
+    helpers/                 库存计算等辅助工具
+    test_scr/                配色实验和 Python 回归测试
   tests/                     自动化测试
 doc/
   feature-docs.md             已实现功能与变更记录
@@ -42,7 +89,7 @@ doc/
 
 目标：将原始截图归成同一图纸的 ImageN 分组，生成下游识别使用的 manifest。
 
-- 输入：`.cursor/tmp/img/`；新增批次使用 `.cursor/tmp/img-new/`。
+- 输入：`.codex/tmp/img/`；新增批次使用 `.codex/tmp/img-new/`。
 - 输出：`results/processing/1.grouped-images/` 中的分组截图和 `results/processing/1.grouped-images/` 中的 manifest。
 - 使用布局分类、OCR pairKey、pHash/dHash、颜色直方图和裁剪缩略图判定分组，优先比较邻近截图。
 - 页面分类包括 detail_page、summary_view、color_modal、unknown。
@@ -50,7 +97,7 @@ doc/
 - `--no-paddle` 支持关闭 PaddleOCR 回退。
 
 ```powershell
-python scripts/python/group_similar_pattern_images.py .cursor/tmp/img --out results/processing/1.grouped-images --action copy --manifest results/processing/1.grouped-images/groups.manifest.json
+python scripts/python/group_similar_pattern_images.py .codex/tmp/img --out results/processing/1.grouped-images --action copy --manifest results/processing/1.grouped-images/groups.manifest.json
 ```
 
 ### 2. analyze_color_legend.py
@@ -103,7 +150,7 @@ Stage 1 和 Stage 3 在网页点击保存时一起写入。Stage 2 现有文件�
 | 文件（相对 scripts/python/） | 目标和结果 |
 | --- | --- |
 | `analyze_color_modal_legend.py` | 识别弹窗的圆点网格、色号和数量；独立运行输出 debug、final、compare JSON 至 `test_scr/output/`。 |
-| `test_scr/calc_remaining_inventory.py` | 根据选中图纸和库存文本计算剩余库存，输出终端报告。 |
+| `helpers/calc_remaining_inventory.py` | 读取正式用豆统计及库存文本，汇总选中图纸的各色用量，输出 owned、used、remaining 终端表格。 |
 | `test_scr/delta_e_substitutions.py` | 使用 CIEDE2000 寻找替代色，支持指定图片、豆数、排除项；`--apply` 写入替换结果。 |
 | `final_review_gate.py` | 终端交互式复核工具，读取后续输入并在收到退出指令时结束。 |
 
@@ -113,8 +160,8 @@ Stage 1 和 Stage 3 在网页点击保存时一起写入。Stage 2 现有文件�
 
 | 文件 | 目标 | 入口和产物 |
 | --- | --- | --- |
-| `seed-warehouse.js` | 初始化指定 MARD 色板和每色库存 | `npm run seed:warehouse`；写入 `results/app/warehouse/inventory.json`。 |
-| `create-warehouse.js` | 按名称、色板和数量创建豆仓 | `npm run create:warehouse`；支持 `--append`、`--out`、`--palette`、`--count`。 |
+| `seed-warehouse.js` | 初始化空豆仓存储 | `npm run seed:warehouse`；写入 `results/app/warehouse/inventory.csv` 和 `transactions.csv`。 |
+| `create-warehouse.js` | 按名称、色板和数量追加豆仓 | `npm run create:warehouse`；支持 `--out`、`--palette`、`--count`，保留现有豆仓。 |
 | `calc-project-requirements.js` | 根据图纸 JSON 和库存计算项目需求及缺豆 | `npm run calc:project -- --input 配置.json`；生成项目和需求结果。 |
 | `export-pattern-stats-csv.js` | 导出单张网格图纸颜色统计 | `npm run export:pattern-stats -- --pattern 文件.grid.json --out 统计.csv`。 |
 | `generate-icons.js` | 生成应用图标 | `node scripts/javascript/generate-icons.js`；写入 `public/`。 |

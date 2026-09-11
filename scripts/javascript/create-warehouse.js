@@ -1,14 +1,16 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+const { readInventoryFiles, writeInventoryFiles, withInventoryLock } = require('../../src/lib/warehouseCsv');
 
 const rootDir = path.resolve(__dirname, '..', '..');
 const paletteSetsPath = path.join(rootDir, 'src', 'data', 'mardPaletteSets.csv');
 const colorMappingPath = path.join(rootDir, 'src', 'app', 'colorSystemMapping.json');
-const defaultInventoryPath = path.join(rootDir, 'results', 'app', 'warehouse', 'inventory.json');
+const defaultInventoryPath = path.join(rootDir, 'results', 'app', 'warehouse', 'inventory.csv');
 const args = process.argv.slice(2);
 
 const options = {
-  id: readArg('--id') || 'warehouse-1',
+  id: readArg('--id') || `warehouse-${crypto.randomUUID()}`,
   name: readArg('--name') || '豆仓1',
   brand: readArg('--brand') || 'MARD',
   paletteName: readArg('--palette') || '96',
@@ -87,15 +89,8 @@ function readMardKeyToHex() {
 }
 
 function readInventory(outputPath) {
-  if (!options.append || !fs.existsSync(outputPath)) {
-    return { schemaVersion: 1, warehouses: [] };
-  }
-
-  const inventory = readJson(outputPath);
-  if (!Array.isArray(inventory.warehouses)) {
-    throw new Error(`Invalid inventory file: ${outputPath}`);
-  }
-  return inventory;
+  if (path.basename(outputPath) !== 'inventory.csv') throw new Error('--out must end with inventory.csv; transactions.csv is stored alongside it');
+  return readInventoryFiles(path.dirname(outputPath));
 }
 
 function main() {
@@ -130,16 +125,18 @@ function main() {
 
   const existingIndex = inventory.warehouses.findIndex((item) => item.id === options.id);
   if (existingIndex >= 0) {
-    warehouse.createdAt = inventory.warehouses[existingIndex].createdAt || now;
-    inventory.warehouses[existingIndex] = warehouse;
+    throw new Error(`Warehouse ID already exists: ${options.id}`);
   } else {
     inventory.warehouses.push(warehouse);
   }
 
-  fs.mkdirSync(path.dirname(options.outputPath), { recursive: true });
-  fs.writeFileSync(options.outputPath, `${JSON.stringify(inventory, null, 2)}\n`, 'utf8');
+  inventory.transactions = [...(inventory.transactions || []), {
+    id: crypto.randomUUID(), warehouseId: warehouse.id, type: 'create_warehouse', createdAt: now,
+    note: 'Initial inventory', items: items.map(item => ({ hex: item.hex, colorKey: item.colorKey, before: 0, after: item.ownedCount, delta: item.ownedCount })),
+  }];
+  writeInventoryFiles(path.dirname(options.outputPath), inventory);
   console.log(`Wrote ${path.relative(rootDir, options.outputPath).replace(/\\/g, '/')}`);
   console.log(`${warehouse.name}: ${warehouse.brand} ${warehouse.paletteName}, ${items.length} colors, ${options.ownedCount} beads each`);
 }
 
-main();
+withInventoryLock(path.dirname(options.outputPath), main).catch(error => { console.error(error.message); process.exitCode = 1; });

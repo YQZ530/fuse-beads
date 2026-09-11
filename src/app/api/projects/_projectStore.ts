@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { mkdir, readdir, readFile, rename, rm, writeFile } from 'fs/promises';
 import path from 'path';
+import { readInventory } from '../../../lib/warehouseStore';
 
 export type ProjectStatus = 'draft' | 'in_progress' | 'completed';
 
@@ -121,15 +122,6 @@ export interface ProjectWarehouseOption {
   paletteName: string;
 }
 
-interface InventoryFile {
-  warehouses?: Array<{
-    id?: string;
-    name?: string;
-    brand?: string;
-    paletteName?: string;
-  }>;
-}
-
 export interface CreateProjectInput {
   name: string;
   warehouseId: string;
@@ -171,17 +163,6 @@ interface PatternGridFile {
   }>;
 }
 
-interface InventoryStockFile {
-  warehouses?: Array<{
-    id?: string;
-    items?: Array<{
-      hex?: string;
-      colorKey?: string;
-      ownedCount?: number;
-    }>;
-  }>;
-}
-
 interface PatternAssignmentsFile {
   [patternId: string]: {
     projectId: string;
@@ -208,7 +189,6 @@ interface BatchAnalyzeImage {
 
 const ROOT_DIR = process.cwd();
 const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'app', 'projects');
-const INVENTORY_PATH = path.join(ROOT_DIR, 'results', 'app', 'warehouse', 'inventory.json');
 const BATCH_ANALYSIS_PATH = path.join(ROOT_DIR, 'results', 'processing', '2.groupped-bead-count', 'analyze_color_legend.main.json');
 const ASSIGNMENTS_PATH = path.join(PROJECTS_DIR, 'pattern-assignments.json');
 const PROJECT_DATA_FILE = 'project_data.json';
@@ -267,7 +247,7 @@ export async function readAvailablePatterns(projectId?: string): Promise<Availab
 }
 
 export async function readProjectWarehouseOptions(): Promise<ProjectWarehouseOption[]> {
-  const inventory = await readJsonFile<InventoryFile>(INVENTORY_PATH, { warehouses: [] });
+  const inventory = await readInventory();
   return (inventory.warehouses ?? [])
     .filter((warehouse) => warehouse.id && warehouse.name)
     .map((warehouse) => ({
@@ -604,7 +584,7 @@ async function buildPatternDetail(directoryName: string, pattern: ProjectPattern
 }
 
 async function recalculateProject(project: ProjectFile, directoryName: string): Promise<ProjectFile> {
-  const inventory = await readJsonFile<InventoryStockFile>(INVENTORY_PATH, { warehouses: [] });
+  const inventory = await readInventory();
   const warehouse = (inventory.warehouses ?? []).find((candidate) => candidate.id === project.warehouseId);
   const stock = new Map<string, { colorKey: string; ownedCount: number }>();
   const stockByKey = new Map<string, { hex: string; colorKey: string; ownedCount: number }>();

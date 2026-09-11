@@ -48,17 +48,17 @@ npm run dev -- -p 3000
 待处理原图统一放在仓库内：
 
 ```text
-.cursor/tmp/img/
+.codex/tmp/img/
 ```
 
 这个目录用于临时导入新截图，不提交到 git。旧的桌面临时目录如 `C:\Users\z5308\Desktop\more` / `C:\Users\z5308\Desktop\img` 只作为外部暂存，不作为项目标准路径。
 
 ### 1. 分组截图
 
-把 `.cursor/tmp/img` 里的 iPad 截图分组成 `ImageN`：
+把 `.codex/tmp/img` 里的 iPad 截图分组成 `ImageN`：
 
 ```bash
-python scripts/python/group_similar_pattern_images.py .cursor/tmp/img --out results/processing/1.grouped-images --action copy --manifest results/processing/1.grouped-images/groups.manifest.json
+python scripts/python/group_similar_pattern_images.py .codex/tmp/img --out results/processing/1.grouped-images --action copy --manifest results/processing/1.grouped-images/groups.manifest.json
 ```
 
 输出：
@@ -87,13 +87,24 @@ python scripts/python/analyze_color_legend.py --manifest results/processing/1.gr
 
 ## 目录说明
 
+库存统一维护于 `results/app/warehouse/`，网页和脚本共用：
+
+- `inventory.csv`：两仓当前库存，包含豆仓 ID、名称、色板、时间、色号、Hex、数量、额外色标记和备注。
+- `transactions.csv`：出入库流水，包含交易 ID、时间、类型、前后数量、增减量及项目/图纸关联字段。
+
+`warehouse-1` 为亚麻96仓，仅包含标准 MARD 96 色，每色 541 颗，共 51,936 颗；`warehouse-221` 为 MARD 221，共 243,000 颗。完整列定义见 [CSV 数据说明](doc/warehouse-csv.md)。
+
+```powershell
+python scripts/python/helpers/calc_remaining_inventory.py --warehouse warehouse-221 --selected Image13 Image21 --only-used
+```
+
 - `doc/feature-docs.md`：已实现功能和完成记录。
 - `doc/development-log.md`：开发日志、主要脚本目标、输入输出和应用代码分层。
 - `src/`：网站页面、API、组件、服务及图像算法代码。
 - `scripts/javascript/`：手动执行的 JavaScript 工具。
 - `scripts/tests/`：TypeScript 测试，通过 `npm run test:warehouse` 运行。
-- `scripts/python/`：全部 Python 脚本，实验/库存辅助脚本位于其中的 `test_scr/`。
-- `.cursor/tmp/img/`：待处理原图，Git 忽略此目录。
+- `scripts/python/`：全部 Python 脚本；库存辅助工具位于 `helpers/`，实验和 Python 回归测试位于 `test_scr/`。
+- `.codex/tmp/img/`：待处理原图，Git 忽略此目录。
 - `results/app/3.parsed-grid/`：原 `patterns/`，保存分析页面导出的网格数据、色号和数量（`.grid.json`）。
 - `results/app/1.source-images/`：原 `pic/`，保存与网格 JSON 配套的上传原图。
 - `results/processing/1.grouped-images/`：批处理脚本按 `ImageN` 分组后的截图。

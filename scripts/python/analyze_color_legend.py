@@ -100,7 +100,7 @@ def log(message: str) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Analyze bottom legend color keys/counts from screenshots.")
-    parser.add_argument("input", nargs="?", help="Image file or directory. Example: results\\processing\\1.grouped-images or .cursor\\tmp\\img")
+    parser.add_argument("input", nargs="?", help="Image file or directory. Example: results\\processing\\1.grouped-images or .codex\\tmp\\img")
     parser.add_argument("--out", default="", help="Output JSON path.")
     parser.add_argument("--manifest", default="", help="groups.manifest.json from group_similar_pattern_images.py.")
     parser.add_argument("--palette", default="291", help="MARD palette set: 96, 144, 291, or all.")

@@ -1,11 +1,13 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+const { readInventoryFiles, writeInventoryFiles, withInventoryLock } = require('../../src/lib/warehouseCsv');
 
 const rootDir = path.resolve(__dirname, '..', '..');
 const paletteSetsPath = path.join(rootDir, 'src', 'data', 'mardPaletteSets.csv');
 const colorMappingPath = path.join(rootDir, 'src', 'app', 'colorSystemMapping.json');
 const warehouseDir = path.join(rootDir, 'results', 'app', 'warehouse');
-const inventoryPath = path.join(warehouseDir, 'inventory.json');
+const inventoryPath = path.join(warehouseDir, 'inventory.csv');
 
 const args = process.argv.slice(2);
 const options = {
@@ -112,11 +114,13 @@ function main() {
     ],
   };
 
-  fs.mkdirSync(warehouseDir, { recursive: true });
-  fs.writeFileSync(inventoryPath, `${JSON.stringify(inventory, null, 2)}\n`, 'utf8');
+  if (readInventoryFiles(warehouseDir).warehouses.length) throw new Error('Inventory already exists; use create:warehouse to add a warehouse');
+  inventory.transactions = [{ id: crypto.randomUUID(), warehouseId: options.id, type: 'create_warehouse', createdAt: now, note: 'Initial inventory',
+    items: items.map(item => ({ hex: item.hex, colorKey: item.colorKey, delta: item.ownedCount, before: 0, after: item.ownedCount })) }];
+  writeInventoryFiles(warehouseDir, inventory);
 
   console.log(`Wrote ${inventoryPath}`);
   console.log(`${options.name}: ${options.brand} ${options.paletteName}, ${items.length} colors, ${options.ownedCount} beads each`);
 }
 
-main();
+withInventoryLock(warehouseDir, main).catch(error => { console.error(error.message); process.exitCode = 1; });

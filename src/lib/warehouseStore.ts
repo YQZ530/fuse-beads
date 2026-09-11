@@ -1,6 +1,7 @@
 import crypto from 'crypto';
-import { mkdir, readFile, readdir, rename, writeFile } from 'fs/promises';
+import { readFile, readdir } from 'fs/promises';
 import path from 'path';
+import { readInventoryFiles, writeInventoryFiles, withInventoryLock } from './warehouseCsv';
 
 type ColorMapping = Record<string, { MARD?: string }>;
 
@@ -21,6 +22,7 @@ export interface Warehouse {
 }
 
 export interface WarehouseItem {
+  note?: string;
   hex: string;
   colorKey: string;
   ownedCount: number;
@@ -30,6 +32,9 @@ export interface WarehouseItem {
 }
 
 export interface WarehouseTransaction {
+  projectId?: string;
+  patternId?: string;
+  imagePath?: string;
   id: string;
   warehouseId: string;
   type: 'create_warehouse' | 'manual_adjustment' | 'manual_replenishment';
@@ -91,20 +96,14 @@ export interface DeleteWarehouseTransactionInput {
 }
 
 const ROOT_DIR = process.cwd();
-const INVENTORY_PATH = path.join(ROOT_DIR, 'results', 'app', 'warehouse', 'inventory.json');
+const INVENTORY_DIR = path.join(ROOT_DIR, 'results', 'app', 'warehouse');
 const PROJECTS_DIR = path.join(ROOT_DIR, 'results', 'app', 'projects');
 const PALETTE_SETS_PATH = path.join(ROOT_DIR, 'src', 'data', 'mardPaletteSets.csv');
 const COLOR_MAPPING_PATH = path.join(ROOT_DIR, 'src', 'app', 'colorSystemMapping.json');
-const FIRST_VERSION_PALETTES = new Set(['96', '144', '291']);
+const FIRST_VERSION_PALETTES = new Set(['96', '144', '221', '291']);
 
 export async function readInventory(): Promise<WarehouseInventory> {
-  try {
-    const text = await readFile(INVENTORY_PATH, 'utf8');
-    const parsed = JSON.parse(text.replace(/^\uFEFF/, '')) as Partial<WarehouseInventory>;
-    return normalizeInventory(parsed);
-  } catch {
-    return { schemaVersion: 1, warehouses: [], transactions: [] };
-  }
+  return withInventoryLock(INVENTORY_DIR, () => readInventoryFiles(INVENTORY_DIR));
 }
 
 export async function readMardPaletteOptions(): Promise<MardPaletteOption[]> {
@@ -135,7 +134,14 @@ export async function readMardColors(paletteName = '291'): Promise<MardColor[]> 
   });
 }
 
-export async function createWarehouse(input: CreateWarehouseInput): Promise<{ inventory: WarehouseInventory; warehouse: Warehouse }> {
+export const createWarehouse = (input: CreateWarehouseInput) => withInventoryLock(INVENTORY_DIR, () => createWarehouseUnlocked(input));
+export const updateWarehouseItem = (input: UpdateWarehouseItemInput) => withInventoryLock(INVENTORY_DIR, () => updateWarehouseItemUnlocked(input));
+export const renameWarehouse = (input: RenameWarehouseInput) => withInventoryLock(INVENTORY_DIR, () => renameWarehouseUnlocked(input));
+export const replenishWarehouse = (input: ReplenishWarehouseInput) => withInventoryLock(INVENTORY_DIR, () => replenishWarehouseUnlocked(input));
+export const deleteWarehouse = (input: DeleteWarehouseInput) => withInventoryLock(INVENTORY_DIR, () => deleteWarehouseUnlocked(input));
+export const deleteWarehouseTransaction = (input: DeleteWarehouseTransactionInput) => withInventoryLock(INVENTORY_DIR, () => deleteWarehouseTransactionUnlocked(input));
+
+async function createWarehouseUnlocked(input: CreateWarehouseInput): Promise<{ inventory: WarehouseInventory; warehouse: Warehouse }> {
   const name = input.name.trim();
   const paletteName = String(input.paletteName || '').trim();
   const ownedCount = Number(input.ownedCount);
@@ -144,7 +150,7 @@ export async function createWarehouse(input: CreateWarehouseInput): Promise<{ in
     throw new Error('豆仓名称不能为空');
   }
   if (!FIRST_VERSION_PALETTES.has(paletteName)) {
-    throw new Error('第一版只支持 MARD 96 / 144 / 291');
+    throw new Error('支持 MARD 96 / 144 / 221 / 291');
   }
   if (!Number.isInteger(ownedCount) || ownedCount < 0) {
     throw new Error('初始库存必须是非负整数');
@@ -185,7 +191,7 @@ export async function createWarehouse(input: CreateWarehouseInput): Promise<{ in
   return { inventory, warehouse };
 }
 
-export async function updateWarehouseItem(input: UpdateWarehouseItemInput): Promise<WarehouseInventory> {
+async function updateWarehouseItemUnlocked(input: UpdateWarehouseItemInput): Promise<WarehouseInventory> {
   const ownedCount = Number(input.ownedCount);
   if (!Number.isInteger(ownedCount) || ownedCount < 0) {
     throw new Error('库存必须是非负整数');
@@ -225,7 +231,7 @@ export async function updateWarehouseItem(input: UpdateWarehouseItemInput): Prom
   return inventory;
 }
 
-export async function renameWarehouse(input: RenameWarehouseInput): Promise<{ inventory: WarehouseInventory; warehouse: Warehouse }> {
+async function renameWarehouseUnlocked(input: RenameWarehouseInput): Promise<{ inventory: WarehouseInventory; warehouse: Warehouse }> {
   const name = String(input.name || '').trim();
   if (!name) {
     throw new Error('豆仓名称不能为空');
@@ -240,7 +246,7 @@ export async function renameWarehouse(input: RenameWarehouseInput): Promise<{ in
   return { inventory, warehouse };
 }
 
-export async function replenishWarehouse(input: ReplenishWarehouseInput): Promise<WarehouseInventory> {
+async function replenishWarehouseUnlocked(input: ReplenishWarehouseInput): Promise<WarehouseInventory> {
   const merged = mergeReplenishEntries(input.entries);
   if (merged.length === 0) {
     throw new Error('没有可导入的补货记录');
@@ -299,7 +305,7 @@ export async function replenishWarehouse(input: ReplenishWarehouseInput): Promis
   return inventory;
 }
 
-export async function deleteWarehouse(input: DeleteWarehouseInput): Promise<WarehouseInventory> {
+async function deleteWarehouseUnlocked(input: DeleteWarehouseInput): Promise<WarehouseInventory> {
   const inventory = await readInventory();
   const warehouse = findWarehouse(inventory, input.warehouseId);
   const boundProjects = await readProjectsBoundToWarehouse(warehouse.id);
@@ -313,7 +319,7 @@ export async function deleteWarehouse(input: DeleteWarehouseInput): Promise<Ware
   return inventory;
 }
 
-export async function deleteWarehouseTransaction(input: DeleteWarehouseTransactionInput): Promise<WarehouseInventory> {
+async function deleteWarehouseTransactionUnlocked(input: DeleteWarehouseTransactionInput): Promise<WarehouseInventory> {
   const inventory = await readInventory();
   const warehouse = findWarehouse(inventory, input.warehouseId);
   const transactions = inventory.transactions ?? [];
@@ -357,10 +363,7 @@ export function normalizeColorKey(colorKey: string): string {
 }
 
 async function writeInventory(inventory: WarehouseInventory) {
-  await mkdir(path.dirname(INVENTORY_PATH), { recursive: true });
-  const tempPath = `${INVENTORY_PATH}.${crypto.randomUUID()}.tmp`;
-  await writeFile(tempPath, `${JSON.stringify(normalizeInventory(inventory), null, 2)}\n`, 'utf8');
-  await rename(tempPath, INVENTORY_PATH);
+  writeInventoryFiles(INVENTORY_DIR, normalizeInventory(inventory));
 }
 
 function normalizeInventory(input: Partial<WarehouseInventory>): WarehouseInventory {
@@ -386,6 +389,7 @@ function normalizeWarehouse(input: Partial<Warehouse>): Warehouse {
 
 function normalizeWarehouseItem(input: Partial<WarehouseItem>): WarehouseItem {
   return {
+    note: input.note,
     hex: String(input.hex || '#000000').toUpperCase(),
     colorKey: normalizeColorKey(String(input.colorKey || '')),
     ownedCount: Math.max(0, Number.isFinite(Number(input.ownedCount)) ? Number(input.ownedCount) : 0),
@@ -455,7 +459,7 @@ function isColorInBasePalette(warehouse: Warehouse, colorKey: string): boolean {
 }
 
 function makeWarehouseId(inventory: WarehouseInventory, name: string): string {
-  const base = sanitizeIdPart(name) || 'warehouse';
+  const base = sanitizeIdPart(name) || crypto.randomUUID();
   let candidate = `warehouse-${base}`;
   let index = 2;
   while (inventory.warehouses.some((warehouse) => warehouse.id === candidate)) {
@@ -471,7 +475,7 @@ function sanitizeIdPart(input: string): string {
     .toLowerCase()
     .replace(/[\\/:*?"<>|]/g, '-')
     .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9\u4e00-\u9fa5-]+/g, '-')
+    .replace(/[^a-z0-9-]+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
     .slice(0, 48);
