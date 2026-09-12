@@ -1,5 +1,19 @@
 # 开发日志
 
+## 2026-09-11：恢复 Image32 已确认图例
+
+按用户确认将正式 main 中 Image32 恢复为 G13=280、H2=154、H6=88、H3=82、B17=42、G8=40、A20=10、F5=3、F8=3、H4=2、F24=1，共11色705颗，与原有debug及项目副本一致。清空改色方案的Image32旧替换和额外购买项，保留selected。Image32保持draft、未归档未扣库；Image33的完成记录、两仓库存及流水不变。
+
+## 2026-09-11：完成图纸脚本与首次归档
+
+实现 `scripts/python/complete_images.py`，默认预览，`--apply` 提交。脚本校验图例、库存、图片与重复完成状态，逐图扣库并追加逐色流水；归档截图、完整 main/debug、manifest 分组和项目图纸记录，更新活动图例、分配索引及项目需求。备份与阶段日志保存在 `results/processing/.completion-operations/`；捕获错误回滚，异常中断后下次启动先恢复，恢复遇到外部修改时停止。
+
+复用图纸图片 API，收紧为指定图片目录和位图扩展名，验证真实路径以阻止越界。豆仓流水增加归档缩略图，服务端保护完成流水及关联豆仓，避免删除后破坏完成记录。根 tsconfig 保留拆分结构，补 compilerOptions 对象，并为继承配置设置 baseUrl，修复 Next 启动及路径别名解析。
+
+实际完成 Image3/6/8/21/33/37/38，共 7 张、4,409 颗、59 条逐色流水。亚麻96仓由 51,936 扣至 47,527；221 仓保持 243,000。活动 main/debug 剩 30 张，manifest 剩 28 组、49 张截图。亚麻96项目归档 Image3/6/8 后只剩 Image32，需求 705，缺口 41（A20=10、F24=1、G13=30）。重复执行无额外扣库。
+
+验证：15 项 Python 测试、13 项仓库存储测试及 TypeScript 检查通过；真实数据临时副本与网页现有项目计算逐项一致，其他图例和221仓数据不变。HTTP 验证 /warehouse、/projects、库存接口和7张归档图片返回200，越界及非图片路径返回400，删除完成流水返回400且库存不变。浏览器连接不可用，未做可视化点击验收。
+
 ## 2026-09-11：同步已确认 legend 与 debug
 
 Image3（4 色、230 颗）、Image8（8 色、705 颗）的已确认配色同步至 debug 的汇总、页面明细和校验字段。Image33 正式统计及 debug 更新为 E2=122、D20=87、D12=82、H2=81、F9=45、F14=40、E8=23、F11=11、E4=6、C7=2，共 10 色、499 颗；改色方案清空该图旧替换和额外购买项，保留 selected。
@@ -165,7 +179,8 @@ Stage 1 和 Stage 3 在网页点击保存时一起写入。Stage 2 现有文件�
 | `calc-project-requirements.js` | 根据图纸 JSON 和库存计算项目需求及缺豆 | `npm run calc:project -- --input 配置.json`；生成项目和需求结果。 |
 | `export-pattern-stats-csv.js` | 导出单张网格图纸颜色统计 | `npm run export:pattern-stats -- --pattern 文件.grid.json --out 统计.csv`。 |
 | `generate-icons.js` | 生成应用图标 | `node scripts/javascript/generate-icons.js`；写入 `public/`。 |
-| `generate-cert.js` | 生成本地 HTTPS 证书 | `node scripts/javascript/generate-cert.js`；写入 `certificates/`，供根目录 `server.js` 使用。 |
+| `generate-cert.js` | 生成本地 HTTPS 证书 | `node scripts/javascript/generate-cert.js`；写入 `certificates/`，供 `scripts/javascript/server.js` 使用。 |
+| `server.js` | 启动本地 HTTPS 服务 | `npm run dev:https`；默认端口 3002，读取根目录 `certificates/`。 |
 
 ## 开发记录
 

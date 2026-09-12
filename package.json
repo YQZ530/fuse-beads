@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:https": "node scripts/javascript/server.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -11,7 +12,7 @@
     "create:warehouse": "node scripts/javascript/create-warehouse.js",
     "export:pattern-stats": "node scripts/javascript/export-pattern-stats-csv.js",
     "calc:project": "node scripts/javascript/calc-project-requirements.js",
-    "test:warehouse": "tsc -p tsconfig.warehouse-tests.json && node --test .next/warehouse-tests/scripts/tests/warehouseStore.delete.test.js"
+    "test:warehouse": "tsc -p config/typescript/warehouse-tests.json && node --test .next/warehouse-tests/scripts/tests/warehouseStore.delete.test.js"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",

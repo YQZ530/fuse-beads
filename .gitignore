@@ -66,3 +66,4 @@ node-v24.19.0-win-x64.zip
 /.paddlex_cache
 /scripts/python/test_scr/output
 /scripts/python/__pycache__
+/results/processing/.completion-operations/

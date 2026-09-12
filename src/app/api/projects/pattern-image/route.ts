@@ -1,14 +1,14 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
-import { resolveSafeProjectAssetPath } from '../_projectStore';
+import { resolveProjectImagePath } from '@/lib/projectAssetPath';
 
 export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   try {
     const imagePath = request.nextUrl.searchParams.get('path') || '';
-    const resolved = resolveSafeProjectAssetPath(imagePath);
+    const resolved = resolveProjectImagePath(process.cwd(), imagePath);
     if (!resolved) {
       return NextResponse.json({ ok: false, error: '图片路径无效' }, { status: 400 });
     }

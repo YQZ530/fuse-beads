@@ -8,12 +8,13 @@ const dev = process.env.NODE_ENV !== 'production';
 const hostname = '0.0.0.0';
 const port = Number(process.env.PORT || 3002);
 
-const app = next({ dev });
+const rootDir = path.resolve(__dirname, '..', '..');
+const app = next({ dev, dir: rootDir });
 const handle = app.getRequestHandler();
 
 // 检查证书是否存在
-const certPath = path.join(__dirname, 'certificates', 'localhost.pem');
-const keyPath = path.join(__dirname, 'certificates', 'localhost-key.pem');
+const certPath = path.join(rootDir, 'certificates', 'localhost.pem');
+const keyPath = path.join(rootDir, 'certificates', 'localhost-key.pem');
 
 if (!fs.existsSync(certPath) || !fs.existsSync(keyPath)) {
   console.error('HTTPS 证书不存在！请先运行: node scripts/javascript/generate-cert.js');

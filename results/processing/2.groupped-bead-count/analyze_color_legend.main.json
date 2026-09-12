@@ -1,7 +1,7 @@
 {
   "input": "results/processing/1.grouped-images/groups.manifest.json",
   "mode": "grouped_manifest_color_legend_final",
-  "imageCount": 37,
+  "imageCount": 30,
   "conflictCount": 0,
   "images": [
     {
@@ -108,34 +108,6 @@
       "needsReview": [],
       "sourceImages": [
         "C:\\Users\\z5308\\Desktop\\batch_pic\\Image2.PNG"
-      ]
-    },
-    {
-      "id": "Image3",
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "totalColorKeys": 4,
-      "totalBeads": 230,
-      "expected": "4_230",
-      "matchesExpected": true,
-      "colorCounts": {
-        "F5": 64,
-        "H7": 54,
-        "A13": 53,
-        "F8": 59
-      },
-      "needsReviewCount": 0,
-      "needsReview": [],
-      "transparentCount": 2474,
-      "countsWithTransparent": {
-        "F5": 64,
-        "H7": 54,
-        "A13": 53,
-        "F8": 59,
-        "transparent": 2474
-      },
-      "sourceImages": [
-        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image3.PNG"
       ]
     },
     {
@@ -246,34 +218,6 @@
       ]
     },
     {
-      "id": "Image6",
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "totalColorKeys": 4,
-      "totalBeads": 803,
-      "expected": "4_803",
-      "matchesExpected": true,
-      "colorCounts": {
-        "B8": 297,
-        "H7": 285,
-        "H2": 136,
-        "F5": 85
-      },
-      "needsReviewCount": 0,
-      "needsReview": [],
-      "transparentCount": 1901,
-      "countsWithTransparent": {
-        "B8": 297,
-        "H7": 285,
-        "H2": 136,
-        "F5": 85,
-        "transparent": 1901
-      },
-      "sourceImages": [
-        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image6.PNG"
-      ]
-    },
-    {
       "id": "Image7",
       "sourcePageType": "detail_page",
       "analysisStatus": "analyzed_from_detail_page",
@@ -289,42 +233,6 @@
       "needsReview": [],
       "sourceImages": [
         "C:\\Users\\z5308\\Desktop\\batch_pic\\Image7.PNG"
-      ]
-    },
-    {
-      "id": "Image8",
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "totalColorKeys": 8,
-      "totalBeads": 705,
-      "expected": "8_705",
-      "matchesExpected": true,
-      "colorCounts": {
-        "G5": 245,
-        "A4": 176,
-        "F5": 117,
-        "F10": 74,
-        "A6": 55,
-        "F8": 20,
-        "G13": 12,
-        "F7": 6
-      },
-      "needsReviewCount": 0,
-      "needsReview": [],
-      "transparentCount": 1999,
-      "countsWithTransparent": {
-        "G5": 245,
-        "A4": 176,
-        "F5": 117,
-        "F10": 74,
-        "A6": 55,
-        "F8": 20,
-        "G13": 12,
-        "F7": 6,
-        "transparent": 1999
-      },
-      "sourceImages": [
-        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image8.PNG"
       ]
     },
     {
@@ -742,52 +650,6 @@
       ]
     },
     {
-      "id": "Image21",
-      "sourceImages": [
-        "results\\processing\\1.grouped-images\\Image21.PNG"
-      ],
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "totalColorKeys": 13,
-      "totalBeads": 714,
-      "expected": "13_714",
-      "matchesExpected": true,
-      "colorCounts": {
-        "G13": 279,
-        "G8": 174,
-        "H2": 107,
-        "G14": 61,
-        "F3": 27,
-        "E2": 24,
-        "M9": 23,
-        "F14": 13,
-        "M12": 2,
-        "A4": 1,
-        "D8": 1,
-        "E8": 1,
-        "F9": 1
-      },
-      "needsReviewCount": 0,
-      "needsReview": [],
-      "transparentCount": 1990,
-      "countsWithTransparent": {
-        "G13": 279,
-        "G8": 174,
-        "H2": 107,
-        "G14": 61,
-        "F3": 27,
-        "E2": 24,
-        "M9": 23,
-        "F14": 13,
-        "M12": 2,
-        "A4": 1,
-        "D8": 1,
-        "E8": 1,
-        "F9": 1,
-        "transparent": 1990
-      }
-    },
-    {
       "id": "Image22",
       "sourcePageType": "detail_page",
       "analysisStatus": "analyzed_from_detail_page",
@@ -1162,80 +1024,42 @@
       "id": "Image32",
       "sourcePageType": "detail_page",
       "analysisStatus": "analyzed_from_detail_page",
-      "totalColorKeys": 10,
+      "totalColorKeys": 11,
       "totalBeads": 705,
-      "expected": "10_705",
+      "expected": "11_705",
       "matchesExpected": true,
       "colorCounts": {
-        "A11": 10,
-        "B17": 42,
-        "F14": 1,
-        "G13": 283,
-        "G8": 40,
-        "H11": 82,
-        "H2": 154,
-        "H4": 2,
-        "H6": 88,
-        "M14": 3
-      },
-      "needsReviewCount": 0,
-      "needsReview": [],
-      "transparentCount": 1999,
-      "countsWithTransparent": {
-        "G13": 283,
+        "G13": 280,
         "H2": 154,
         "H6": 88,
         "H3": 82,
         "B17": 42,
         "G8": 40,
-        "A11": 10,
+        "A20": 10,
+        "F5": 3,
+        "F8": 3,
         "H4": 2,
-        "F14": 1,
-        "transparent": 1999,
-        "M14": 3
-      },
-      "sourceImages": [
-        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image32.PNG"
-      ]
-    },
-    {
-      "id": "Image33",
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "totalColorKeys": 10,
-      "totalBeads": 499,
-      "expected": "10_499",
-      "matchesExpected": true,
-      "colorCounts": {
-        "E2": 122,
-        "D20": 87,
-        "D12": 82,
-        "H2": 81,
-        "F9": 45,
-        "F14": 40,
-        "E8": 23,
-        "F11": 11,
-        "E4": 6,
-        "C7": 2
+        "F24": 1
       },
       "needsReviewCount": 0,
       "needsReview": [],
-      "transparentCount": 2205,
+      "transparentCount": 1999,
       "countsWithTransparent": {
-        "E2": 122,
-        "D20": 87,
-        "D12": 82,
-        "H2": 81,
-        "F9": 45,
-        "F14": 40,
-        "E8": 23,
-        "F11": 11,
-        "E4": 6,
-        "C7": 2,
-        "transparent": 2205
+        "G13": 280,
+        "H2": 154,
+        "H6": 88,
+        "H3": 82,
+        "B17": 42,
+        "G8": 40,
+        "A20": 10,
+        "F5": 3,
+        "F8": 3,
+        "H4": 2,
+        "F24": 1,
+        "transparent": 1999
       },
       "sourceImages": [
-        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image33.PNG"
+        "C:\\Users\\z5308\\Desktop\\batch_pic\\Image32.PNG"
       ]
     },
     {
@@ -1326,86 +1150,6 @@
       "needsReviewCount": 0,
       "needsReview": [],
       "sourceImages": []
-    },
-    {
-      "id": "Image37",
-      "sourceImages": [
-        "results\\processing\\1.grouped-images\\Image37.PNG"
-      ],
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "totalColorKeys": 12,
-      "totalBeads": 901,
-      "expected": "12_901",
-      "matchesExpected": true,
-      "colorCounts": {
-        "D18": 186,
-        "D12": 110,
-        "C6": 107,
-        "E9": 99,
-        "G14": 89,
-        "B17": 71,
-        "C10": 63,
-        "M12": 63,
-        "H2": 42,
-        "B14": 41,
-        "C2": 17,
-        "H3": 13
-      },
-      "needsReviewCount": 0,
-      "needsReview": [],
-      "transparentCount": 1803,
-      "countsWithTransparent": {
-        "D18": 186,
-        "D12": 110,
-        "C6": 107,
-        "E9": 99,
-        "G14": 89,
-        "B17": 71,
-        "C10": 63,
-        "M12": 63,
-        "H2": 42,
-        "B14": 41,
-        "C2": 17,
-        "H3": 13,
-        "transparent": 1803
-      }
-    },
-    {
-      "id": "Image38",
-      "sourceImages": [
-        "results\\processing\\1.grouped-images\\Image38.PNG"
-      ],
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "totalColorKeys": 8,
-      "totalBeads": 557,
-      "expected": "8_557",
-      "matchesExpected": true,
-      "colorCounts": {
-        "H5": 189,
-        "H6": 108,
-        "H7": 92,
-        "D14": 51,
-        "H3": 50,
-        "D15": 49,
-        "H2": 14,
-        "A6": 4
-      },
-      "needsReviewCount": 0,
-      "needsReview": [],
-      "transparentCount": 2147,
-      "countsWithTransparent": {
-        "H5": 189,
-        "H6": 108,
-        "H7": 92,
-        "D14": 51,
-        "H3": 50,
-        "D15": 49,
-        "H2": 14,
-        "A6": 4,
-        "transparent": 2147
-      }
     }
   ],
   "conflictImages": []

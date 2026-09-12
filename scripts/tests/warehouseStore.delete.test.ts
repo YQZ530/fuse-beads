@@ -6,6 +6,7 @@ import path from 'node:path';
 
 import type { WarehouseInventory } from '../../src/lib/warehouseStore';
 import { readInventoryFiles, writeInventoryFiles, encodeInventory, decodeInventory } from '../../src/lib/warehouseCsv';
+import { resolveProjectImagePath } from '../../src/lib/projectAssetPath';
 
 let tempRoot = '';
 let store: typeof import('../../src/lib/warehouseStore');
@@ -121,6 +122,31 @@ test('CSV round trip preserves metadata, multiline notes, links and empty transa
   inventory.transactions!.push({ id: 'empty', warehouseId: 'warehouse-main', type: 'create_warehouse', createdAt: '2026-09-11', note: 'Empty, "entry"\nline', items: [] });
   const encoded = encodeInventory(inventory);
   assert.deepEqual(decodeInventory(encoded.inventoryText, encoded.transactionsText), inventory);
+});
+
+test('archived completion protects its transaction and warehouse from deletion', async () => {
+  await writeInventory(baseInventory());
+  const archive = path.join(tempRoot, 'results/processing/3.done-images');
+  await mkdir(archive, { recursive: true });
+  await writeFile(path.join(archive, 'done-count.json'), JSON.stringify({ images: {
+    Image3: { transactionId: 'txn-out', warehouseId: 'warehouse-main' },
+  } }));
+  const before = await readInventory();
+  await assert.rejects(() => store.deleteWarehouseTransaction({ warehouseId: 'warehouse-main', transactionId: 'txn-out' }), /不能单独删除/);
+  await assert.rejects(() => store.deleteWarehouse({ warehouseId: 'warehouse-main' }), /已归档图纸/);
+  assert.deepEqual(await readInventory(), before);
+  assert.equal((await store.readInventory()).transactions?.find(t => t.id === 'txn-out')?.archivedCompletion, true);
+});
+
+test('image resolver allows archived images but rejects non-image files and traversal', async () => {
+  const archive = path.join(tempRoot, 'results/processing/3.done-images');
+  await mkdir(archive, { recursive: true });
+  await writeFile(path.join(archive, 'Image3.PNG'), 'image');
+  assert.equal(resolveProjectImagePath(tempRoot, 'results/processing/3.done-images/Image3.PNG'), path.join(archive, 'Image3.PNG'));
+  for (const candidate of ['results/app/warehouse/inventory.csv', 'package.json', '../secret.PNG',
+    'results/processing/3.done-images/../../../secret.PNG', 'C:/secret.PNG']) {
+    assert.equal(resolveProjectImagePath(tempRoot, candidate), '');
+  }
 });
 
 test('CSV invalid quantities fail rather than returning an empty warehouse', async () => {

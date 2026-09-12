@@ -32,6 +32,7 @@ export interface WarehouseItem {
 }
 
 export interface WarehouseTransaction {
+  archivedCompletion?: boolean;
   projectId?: string;
   patternId?: string;
   imagePath?: string;
@@ -103,7 +104,28 @@ const COLOR_MAPPING_PATH = path.join(ROOT_DIR, 'src', 'app', 'colorSystemMapping
 const FIRST_VERSION_PALETTES = new Set(['96', '144', '221', '291']);
 
 export async function readInventory(): Promise<WarehouseInventory> {
-  return withInventoryLock(INVENTORY_DIR, () => readInventoryFiles(INVENTORY_DIR));
+  return withInventoryLock(INVENTORY_DIR, async () => {
+    const inventory = readInventoryFiles(INVENTORY_DIR) as WarehouseInventory;
+    const completed = await readArchivedCompletions();
+    for (const transaction of inventory.transactions ?? []) {
+      transaction.archivedCompletion = completed.some(record => record.transactionId === transaction.id);
+    }
+    return inventory;
+  });
+}
+
+async function readArchivedCompletions(): Promise<Array<{ transactionId: string; warehouseId: string }>> {
+  const file = path.join(ROOT_DIR, 'results', 'processing', '3.done-images', 'done-count.json');
+  try {
+    const data = JSON.parse(await readFile(file, 'utf8'));
+    if (!data.images || typeof data.images !== 'object' || Array.isArray(data.images)) {
+      throw new Error('Invalid completed image archive');
+    }
+    return Object.values(data.images);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return [];
+    throw error;
+  }
 }
 
 export async function readMardPaletteOptions(): Promise<MardPaletteOption[]> {
@@ -308,6 +330,9 @@ async function replenishWarehouseUnlocked(input: ReplenishWarehouseInput): Promi
 async function deleteWarehouseUnlocked(input: DeleteWarehouseInput): Promise<WarehouseInventory> {
   const inventory = await readInventory();
   const warehouse = findWarehouse(inventory, input.warehouseId);
+  if ((await readArchivedCompletions()).some(record => record.warehouseId === warehouse.id)) {
+    throw new Error('这个豆仓包含已归档图纸，不能删除');
+  }
   const boundProjects = await readProjectsBoundToWarehouse(warehouse.id);
   if (boundProjects.length > 0) {
     throw new Error(`这个豆仓已被项目绑定，不能删除：${boundProjects.join('、')}`);
@@ -330,6 +355,9 @@ async function deleteWarehouseTransactionUnlocked(input: DeleteWarehouseTransact
   const deletedTransaction = transactions.find((transaction) => transaction.id === input.transactionId);
   if (deletedTransaction?.warehouseId !== warehouse.id) {
     throw new Error('这条库存记录不属于当前豆仓');
+  }
+  if (deletedTransaction.archivedCompletion) {
+    throw new Error('已归档图纸的完成流水不能单独删除');
   }
 
   const now = new Date().toISOString();

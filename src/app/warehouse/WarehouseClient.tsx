@@ -722,6 +722,25 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
                         <div key={transaction.id} className="rounded border border-slate-100 bg-slate-50 p-3">
                           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                             <div className="min-w-0">
+                              {transaction.imagePath && (
+                                <a
+                                  href={`/api/projects/pattern-image?path=${encodeURIComponent(transaction.imagePath)}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="mb-2 inline-flex items-center gap-2"
+                                >
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={`/api/projects/pattern-image?path=${encodeURIComponent(transaction.imagePath)}`}
+                                    alt={transaction.patternId || '图纸'}
+                                    width={64}
+                                    height={64}
+                                    loading="lazy"
+                                    className="h-16 w-16 object-contain"
+                                  />
+                                  <span>{transaction.patternId}</span>
+                                </a>
+                              )}
                               <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
                                 <span className="font-medium text-slate-800">{transactionLabel(transaction.type)}</span>
                                 <span className="text-slate-500">{formatDateTime(transaction.createdAt)}</span>
@@ -742,7 +761,8 @@ export default function WarehouseClient({ initialInventory, paletteOptions, allM
                               )}
                               <button
                                 type="button"
-                                disabled={busyAction === actionKey}
+                                disabled={busyAction === actionKey || transaction.archivedCompletion}
+                                title={transaction.archivedCompletion ? '已归档图纸的完成流水不能单独删除' : undefined}
                                 onClick={() => handleDeleteTransaction(transaction)}
                                 className="text-sm font-medium text-red-600 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                               >

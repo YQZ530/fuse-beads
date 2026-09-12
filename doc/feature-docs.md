@@ -23,6 +23,16 @@
 - 项目关联豆仓及图纸，汇总颜色需求与库存缺口。
 - 项目数据保存在 `results/app/projects/`。
 
+## 完成图纸归档
+
+- `scripts/python/complete_images.py` 按图纸 ID 预览或提交完成操作，支持交互输入及批量编号。
+- 逐色扣除指定豆仓库存，每张图生成一笔流水；重复执行同一完成 ID 时验证一致性并跳过。
+- 全部截图、正式图例、debug 和原分组信息归档到 `results/processing/3.done-images/`，由 `done-count.json` 汇总。
+- 项目中匹配的图纸记录移入归档并保存原项目关系，活动项目需求及分配索引同步更新。
+- 豆仓流水提供归档图片缩略图，图片接口限制在指定图片目录内。
+- 已归档图纸的完成流水及其豆仓受到服务端删除保护。
+- 离线提交保留备份及操作日志，错误回滚，进程中断后下次脚本启动先恢复。
+
 ## 已完成功能
 
 ### 我的豆仓
@@ -118,7 +128,7 @@
 
 ## 测试
 
-- 新增测试配置：`tsconfig.warehouse-tests.json`
+- 测试配置：`config/typescript/warehouse-tests.json`
 - 新增测试命令：`npm run test:warehouse`
 - 当前测试文件：`scripts/tests/warehouseStore.delete.test.ts`
 - 已覆盖：

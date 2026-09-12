@@ -79,7 +79,27 @@ python scripts/python/analyze_color_legend.py --manifest results/processing/1.gr
 - 调试结果：`results/processing/2.groupped-bead-count/analyze_color_legend.debug.json`
 - 识别结果：`results/processing/2.groupped-bead-count/analyze_color_legend.main.json`
 
-项目页面读取该目录的 `analyze_color_legend.main.json`。已确认的四张新增图纸已合入正式统计和 debug，正式统计共 37 张图纸。分组清单与截图统一放在 `results/processing/1.grouped-images/`。
+项目页面读取该目录的 `analyze_color_legend.main.json`。当前活动统计共 30 张图纸，另有 7 张已完成图纸归档到 `results/processing/3.done-images/`。分组清单与活动截图统一放在 `results/processing/1.grouped-images/`。
+
+### 完成图纸与扣库
+
+使用已复核的正式图例，预览指定图纸的完成操作：
+
+```powershell
+python scripts/python/complete_images.py --images 3 6 8 --warehouse warehouse-1
+```
+
+支持 `3,6,8`、`3 6 8`、`Image3 Image6 Image8`；省略 `--images` 时提示输入。确认图例和预览后，停止网页服务，再执行：
+
+```powershell
+python scripts/python/complete_images.py --images 3 6 8 --warehouse warehouse-1 --apply
+```
+
+脚本扣除逐色库存，每图追加一笔流水，将全部截图和完整图例移入 `results/processing/3.done-images/`，汇总保存在 `done-count.json`。项目中对应的图纸记录及原项目关系随图归档，活动项目需求和分配索引同步更新。已完成且记录一致的 ID 会跳过。
+
+一次只运行一个修改数据的脚本。操作备份保留在 `results/processing/.completion-operations/`，不提交 Git。异常中断后先重新运行脚本，启动时会恢复未完成操作，再进行预览；恢复成功前不要启动网页或手动修改相关数据。正常完成后可重新 `npm run dev`，豆仓流水显示归档图片，归档完成流水不能单独删除。
+
+脚本测试：`python -m unittest discover -s scripts/tests -p test_complete_images.py -v`。
 
 ### 3. 网格几何实验脚本
 

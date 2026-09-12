@@ -3,7 +3,7 @@
   "id": "a5146ea7-a599-4cc4-9379-37a49baeee98",
   "name": "亚麻96项目",
   "createdAt": "2026-08-13T22:52:18.063Z",
-  "updatedAt": "2026-09-11T20:04:31.470Z",
+  "updatedAt": "2026-09-11T20:52:35.381Z",
   "warehouseId": "warehouse-1",
   "warehouseName": "豆仓1",
   "warehouseBrand": "MARD",
@@ -11,44 +11,6 @@
   "warehouseLockedAt": "2026-08-13T22:52:18.063Z",
   "status": "draft",
   "patterns": [
-    {
-      "id": "Image3",
-      "name": "Image3",
-      "thumbnailPath": "results/processing/1.grouped-images/Image3.PNG",
-      "totalBeadCount": 230,
-      "colorCount": 4,
-      "colorCounts": {
-        "F5": 64,
-        "H7": 54,
-        "A13": 53,
-        "F8": 59
-      },
-      "expected": "4_230",
-      "matchesExpected": true,
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "status": "draft",
-      "addedToPlanAt": "2026-08-22T03:50:13.961Z"
-    },
-    {
-      "id": "Image6",
-      "name": "Image6",
-      "thumbnailPath": "results/processing/1.grouped-images/Image6.PNG",
-      "totalBeadCount": 803,
-      "colorCount": 4,
-      "colorCounts": {
-        "B8": 297,
-        "H7": 285,
-        "H2": 136,
-        "F5": 85
-      },
-      "expected": "4_803",
-      "matchesExpected": true,
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "status": "draft",
-      "addedToPlanAt": "2026-08-22T03:50:13.961Z"
-    },
     {
       "id": "Image32",
       "name": "Image32",
@@ -74,63 +36,16 @@
       "analysisStatus": "analyzed_from_detail_page",
       "status": "draft",
       "addedToPlanAt": "2026-08-22T04:14:04.929Z"
-    },
-    {
-      "id": "Image8",
-      "name": "Image8",
-      "thumbnailPath": "results/processing/1.grouped-images/Image8.PNG",
-      "totalBeadCount": 705,
-      "colorCount": 8,
-      "colorCounts": {
-        "G5": 245,
-        "A4": 176,
-        "F5": 117,
-        "F10": 74,
-        "A6": 55,
-        "F8": 20,
-        "G13": 12,
-        "F7": 6
-      },
-      "expected": "8_705",
-      "matchesExpected": true,
-      "sourcePageType": "detail_page",
-      "analysisStatus": "analyzed_from_detail_page",
-      "status": "draft",
-      "addedToPlanAt": "2026-08-22T04:14:04.929Z"
     }
   ],
   "summary": {
-    "totalNeeded": 2443,
-    "totalOwned": 2432,
-    "totalMissing": 11,
-    "colorsNeeded": 19,
-    "missingColorCount": 2
+    "totalNeeded": 705,
+    "totalOwned": 664,
+    "totalMissing": 41,
+    "colorsNeeded": 11,
+    "missingColorCount": 3
   },
   "items": [
-    {
-      "hex": "#FBED56",
-      "colorKey": "A4",
-      "needed": 176,
-      "owned": 541,
-      "missing": 0,
-      "remainingAfterProject": 365
-    },
-    {
-      "hex": "#FEAC4C",
-      "colorKey": "A6",
-      "needed": 55,
-      "owned": 541,
-      "missing": 0,
-      "remainingAfterProject": 486
-    },
-    {
-      "hex": "#FFC365",
-      "colorKey": "A13",
-      "needed": 53,
-      "owned": 541,
-      "missing": 0,
-      "remainingAfterProject": 488
-    },
     {
       "hex": "#00FA3F",
       "colorKey": "A20",
@@ -140,52 +55,28 @@
       "remainingAfterProject": -10
     },
     {
-      "hex": "#1C9C4F",
-      "colorKey": "B8",
-      "needed": 297,
-      "owned": 541,
-      "missing": 0,
-      "remainingAfterProject": 244
-    },
-    {
       "hex": "#9BB13A",
       "colorKey": "B17",
       "needed": 42,
-      "owned": 541,
+      "owned": 470,
       "missing": 0,
-      "remainingAfterProject": 499
+      "remainingAfterProject": 428
     },
     {
       "hex": "#E7002F",
       "colorKey": "F5",
-      "needed": 269,
-      "owned": 541,
+      "needed": 3,
+      "owned": 275,
       "missing": 0,
       "remainingAfterProject": 272
     },
     {
-      "hex": "#971937",
-      "colorKey": "F7",
-      "needed": 6,
-      "owned": 541,
-      "missing": 0,
-      "remainingAfterProject": 535
-    },
-    {
       "hex": "#BC0028",
       "colorKey": "F8",
-      "needed": 82,
-      "owned": 541,
+      "needed": 3,
+      "owned": 462,
       "missing": 0,
       "remainingAfterProject": 459
-    },
-    {
-      "hex": "#8A4526",
-      "colorKey": "F10",
-      "needed": 74,
-      "owned": 541,
-      "missing": 0,
-      "remainingAfterProject": 467
     },
     {
       "hex": "#010D08",
@@ -196,44 +87,36 @@
       "remainingAfterProject": -1
     },
     {
-      "hex": "#EDB045",
-      "colorKey": "G5",
-      "needed": 245,
-      "owned": 541,
-      "missing": 0,
-      "remainingAfterProject": 296
-    },
-    {
       "hex": "#753832",
       "colorKey": "G8",
       "needed": 40,
-      "owned": 541,
+      "owned": 367,
       "missing": 0,
-      "remainingAfterProject": 501
+      "remainingAfterProject": 327
     },
     {
       "hex": "#B7714A",
       "colorKey": "G13",
-      "needed": 292,
-      "owned": 541,
-      "missing": 0,
-      "remainingAfterProject": 249
+      "needed": 280,
+      "owned": 250,
+      "missing": 30,
+      "remainingAfterProject": -30
     },
     {
       "hex": "#FEFFFF",
       "colorKey": "H2",
-      "needed": 290,
-      "owned": 541,
+      "needed": 154,
+      "owned": 161,
       "missing": 0,
-      "remainingAfterProject": 251
+      "remainingAfterProject": 7
     },
     {
       "hex": "#B6B1BA",
       "colorKey": "H3",
       "needed": 82,
-      "owned": 541,
+      "owned": 478,
       "missing": 0,
-      "remainingAfterProject": 459
+      "remainingAfterProject": 396
     },
     {
       "hex": "#89858C",
@@ -247,17 +130,9 @@
       "hex": "#2F2B2F",
       "colorKey": "H6",
       "needed": 88,
-      "owned": 541,
+      "owned": 433,
       "missing": 0,
-      "remainingAfterProject": 453
-    },
-    {
-      "hex": "#000000",
-      "colorKey": "H7",
-      "needed": 339,
-      "owned": 541,
-      "missing": 0,
-      "remainingAfterProject": 202
+      "remainingAfterProject": 345
     }
   ],
   "missingItems": [
@@ -276,6 +151,14 @@
       "owned": 0,
       "missing": 1,
       "remainingAfterProject": -1
+    },
+    {
+      "hex": "#B7714A",
+      "colorKey": "G13",
+      "needed": 280,
+      "owned": 250,
+      "missing": 30,
+      "remainingAfterProject": -30
     }
   ]
 }
