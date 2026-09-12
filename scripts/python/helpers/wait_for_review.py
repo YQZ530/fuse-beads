@@ -1,4 +1,4 @@
-# final_review_gate.py
+# Terminal input loop referenced by .codex/plan/reviewgate.mdc.
 import sys
 import os
 

@@ -58,7 +58,7 @@ npm run dev -- -p 3000
 把 `.codex/tmp/img` 里的 iPad 截图分组成 `ImageN`：
 
 ```bash
-python scripts/python/group_similar_pattern_images.py .codex/tmp/img --out results/processing/1.grouped-images --action copy --manifest results/processing/1.grouped-images/groups.manifest.json
+python scripts/python/processing/stage1_group_images.py .codex/tmp/img --out results/processing/1.grouped-images --action copy --manifest results/processing/1.grouped-images/groups.manifest.json
 ```
 
 输出：
@@ -71,7 +71,7 @@ python scripts/python/group_similar_pattern_images.py .codex/tmp/img --out resul
 基于分组清单读取每个图纸的底部色号/数量：
 
 ```bash
-python scripts/python/analyze_color_legend.py --manifest results/processing/1.grouped-images/groups.manifest.json --out results/processing/2.groupped-bead-count/analyze_color_legend.debug.json
+python scripts/python/processing/stage2_analyze_bead_counts.py --manifest results/processing/1.grouped-images/groups.manifest.json --out results/processing/2.groupped-bead-count/analyze_color_legend.debug.json
 ```
 
 输出：
@@ -86,13 +86,13 @@ python scripts/python/analyze_color_legend.py --manifest results/processing/1.gr
 使用已复核的正式图例，预览指定图纸的完成操作：
 
 ```powershell
-python scripts/python/complete_images.py --images 3 6 8 --warehouse warehouse-1
+python scripts/python/processing/stage3_complete_images.py --images 3 6 8 --warehouse warehouse-1
 ```
 
 支持 `3,6,8`、`3 6 8`、`Image3 Image6 Image8`；省略 `--images` 时提示输入。确认图例和预览后，停止网页服务，再执行：
 
 ```powershell
-python scripts/python/complete_images.py --images 3 6 8 --warehouse warehouse-1 --apply
+python scripts/python/processing/stage3_complete_images.py --images 3 6 8 --warehouse warehouse-1 --apply
 ```
 
 脚本扣除逐色库存，每图追加一笔流水，将全部截图和完整图例移入 `results/processing/3.done-images/`，汇总保存在 `done-count.json`。项目中对应的图纸记录及原项目关系随图归档，活动项目需求和分配索引同步更新。已完成且记录一致的 ID 会跳过。
@@ -103,7 +103,7 @@ python scripts/python/complete_images.py --images 3 6 8 --warehouse warehouse-1 
 
 ### 3. 网格几何实验脚本
 
-`scripts/python/prototype_grid_geometry_v3.py` 是单张图纸的网格几何/文字中心检测实验脚本，不属于上面的 batch 截图主流程。只有在调试裁剪、网格定位、文字中心检测时才单独使用。
+`scripts/python/experiments/grid_geometry_v2.py` 是单张图纸的网格几何/文字中心检测实验脚本，不属于上面的 batch 截图主流程。只有在调试裁剪、网格定位、文字中心检测时才单独使用。
 
 ## 目录说明
 
@@ -115,7 +115,7 @@ python scripts/python/complete_images.py --images 3 6 8 --warehouse warehouse-1 
 `warehouse-1` 为亚麻96仓，仅包含标准 MARD 96 色，每色 541 颗，共 51,936 颗；`warehouse-221` 为 MARD 221，共 243,000 颗。完整列定义见 [CSV 数据说明](doc/warehouse-csv.md)。
 
 ```powershell
-python scripts/python/helpers/calc_remaining_inventory.py --warehouse warehouse-221 --selected Image13 Image21 --only-used
+python scripts/python/helpers/calculate_remaining_inventory.py --warehouse warehouse-221 --selected Image13 Image21 --only-used
 ```
 
 - `doc/feature-docs.md`：已实现功能和完成记录。
@@ -123,7 +123,7 @@ python scripts/python/helpers/calc_remaining_inventory.py --warehouse warehouse-
 - `src/`：网站页面、API、组件、服务及图像算法代码。
 - `scripts/javascript/`：手动执行的 JavaScript 工具。
 - `scripts/tests/`：TypeScript 测试，通过 `npm run test:warehouse` 运行。
-- `scripts/python/`：全部 Python 脚本；库存辅助工具位于 `helpers/`，实验和 Python 回归测试位于 `test_scr/`。
+- `scripts/python/`：全部 Python 脚本；处理阶段位于 `processing/`，网页检测位于 `app/`，辅助工具位于 `helpers/`，实验位于 `experiments/`；自动化测试位于 `scripts/tests/`。
 - `.codex/tmp/img/`：待处理原图，Git 忽略此目录。
 - `results/app/3.parsed-grid/`：原 `patterns/`，保存分析页面导出的网格数据、色号和数量（`.grid.json`）。
 - `results/app/1.source-images/`：原 `pic/`，保存与网格 JSON 配套的上传原图。

@@ -4,8 +4,8 @@
 This script does not modify any files.
 
 Examples:
-    python scripts/python/helpers/calc_remaining_inventory.py --selected Image3 Image6
-    python scripts/python/helpers/calc_remaining_inventory.py --selected Image3 Image6 Image22 --extra H11=300
+    python scripts/python/helpers/calculate_remaining_inventory.py --selected Image3 Image6
+    python scripts/python/helpers/calculate_remaining_inventory.py --selected Image3 Image6 Image22 --extra H11=300
 """
 
 from __future__ import annotations

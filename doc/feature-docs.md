@@ -25,7 +25,7 @@
 
 ## 完成图纸归档
 
-- `scripts/python/complete_images.py` 按图纸 ID 预览或提交完成操作，支持交互输入及批量编号。
+- `scripts/python/processing/stage3_complete_images.py` 按图纸 ID 预览或提交完成操作，支持交互输入及批量编号。
 - 逐色扣除指定豆仓库存，每张图生成一笔流水；重复执行同一完成 ID 时验证一致性并跳过。
 - 全部截图、正式图例、debug 和原分组信息归档到 `results/processing/3.done-images/`，由 `done-count.json` 汇总。
 - 项目中匹配的图纸记录移入归档并保存原项目关系，活动项目需求及分配索引同步更新。

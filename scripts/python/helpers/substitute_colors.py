@@ -2,9 +2,9 @@
 """Find MARD color substitutions with CIEDE2000 / Delta E.
 
 Examples:
-    python scripts/python/test_scr/delta_e_substitutions.py --images Image32 Image8
-    python scripts/python/test_scr/delta_e_substitutions.py --max-beads 1500 --exclude Image3 Image6
-    python scripts/python/test_scr/delta_e_substitutions.py --images Image32 --apply
+    python scripts/python/helpers/substitute_colors.py --images Image32 Image8
+    python scripts/python/helpers/substitute_colors.py --max-beads 1500 --exclude Image3 Image6
+    python scripts/python/helpers/substitute_colors.py --images Image32 --apply
 """
 
 from __future__ import annotations

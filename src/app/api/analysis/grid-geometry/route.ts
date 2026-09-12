@@ -6,8 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-const PROTOTYPE_GRID_SCRIPT =
-  process.env.GRID_GEOMETRY_SCRIPT ?? path.join(process.cwd(), 'scripts', 'python', 'prototype_grid_geometry_v2.py');
+const GRID_GEOMETRY_SCRIPT =
+  process.env.GRID_GEOMETRY_SCRIPT ?? path.join(process.cwd(), 'scripts', 'python', 'app', 'detect_grid_geometry_v1.py');
 const PYTHON_COMMAND = process.env.PYTHON ?? 'python';
 const TEMP_ROOT_NAME = '.grid-python';
 const DEFAULT_BOARD_SIZE = 52;
@@ -73,11 +73,11 @@ export async function POST(request: NextRequest) {
 
     const imagePath = path.join(tempDir, 'input.png');
     const outputDir = tempDir;
-    const jsonPath = path.join(outputDir, 'input.geometry.v2.json');
+    const jsonPath = path.join(outputDir, 'input.geometry.v1.json');
     await writeFile(imagePath, imageBuffer);
 
     const args = [
-      PROTOTYPE_GRID_SCRIPT,
+      GRID_GEOMETRY_SCRIPT,
       '--image',
       imagePath,
       '--out-dir',
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       source: 'python-prototype',
-      mode: typeof prototype.mode === 'string' ? prototype.mode : 'text-lattice-v2',
+      mode: typeof prototype.mode === 'string' ? prototype.mode : 'text-lattice-v1',
       boardSize,
       usedReference: false,
       usedCrop: shouldUseCrop,

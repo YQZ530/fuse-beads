@@ -2,7 +2,7 @@
 """Analyze color modal pages with the modal-specific 6-column circle grid.
 
 Standalone test run:
-    python scripts/python/analyze_color_modal_legend.py --manifest results/processing/1.grouped-images/groups.manifest.json --only Image4
+    python scripts/python/processing/stage2_analyze_helper_modal_legend.py --manifest results/processing/1.grouped-images/groups.manifest.json --only Image4
 """
 
 import argparse
@@ -16,12 +16,12 @@ from collections import Counter, defaultdict
 from typing import Any
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-SCRIPT = ROOT / "scripts" / "analyze_color_legend.py"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+SCRIPT = pathlib.Path(__file__).with_name("stage2_analyze_bead_counts.py")
 MANIFEST = ROOT / "results" / "processing" / "1.grouped-images" / "groups.manifest.json"
-OUT_DEBUG = ROOT / "scripts" / "python" / "test_scr" / "output" / "color_modal_grid_ocr.debug.json"
-OUT_FINAL = ROOT / "scripts" / "python" / "test_scr" / "output" / "color_modal_grid_ocr.final.json"
-OUT_COMPARE = ROOT / "scripts" / "python" / "test_scr" / "output" / "color_modal_grid_ocr.compare.json"
+OUT_DEBUG = ROOT / "results" / "processing" / "debug" / "modal-legend" / "color_modal_grid_ocr.debug.json"
+OUT_FINAL = ROOT / "results" / "processing" / "debug" / "modal-legend" / "color_modal_grid_ocr.final.json"
+OUT_COMPARE = ROOT / "results" / "processing" / "debug" / "modal-legend" / "color_modal_grid_ocr.compare.json"
 
 acl: Any = None
 

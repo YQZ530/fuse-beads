@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prototype v3 grid geometry detector.
+"""Experimental v2 grid geometry detector (formerly prototype v3).
 
 This version follows the text-lattice fitting flow:
 detect text centers, estimate a square pitch from direct neighbors, fit the
@@ -23,7 +23,7 @@ import numpy as np
 
 DEFAULT_GRID_SIZE = 52
 GRID_SIZE_CHOICES = (52, 104)
-DEFAULT_OUT_DIR = Path(__file__).resolve().parents[2] / "results" / "app" / "2.grid-detection"
+DEFAULT_OUT_DIR = Path(__file__).resolve().parents[3] / "results" / "app" / "2.grid-detection"
 
 
 @dataclass
@@ -101,9 +101,9 @@ def main() -> int:
     apply_matches_to_centers(centers, result.occupied)
 
     stem = image_path.stem
-    json_path = out_dir / f"{stem}.geometry.v3.json"
-    svg_path = out_dir / f"{stem}.grid_overlay.v3.svg"
-    mask_path = out_dir / f"{stem}.text_mask.v3.png"
+    json_path = out_dir / f"{stem}.geometry.v2.json"
+    svg_path = out_dir / f"{stem}.grid_overlay.v2.svg"
+    mask_path = out_dir / f"{stem}.text_mask.v2.png"
 
     payload = result_to_payload(image, result, centers)
     json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -393,7 +393,7 @@ def apply_matches_to_centers(centers: Sequence[TextCenter], occupied: Dict[Tuple
 def result_to_payload(image: ImageData, result: FitResult, centers: Sequence[TextCenter]) -> Dict[str, object]:
     return {
         "imageSize": {"width": image.width, "height": image.height},
-        "mode": "text-lattice-v3",
+        "mode": "text-lattice-v2",
         "crop": {
             "left": max(0.0, result.left),
             "top": max(0.0, result.top),
@@ -499,7 +499,7 @@ def write_svg_overlay(
             lines.append(f'<circle cx="{center.x:.3f}" cy="{center.y:.3f}" r="{dot_radius:.3f}"/>')
     lines.append("</g>")
 
-    label = f"v3 {result.grid_size}x{result.grid_size} pitch={result.pitch:.4f} matches={len(result.occupied)} conf={result.confidence:.3f}"
+    label = f"v2 {result.grid_size}x{result.grid_size} pitch={result.pitch:.4f} matches={len(result.occupied)} conf={result.confidence:.3f}"
     lines.append(f'<text x="16" y="28" font-family="Arial, sans-serif" font-size="22" fill="#dc2626" stroke="white" stroke-width="4" paint-order="stroke">{escape_xml(label)}</text>')
     lines.append("</svg>")
     path.write_text("\n".join(lines), encoding="utf-8")

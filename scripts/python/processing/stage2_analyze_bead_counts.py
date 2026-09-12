@@ -2,7 +2,7 @@
 """Read color keys/counts from the bottom legend of Perler bead screenshots.
 
 Batch run:
-    python scripts/python/analyze_color_legend.py --manifest results/processing/1.grouped-images/groups.manifest.json
+    python scripts/python/processing/stage2_analyze_bead_counts.py --manifest results/processing/1.grouped-images/groups.manifest.json
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ try:
 except ImportError:  # pragma: no cover
     pytesseract = None
 
-import analyze_color_modal_legend
+import stage2_analyze_helper_modal_legend
 
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}
@@ -102,7 +102,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Analyze bottom legend color keys/counts from screenshots.")
     parser.add_argument("input", nargs="?", help="Image file or directory. Example: results\\processing\\1.grouped-images or .codex\\tmp\\img")
     parser.add_argument("--out", default="", help="Output JSON path.")
-    parser.add_argument("--manifest", default="", help="groups.manifest.json from group_similar_pattern_images.py.")
+    parser.add_argument("--manifest", default="", help="groups.manifest.json from stage1_group_images.py.")
     parser.add_argument("--palette", default="291", help="MARD palette set: 96, 144, 291, or all.")
     parser.add_argument("--legend-ratio", type=float, default=0.38, help="Bottom image ratio scanned for legend circles.")
     parser.add_argument("--tesseract", default=str(DEFAULT_TESSERACT), help="Path to tesseract.exe.")
@@ -460,7 +460,7 @@ def analyze_manifest_group(
             page_results.append(error_result(image_id, source, "Could not read image"))
             continue
         if source_type == COLOR_MODAL:
-            result = analyze_color_modal_legend.analyze_modal(source, palette, sys.modules[__name__])
+            result = stage2_analyze_helper_modal_legend.analyze_modal(source, palette, sys.modules[__name__])
             result["id"] = image_id
             result["source"] = str(source)
             result["analysisMethod"] = "color_modal_grid_6_per_row_palette_match_plus_count_ocr"
@@ -472,7 +472,7 @@ def analyze_manifest_group(
             result["totalCellsWithTransparent"] = None
             result["countsWithTransparent"] = dict(result.get("colorCounts", {}))
             result["entriesWithTransparent"] = list(result.get("colors", []))
-            result["needsReview"] = analyze_color_modal_legend.count_review_items(result)
+            result["needsReview"] = stage2_analyze_helper_modal_legend.count_review_items(result)
             result["needsReviewCount"] = len(result["needsReview"])
             result["validation"] = {
                 "colorCountsEqualFullTotal": None,
@@ -484,7 +484,7 @@ def analyze_manifest_group(
             if result["needsReview"]:
                 review_result = dict(result)
                 review_result["id"] = group_name
-                analyze_color_modal_legend.print_review_items(review_result)
+                stage2_analyze_helper_modal_legend.print_review_items(review_result)
         else:
             analysis = analyze_image_legend(image, palette, legend_ratio=0.38)
             if len(selected_items) > 1:

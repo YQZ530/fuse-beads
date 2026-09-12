@@ -51,8 +51,8 @@ Images remain separate files. The reference columns store IDs or paths. These co
 Use warehouseId to select inventory when multiple warehouses share a color. Existing project references keep `warehouse-1`; the purchased 221-color warehouse uses `warehouse-221`. Display names may contain Chinese; filenames, column names and generated IDs use ASCII.
 
 ```powershell
-python scripts/python/helpers/calc_remaining_inventory.py --warehouse warehouse-1 --selected Image13 --only-used
-python scripts/python/helpers/calc_remaining_inventory.py --warehouse warehouse-221 --selected Image13 --only-used
+python scripts/python/helpers/calculate_remaining_inventory.py --warehouse warehouse-1 --selected Image13 --only-used
+python scripts/python/helpers/calculate_remaining_inventory.py --warehouse warehouse-221 --selected Image13 --only-used
 npm run create:warehouse -- --name "MARD 96" --palette 96 --count 541
 ```
 

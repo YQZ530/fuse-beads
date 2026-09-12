@@ -6,7 +6,7 @@
 
 ## 2026-09-11：完成图纸脚本与首次归档
 
-实现 `scripts/python/complete_images.py`，默认预览，`--apply` 提交。脚本校验图例、库存、图片与重复完成状态，逐图扣库并追加逐色流水；归档截图、完整 main/debug、manifest 分组和项目图纸记录，更新活动图例、分配索引及项目需求。备份与阶段日志保存在 `results/processing/.completion-operations/`；捕获错误回滚，异常中断后下次启动先恢复，恢复遇到外部修改时停止。
+实现 `scripts/python/processing/stage3_complete_images.py`，默认预览，`--apply` 提交。脚本校验图例、库存、图片与重复完成状态，逐图扣库并追加逐色流水；归档截图、完整 main/debug、manifest 分组和项目图纸记录，更新活动图例、分配索引及项目需求。备份与阶段日志保存在 `results/processing/.completion-operations/`；捕获错误回滚，异常中断后下次启动先恢复，恢复遇到外部修改时停止。
 
 复用图纸图片 API，收紧为指定图片目录和位图扩展名，验证真实路径以阻止越界。豆仓流水增加归档缩略图，服务端保护完成流水及关联豆仓，避免删除后破坏完成记录。根 tsconfig 保留拆分结构，补 compilerOptions 对象，并为继承配置设置 baseUrl，修复 Next 启动及路径别名解析。
 
@@ -86,7 +86,9 @@ scripts/
   javascript/                手动运行的 JS 工具
   python/                    Python 工具
     helpers/                 库存计算等辅助工具
-    test_scr/                配色实验和 Python 回归测试
+    processing/              截图分组、用豆统计、完成归档
+    app/                     网页调用的网格检测 v1
+    experiments/             网格检测实验 v2
   tests/                     自动化测试
 doc/
   feature-docs.md             已实现功能与变更记录
@@ -99,7 +101,7 @@ doc/
 
 命令均从仓库根目录执行。
 
-### 1. group_similar_pattern_images.py
+### 1. processing/stage1_group_images.py
 
 目标：将原始截图归成同一图纸的 ImageN 分组，生成下游识别使用的 manifest。
 
@@ -111,19 +113,19 @@ doc/
 - `--no-paddle` 支持关闭 PaddleOCR 回退。
 
 ```powershell
-python scripts/python/group_similar_pattern_images.py .codex/tmp/img --out results/processing/1.grouped-images --action copy --manifest results/processing/1.grouped-images/groups.manifest.json
+python scripts/python/processing/stage1_group_images.py .codex/tmp/img --out results/processing/1.grouped-images --action copy --manifest results/processing/1.grouped-images/groups.manifest.json
 ```
 
-### 2. analyze_color_legend.py
+### 2. processing/stage2_analyze_bead_counts.py
 
 目标：从图例识别每张图纸的色号和数量，生成颜色统计及可复核证据。
 
 输入支持 manifest、单张图片或图片目录。详情页采样底部圆点并匹配 MARD Lab 颜色，结合预处理 OCR 投票、OpenCV 模板和 Tesseract token 识别数量。多页同色数据合并，并使用分组 pairKey 的预期总数核对。
 
-主流程调用同目录的 `analyze_color_modal_legend.py` 处理颜色弹窗。debug 保留数量候选、投票来源、冲突及实际解析页；main 输出 colorCounts、sourceImages、needsReview 等。弹窗 main 展示来源可映射到首张图，debug 保留真实弹窗页。
+主流程调用同目录的 `processing/stage2_analyze_helper_modal_legend.py` 处理颜色弹窗。debug 保留数量候选、投票来源、冲突及实际解析页；main 输出 colorCounts、sourceImages、needsReview 等。弹窗 main 展示来源可映射到首张图，debug 保留真实弹窗页。
 
 ```powershell
-python scripts/python/analyze_color_legend.py --manifest results/processing/1.grouped-images/groups.manifest.json --out results/processing/2.groupped-bead-count/analyze_color_legend.debug.json
+python scripts/python/processing/stage2_analyze_bead_counts.py --manifest results/processing/1.grouped-images/groups.manifest.json --out results/processing/2.groupped-bead-count/analyze_color_legend.debug.json
 ```
 
 输出为 `results/processing/2.groupped-bead-count/analyze_color_legend.debug.json` 和 `analyze_color_legend.main.json`，也是批处理默认输出位置。项目服务读取该目录的 main。用户确认四张新增图纸后，新增 main、debug 和分组清单已分别合入正式文件，三个 `.new` 文件已删除。
@@ -147,26 +149,26 @@ results/
 
 Stage 1 和 Stage 3 在网页点击保存时一起写入。Stage 2 现有文件是 v3 脚本生成的 geometry JSON、SVG 网格叠加图和 PNG 文字掩码，网页没有直接读取这些文件。
 
-网页 `/api/analysis/grid-geometry` 调用 `scripts/python/prototype_grid_geometry_v2.py`，将输入及输出放入 `.grid-python/<请求ID>/`，读取检测结果后在 finally 中删除临时目录。此次修正其旧脚本路径，保留上述运行方式。Stage 2 的网页持久化属于后续计划。
+网页 `/api/analysis/grid-geometry` 调用 `scripts/python/app/detect_grid_geometry_v1.py`，将输入及输出放入 `.grid-python/<请求ID>/`，读取检测结果后在 finally 中删除临时目录。此次修正其旧脚本路径，保留上述运行方式。Stage 2 的网页持久化属于后续计划。
 
 2026-09-11 阶段迁移：同步更新页面 API、项目服务、库存服务、JS/Python 默认路径及已有 JSON 路径。历史批量统计移入 processing 第 2 阶段；分组清单合入第 1 阶段。经全文与 SHA-256 比较确认 archived 与主清单完全一致，已删除重复副本。v3 默认目录改为当前仓库的 Stage 2 路径。
 
 验证：TypeScript、5 项豆仓测试及 Python 语法检查通过。v2 脚本以 `results/app/1.source-images/2026-08-13_185017_karbi_original.jpg` 为输入，在 `.cursor/tmp/stage-check/` 成功生成 geometry JSON 和 SVG。此次验证覆盖实际脚本执行；网页端到端交互未重测。
 
-### 3. prototype_grid_geometry_v3.py
+### 网格检测实验：experiments/grid_geometry_v2.py
 
 目标：单张图纸的网格几何、文字中心和叠加预览实验，用于调试定位。
 
-`--image` 指定图片，`--grid-size` 指定板尺寸，`--out-dir` 指定输出目录。v2 保留上一版实验实现。这是独立的网格实验流程。
+`--image` 指定图片，`--grid-size` 指定板尺寸，`--out-dir` 指定输出目录。当前实验版为 v2（原 prototype v3），网页使用 `app/detect_grid_geometry_v1.py`（原 prototype v2）。上文历史验证中的 v2/v3 指重命名前的版本。
 
 ### 其他 Python 工具
 
 | 文件（相对 scripts/python/） | 目标和结果 |
 | --- | --- |
-| `analyze_color_modal_legend.py` | 识别弹窗的圆点网格、色号和数量；独立运行输出 debug、final、compare JSON 至 `test_scr/output/`。 |
-| `helpers/calc_remaining_inventory.py` | 读取正式用豆统计及库存文本，汇总选中图纸的各色用量，输出 owned、used、remaining 终端表格。 |
-| `test_scr/delta_e_substitutions.py` | 使用 CIEDE2000 寻找替代色，支持指定图片、豆数、排除项；`--apply` 写入替换结果。 |
-| `final_review_gate.py` | 终端交互式复核工具，读取后续输入并在收到退出指令时结束。 |
+| `processing/stage2_analyze_helper_modal_legend.py` | 识别弹窗的圆点网格、色号和数量；独立运行输出 debug、final、compare JSON 至 `results/processing/debug/modal-legend/`。 |
+| `helpers/calculate_remaining_inventory.py` | 读取正式用豆统计及库存文本，汇总选中图纸的各色用量，输出 owned、used、remaining 终端表格。 |
+| `helpers/substitute_colors.py` | 使用 CIEDE2000 寻找替代色，支持指定图片、豆数、排除项；`--apply` 写入替换结果。 |
+| `helpers/wait_for_review.py` | 终端交互式复核工具，读取后续输入并在收到退出指令时结束。 |
 
 ## JavaScript 工具
 

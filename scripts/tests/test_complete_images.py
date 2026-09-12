@@ -5,7 +5,7 @@ import tempfile
 import unittest
 
 REPO = Path(__file__).resolve().parents[2]
-spec = importlib.util.spec_from_file_location('complete_images', REPO / 'scripts/python/complete_images.py')
+spec = importlib.util.spec_from_file_location('complete_images', REPO / 'scripts/python/processing/stage3_complete_images.py')
 c = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(c)
 

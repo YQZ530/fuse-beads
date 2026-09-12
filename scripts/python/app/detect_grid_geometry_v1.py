@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prototype v2 grid geometry detector.
+"""App v1 grid geometry detector (formerly prototype v2).
 
 This version estimates a square grid from text-like centers first. It does not
 need known row/column counts and treats axis-profile/grid-line detection as a
@@ -108,7 +108,7 @@ def main() -> int:
 
     payload = {
         "imageSize": {"width": image.width, "height": image.height},
-        "mode": "text-lattice-v2",
+        "mode": "text-lattice-v1",
         "crop": bounds_to_json(grid_bounds),
         "geometry": {
             "centerX": geometry.origin_x,
@@ -139,8 +139,8 @@ def main() -> int:
         "textCenters": [candidate_to_json(c) for c in result.candidates if c.inlier],
     }
 
-    json_path = out_dir / f"{stem}.geometry.v2.json"
-    svg_path = out_dir / f"{stem}.grid_overlay.v2.svg"
+    json_path = out_dir / f"{stem}.geometry.v1.json"
+    svg_path = out_dir / f"{stem}.grid_overlay.v1.svg"
     json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     write_svg_overlay(
         svg_path,

@@ -426,7 +426,7 @@ def main():
     parser.add_argument('--note', default='完成拼图')
     parser.add_argument('--apply', action='store_true')
     args = parser.parse_args()
-    root = Path(__file__).resolve().parents[2]
+    root = Path(__file__).resolve().parents[3]
     try:
         recover_pending(root)
         ids = parse_image_ids(args.images or [input('Image IDs: ')])
