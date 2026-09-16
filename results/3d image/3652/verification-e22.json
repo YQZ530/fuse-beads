@@ -1,0 +1,32 @@
+{
+  "columns": 52,
+  "rows": 90,
+  "parts": 18,
+  "beads": 2906,
+  "counts": {
+    "H18": 271,
+    "C23": 244,
+    "C2": 553,
+    "D17": 331,
+    "A20": 254,
+    "G19": 54,
+    "G13": 34,
+    "B3": 222,
+    "B5": 330,
+    "B8": 232,
+    "B15": 381
+  },
+  "checks": [
+    "all original grids unchanged",
+    "no rotation",
+    "no overlap",
+    "at least one empty cell between different parts",
+    "bead grid identical to the original CSV; E22 is background only"
+  ],
+  "background": {
+    "code": "E22",
+    "hex": "#B785A1",
+    "palette_source": "src\\app\\colorSystemMapping.json",
+    "beads": false
+  }
+}

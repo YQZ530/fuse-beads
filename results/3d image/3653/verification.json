@@ -1,0 +1,26 @@
+{
+  "columns": 52,
+  "rows": 83,
+  "parts": 14,
+  "beads": 2295,
+  "counts": {
+    "H18": 206,
+    "A2": 223,
+    "A4": 201,
+    "A6": 140,
+    "F3": 193,
+    "D1": 80,
+    "C7": 125,
+    "D22": 278,
+    "D10": 234,
+    "G11": 257,
+    "G13": 251,
+    "F11": 107
+  },
+  "checks": [
+    "all original grids unchanged",
+    "no rotation",
+    "no overlap",
+    "at least one empty cell between different parts"
+  ]
+}
